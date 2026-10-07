@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+
+# Build output
+dist/
+build/
+.vite/
+*.tsbuildinfo
+
+# Test output
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+
+# Cache
+.turbo/
+.cache/
+
+# Environment — real secrets only. .env.example is committed on purpose (DL-03).
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Docker / local volumes
+.docker-data/
+
+# Deployment
+render.yaml.local
+
+# Lockfiles, Prisma schema, and migrations are intentionally NOT ignored.
+# backend/pnpm-lock.yaml and frontend/pnpm-lock.yaml must be committed.
+# backend/prisma/schema.prisma and backend/prisma/migrations/ must be committed
+# so migrations are versioned and reproducible (SRS §17.4, DL-04).

@@ -1,8 +1,8 @@
 # API Data Format Specification
 
-> **Source:** [../srs.md](../srs.md) §3–§10, §15, §16, §17 · Phases [00](phase-00-backend-foundation.md)–[11](phase-11-github-integration.md)
+> **Source:** [../srs.md](../srs.md) §3–§10, §15, §16, §17, §18 · Phases [00](phase-00-backend-foundation.md)–[14](phase-14-deliverables.md)
 > **Priority:** Mandatory · FR-01 – FR-30 · DL-05
-> **Feeds:** Phase 10 §7 — OpenAPI generation and the route/spec parity test
+> **Feeds:** Phase 10 §7 — OpenAPI generation and the route/spec parity test · Phase 14 §8 — the DL-05 endpoint summary
 > **Status:** Contract of record. This document defines the wire format; the phase documents define the behaviour behind it.
 
 ---
@@ -31,7 +31,10 @@ Phase 10 §7.1 commits to generating OpenAPI from annotations in the route handl
 | Dashboard statistics, upcoming | §7 | 04 | [§6.4](#64-dashboard) |
 | Project creation and CRUD | §12 | 08 | [§6.5](#65-projects) |
 | Repository selection, GitHub issues | §10 | 11 | [§6.6](#66-github) |
-| Swagger / OpenAPI | §16 | 10 | [§10](#10-mapping-to-openapi) |
+| Swagger / OpenAPI | §16 | 10, 14 | [§6.7](#67-docs), [§10](#10-mapping-to-openapi) |
+| Docker Compose, Kong gateway | §16 | 12 | [§3.1](#31-base-url-varies-by-environment), [§3.2](#32-the-gateway-is-not-the-auth-boundary) |
+| Deployment | §16 | 13 | [§3.1](#31-base-url-varies-by-environment) |
+| API documentation delivered (DL-05) | §18 | 14 | this document |
 
 ---
 
@@ -50,6 +53,26 @@ Phase 10 §7.1 commits to generating OpenAPI from annotations in the route handl
 There is **no** `Authorization` header and **no** bearer token. The session is an opaque random string delivered only as a cookie (Phase 01 §4.1). A browser client needs `credentials: 'include'`; a CLI or server-side client needs a cookie jar.
 
 `GET /health` and `GET /api/health` are the only routes that do not require a session.
+
+### 3.1 Base URL Varies by Environment
+
+The path contract is fixed, but the origin is not. A client must not hardcode it:
+
+| Environment | API base URL | Source |
+| ----------- | ------------ | ------ |
+| Local, no Docker | `http://localhost:3000/api` | Phase 12 §7.1 |
+| Local, Docker Compose + Kong | `http://localhost:8000/api` | Phase 12 §6.1 |
+| Production (Render) | `https://<web-service>.onrender.com/api` | Phase 13 §5.2 |
+
+The frontend reads this from `VITE_API_URL`. Vite inlines `VITE_*` variables at **build time**, not at container start — setting it as a runtime environment variable does nothing, and a Docker image built without the right `--build-arg` will point at `localhost` forever (Phase 12 §5.3). This is the most common cause of "works locally, broken in Docker" for this stack.
+
+Paths, envelopes, and field names are identical across all three. Only the origin changes.
+
+### 3.2 The Gateway Is Not the Auth Boundary
+
+Kong routes and rate-limits, but authentication is enforced in the API, never at the gateway (Phase 12 §7.1). A gateway-only auth check would leave the backend unauthenticated for anyone reaching it directly on `:3000`. Every route works with Kong absent — it is not in the default Compose profile.
+
+A `429` from the gateway and a `429` from the API's own rate limiter are indistinguishable to a client; both carry `RATE_LIMITED`.
 
 ---
 
@@ -1557,8 +1580,11 @@ Discrepancies found while assembling this document, and how each was resolved. A
 | 9 | Phase 11 §6.5 says nothing about a maximum `issueNumbers` length | **100**, stated in [§6.6](#66-github). Consistent with `pageSize` capping and `perPage` capping. Needs confirming |
 | 10 | Phase 11 §6.2 does not state the success status for linking a repository | **201 Created** with the updated `Project`. Consistent with `POST /api/projects` and `POST /api/tasks` |
 | 11 | `GET /api/projects` is unpaginated, so it returns no `meta` block, unlike every other list | **Intentional**, per [§6.5](#65-projects). A user's project count is small and bounded |
+| 12 | Phase 14 §8 (DL-05) lists 26 routes and omits `/api/openapi.json`, which Phase 10 §7.2 specifies as a served route | **Documented** in [§6.7](#67-docs). Both spec-serving routes are registered Express routes, so the parity test in [§10](#10-mapping-to-openapi) requires both. Phase 14 §8's list should gain the entry |
+| 13 | `JWT_SECRET` and `JWT_EXPIRES_IN` appear in Phase 00 §9, Phase 13 §5.1, and Phase 14 §6, but Phase 01 §4.1 chose **opaque session tokens** and rejected JWT | **Opaque sessions**, as this document specifies in [§3](#3-transport) and [§6.2](#62-auth). The two `JWT_*` variables are leftovers from the pre-decision draft and should be dropped from `.env.example` — shipping a `JWT_SECRET` implies a signing scheme the system does not use |
+| 14 | Phase 14 §8 groups `/health`, `/api/health`, and `/api/docs` under a single "System" heading | **Split** into `Health` and `Docs` tags in [§6](#6-endpoints). `/api/docs` serves a specification, not a system probe, and the split keeps the Health tag limited to the two routes a platform health check should use |
 
-Open items for confirmation: #9 and #10 are additions this document makes, not restatements.
+Open items for confirmation: #9 and #10 are additions this document makes, not restatements. Items #13 and #14 are corrections the phase documents need, not choices this document made.
 
 ---
 
@@ -1573,3 +1599,6 @@ Open items for confirmation: #9 and #10 are additions this document makes, not r
 - [Phase 08 — Projects](phase-08-backend-frontend-projects.md) — project CRUD, task counts, `projectId` threading
 - [Phase 10 — Testing, API Docs & CI](phase-10-testing-api-docs-ci.md) — OpenAPI generation, parity test
 - [Phase 11 — GitHub Integration](phase-11-github-integration.md) — repositories, issues, import, `BigInt` handling
+- [Phase 12 — Docker Compose & Kong](phase-12-docker-kong.md) — service topology, gateway CORS and rate limiting, build-time variables
+- [Phase 13 — Deployment](phase-13-deployment.md) — Render topology, production OAuth callback, health checks
+- [Phase 14 — Deliverables & Submission](phase-14-deliverables.md) — DL-05, the endpoint summary in its §8
