@@ -12,6 +12,14 @@ dist
 dist-ssr
 *.local
 
+# Environment files — placeholders are committed, real values never are.
+.env
+.env.*
+!.env.example
+
+# Test output
+coverage
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

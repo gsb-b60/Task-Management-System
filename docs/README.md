@@ -4,6 +4,12 @@ Phase-by-phase specifications for **Git Project Manager**, derived from [../srs.
 
 **Source of truth:** `srs.md`. If a phase document and the SRS disagree, the SRS wins.
 
+**Visual source of truth:** [../mockup/index.html](../mockup/index.html) — 24 screens
+across seven features (SC-01 – SC-24), each shown on Desktop, Tablet and Phone with
+every list state. Frontend work follows the mockup's class strings and colour
+tokens literally; where a phase document and the mockup disagree on *appearance*,
+the mockup wins.
+
 ---
 
 ## Ordering
@@ -51,9 +57,14 @@ The API runs on **port 5004** in development.
 
 | Phase | Document | Covers | SRS |
 | ----- | -------- | ------ | --- |
-| 05 | [Auth, Layout & API Client](phase-05-frontend-auth.md) | API client, auth context, route guards, Register/Login screens, app shell | §3, §13.1–2 |
+| 05 | [Auth, Layout & API Client](phase-05-frontend-auth.md) | API client, auth context, route guards, Register/Login screens, app shell, **mock API layer**, design tokens | §3, §13.1–2 |
 | 06 | [Task List & Dashboard](phase-06-frontend-tasks-dashboard.md) | Dashboard, searchable/filterable/paginated task list, task detail, cache invalidation | §6, §7, §13.3–4, §13.8 |
 | 08 | [Projects](phase-08-backend-frontend-projects.md) | Project CRUD, project switcher, `?projectId=` scoping | §12, §13.5 |
+
+**Status:** Phase 05 is implemented — 105 tests, `lint`/`build`/`test` green.
+Because Phases 00–04 have not landed, the app runs against a mock API layer behind
+the same interfaces (`VITE_USE_MOCK_API=false` switches to `fetch`). Phase 06's
+dashboard screen is built early on those fixtures; the rest of its scope is not started.
 
 ### Bonus Features
 
@@ -122,6 +133,8 @@ Points where a wrong choice causes a real bug. Each is called out in its phase d
 | **`VITE_API_URL` is build-time** | 12, 13 | Vite inlines `VITE_*` during build. Setting it after the build does nothing. |
 | **Kong is not the auth boundary** | 12 | The API enforces auth. Kong is optional and not in the default Compose profile. |
 | **Migrate runs before traffic** | 13 | `migrate deploy` as a release step, never `migrate dev` in production. |
+| **A failed `/me` is not a sign-out** | 05 | Only a `401` means "no session". A `500` or a dead network must offer retry, not bounce the user to the login form. |
+| **`?redirect=` is attacker-controlled** | 05 | Accept only rooted paths, or `/login?redirect=` becomes an open redirect carrying the session off-site. |
 
 ---
 
