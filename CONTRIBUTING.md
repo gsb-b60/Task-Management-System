@@ -372,7 +372,7 @@ git pull origin main
 git checkout -b feat/backend-task-labels
 
 # 2. Develop with small, focused commits
-git add backend/src/modules/tasks
+git add backend/src/presentation/tasks backend/src/service backend/src/repository
 git commit -m "feat(backend): add labels field to task schema"
 
 git add backend/prisma/migrations

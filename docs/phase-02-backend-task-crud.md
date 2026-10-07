@@ -193,14 +193,22 @@ findFirst({ where: { id, userId } })    ← correct
 
 ## 7. Code Structure
 
+Layer rules in [architecture-backend.md](architecture-backend.md) §3.
+
 ```text
-src/modules/tasks/
+src/presentation/tasks/
 ├── tasks.routes.ts
 ├── tasks.controller.ts
-├── tasks.service.ts
 ├── tasks.schemas.ts       # Zod: createBody, updateBody, listQuery
-├── tasks.mapper.ts         # Prisma row → response DTO
-└── __tests__/
+└── __tests__/             # integration
+
+src/service/
+├── tasks.service.ts       # create, list, getById, update, remove — each scoped by userId
+├── tasks.mapper.ts        # Prisma row → response DTO
+└── __tests__/             # unit, repository mocked
+
+src/repository/
+└── task.repository.ts     # findFirst({ where: { id, userId } }) — never findUnique by id
 ```
 
 The mapper is a deliberate boundary: it guarantees `userId` never leaks into a response body and gives Phase 03 one place to add computed fields.

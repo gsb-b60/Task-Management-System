@@ -71,6 +71,8 @@ Stand up the backend runtime, database layer, configuration loading, and project
 
 ## 5. Proposed Layout
 
+Layer structure is defined in [architecture-backend.md](architecture-backend.md) — that document is authoritative on *where files live*. Phase 00 fills in the infrastructure folders and the first vertical slice.
+
 ```text
 backend/
 ├── prisma/
@@ -88,16 +90,31 @@ backend/
 │   ├── middleware/
 │   │   ├── errorHandler.ts
 │   │   ├── notFound.ts
-│   │   └── requireAuth.ts     # stubbed in Phase 01
-│   ├── modules/
+│   │   ├── requireAuth.ts     # stubbed in Phase 01
+│   │   ├── requireOwnership.ts# Phase 01
+│   │   └── rateLimit.ts       # Phase 01
+│   ├── presentation/          # HTTP boundary
+│   │   ├── index.ts           # mounts all feature routers
+│   │   ├── health/            # Phase 00
 │   │   ├── auth/              # Phase 01
 │   │   ├── tasks/             # Phase 02
 │   │   └── dashboard/         # Phase 04
-│   └── routes/
-│       └── index.ts           # mounts all module routers
+│   ├── service/               # business rules
+│   │   ├── index.ts
+│   │   ├── health.service.ts  # Phase 00
+│   │   ├── auth.service.ts    # Phase 01
+│   │   ├── tasks.service.ts   # Phase 02
+│   │   └── dashboard.service.ts # Phase 04
+│   └── repository/            # data access — Prisma lives only here
+│       ├── index.ts
+│       ├── user.repository.ts   # Phase 01
+│       ├── session.repository.ts# Phase 01
+│       ├── task.repository.ts   # Phase 02
+│       └── project.repository.ts# Phase 08
 ├── .env.example
 ├── package.json
-└── tsconfig.json
+├── tsconfig.json
+└── tsconfig.build.json
 ```
 
 ---
@@ -257,7 +274,7 @@ Every error response in every phase uses this shape.
 
 ```dotenv
 NODE_ENV=development
-PORT=3000
+PORT=5004
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todogit?schema=public"
 
 # Phase 01 — auth
@@ -268,7 +285,7 @@ BCRYPT_SALT_ROUNDS=12
 # Phase 06 — GitHub
 GITHUB_CLIENT_ID=""
 GITHUB_CLIENT_SECRET=""
-GITHUB_CALLBACK_URL="http://localhost:3000/api/auth/github/callback"
+GITHUB_CALLBACK_URL="http://localhost:5004/api/auth/github/callback"
 
 # Phase 09 — deployment
 FRONTEND_ORIGIN="http://localhost:5173"
@@ -293,7 +310,7 @@ FRONTEND_ORIGIN="http://localhost:5173"
 - [ ] Create `src/middleware/notFound.ts`
 - [ ] Create `src/app.ts` (JSON body parsing, CORS, routes, error handler last)
 - [ ] Create `src/server.ts` with graceful shutdown
-- [ ] Implement `GET /health` and `GET /api/health`
+- [ ] Implement `GET /health` and `GET /api/health` as `src/presentation/health/` + `src/service/health.service.ts`
 - [ ] Create `.env.example` and confirm `.env` is gitignored
 - [ ] Verify `GET /api/health` returns 200 against a running PostgreSQL
 

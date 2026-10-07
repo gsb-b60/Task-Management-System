@@ -42,7 +42,7 @@ Phase 10 §7.1 commits to generating OpenAPI from annotations in the route handl
 
 | Property | Value |
 | -------- | ----- |
-| Base URL | `http://localhost:3000` in development |
+| Base URL | `http://localhost:5004` in development |
 | Path prefix | `/api` for all application routes |
 | Request content type | `application/json` |
 | Response content type | `application/json`, except `204 No Content` which has none |
@@ -60,7 +60,7 @@ The path contract is fixed, but the origin is not. A client must not hardcode it
 
 | Environment | API base URL | Source |
 | ----------- | ------------ | ------ |
-| Local, no Docker | `http://localhost:3000/api` | Phase 12 §7.1 |
+| Local, no Docker | `http://localhost:5004/api` | Phase 12 §7.1 |
 | Local, Docker Compose + Kong | `http://localhost:8000/api` | Phase 12 §6.1 |
 | Production (Render) | `https://<web-service>.onrender.com/api` | Phase 13 §5.2 |
 
@@ -70,7 +70,7 @@ Paths, envelopes, and field names are identical across all three. Only the origi
 
 ### 3.2 The Gateway Is Not the Auth Boundary
 
-Kong routes and rate-limits, but authentication is enforced in the API, never at the gateway (Phase 12 §7.1). A gateway-only auth check would leave the backend unauthenticated for anyone reaching it directly on `:3000`. Every route works with Kong absent — it is not in the default Compose profile.
+Kong routes and rate-limits, but authentication is enforced in the API, never at the gateway (Phase 12 §7.1). A gateway-only auth check would leave the backend unauthenticated for anyone reaching it directly on `:5004`. Every route works with Kong absent — it is not in the default Compose profile.
 
 A `429` from the gateway and a `429` from the API's own rate limiter are indistinguishable to a client; both carry `RATE_LIMITED`.
 
@@ -1381,7 +1381,7 @@ A complete session against a running backend. Every payload below is a real resp
 
 ```bash
 # 1. Register — logs in, writes the session cookie
-curl -i -c cookies.txt -X POST http://localhost:3000/api/auth/register \
+curl -i -c cookies.txt -X POST http://localhost:5004/api/auth/register \
   -H 'Content-Type: application/json' \
   -d '{"email":"dev@example.com","password":"sup3rsecret","displayName":"Dev"}'
 ```
@@ -1396,7 +1396,7 @@ Set-Cookie: gpm_session=8fA2…; HttpOnly; SameSite=lax; Path=/; Max-Age=604800
 
 ```bash
 # 2. Create a project — name is the only required field
-curl -b cookies.txt -X POST http://localhost:3000/api/projects \
+curl -b cookies.txt -X POST http://localhost:5004/api/projects \
   -H 'Content-Type: application/json' \
   -d '{"name":"Git Project Manager","startDate":"2026-10-01"}'
 ```
@@ -1410,7 +1410,7 @@ curl -b cookies.txt -X POST http://localhost:3000/api/projects \
 
 ```bash
 # 3. Create a task — status and priority defaulted server-side
-curl -b cookies.txt -X POST http://localhost:3000/api/tasks \
+curl -b cookies.txt -X POST http://localhost:5004/api/tasks \
   -H 'Content-Type: application/json' \
   -d '{"title":"Fix login redirect","dueDate":"2026-10-15",
        "projectId":"a13b5c7d-9e42-4f18-b3a6-0d5c8e1f2b70"}'
@@ -1428,7 +1428,7 @@ curl -b cookies.txt -X POST http://localhost:3000/api/tasks \
 
 ```bash
 # 4. Move it to DONE — the drag-and-drop write. Absent fields survive.
-curl -b cookies.txt -X PATCH http://localhost:3000/api/tasks/c41f8a1e-5b3d-4c9f-8e2a-1d6b0f3c9a44 \
+curl -b cookies.txt -X PATCH http://localhost:5004/api/tasks/c41f8a1e-5b3d-4c9f-8e2a-1d6b0f3c9a44 \
   -H 'Content-Type: application/json' \
   -d '{"status":"IN_PROGRESS"}'
 ```
@@ -1436,7 +1436,7 @@ curl -b cookies.txt -X PATCH http://localhost:3000/api/tasks/c41f8a1e-5b3d-4c9f-
 ```bash
 # 5. Search, filter, paginate. Both array forms are equivalent.
 curl -b cookies.txt \
-  'http://localhost:3000/api/tasks?q=login&status=TODO,IN_PROGRESS&priority=HIGH&sortBy=dueDate&sortOrder=asc&page=1&pageSize=10'
+  'http://localhost:5004/api/tasks?q=login&status=TODO,IN_PROGRESS&priority=HIGH&sortBy=dueDate&sortOrder=asc&page=1&pageSize=10'
 ```
 
 ```json
@@ -1450,8 +1450,8 @@ curl -b cookies.txt \
 
 ```bash
 # 6. Dashboard
-curl -b cookies.txt http://localhost:3000/api/dashboard/summary
-curl -b cookies.txt http://localhost:3000/api/dashboard/upcoming
+curl -b cookies.txt http://localhost:5004/api/dashboard/summary
+curl -b cookies.txt http://localhost:5004/api/dashboard/upcoming
 ```
 
 ```json
@@ -1469,16 +1469,16 @@ curl -b cookies.txt http://localhost:3000/api/dashboard/upcoming
 
 ```bash
 # 7. GitHub — list repositories, link one, import issues
-curl -b cookies.txt http://localhost:3000/api/github/repositories
-curl -b cookies.txt -X POST http://localhost:3000/api/projects/a13b5c7d-9e42-4f18-b3a6-0d5c8e1f2b70/github-repository \
+curl -b cookies.txt http://localhost:5004/api/github/repositories
+curl -b cookies.txt -X POST http://localhost:5004/api/projects/a13b5c7d-9e42-4f18-b3a6-0d5c8e1f2b70/github-repository \
   -H 'Content-Type: application/json' -d '{"githubId":"1296269"}'
-curl -b cookies.txt -X POST http://localhost:3000/api/projects/a13b5c7d-9e42-4f18-b3a6-0d5c8e1f2b70/import-issues \
+curl -b cookies.txt -X POST http://localhost:5004/api/projects/a13b5c7d-9e42-4f18-b3a6-0d5c8e1f2b70/import-issues \
   -H 'Content-Type: application/json' -d '{"issueNumbers":[24,25,26]}'
 ```
 
 ```bash
 # 8. Logout — 204, cookie cleared. Then /api/auth/me is 401.
-curl -b cookies.txt -c cookies.txt -X POST http://localhost:3000/api/auth/logout
+curl -b cookies.txt -c cookies.txt -X POST http://localhost:5004/api/auth/logout
 ```
 
 ---

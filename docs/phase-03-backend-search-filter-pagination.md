@@ -208,18 +208,25 @@ GET /api/tasks?q=login&status=TODO&sortBy=dueDate&sortOrder=asc&page=2&pageSize=
 
 ## 9. Code Structure
 
+Layer rules in [architecture-backend.md](architecture-backend.md) §3. Files from Phase 02, relocated into the three layers.
+
 ```text
-src/modules/tasks/
-├── tasks.schemas.ts     # Zod: listQuery with coercion + defaults
-├── tasks.repository.ts  # query builder — the single place filters live
-├── tasks.service.ts
+src/presentation/tasks/
+├── tasks.schemas.ts       # Zod: listQuery with coercion + defaults
 └── __tests__/
 
+src/service/
+├── tasks.service.ts       # search / filter / paginate orchestration
+└── __tests__/
+
+src/repository/
+└── task.repository.ts     # query builder — the single place filters live
+
 src/lib/
-└── pagination.ts        # parse page/pageSize, clamp, skip/take, build meta
+└── pagination.ts          # parse page/pageSize, clamp, skip/take, build meta
 ```
 
-`tasks.repository.ts` exists so filters are composed in exactly one place. Phase 04 reuses the same builder for the Dashboard counts.
+The Phase 02 `task.repository.ts` query builder is extended rather than duplicated, so filters are composed in exactly one place. Phase 04 reuses the same builder for the Dashboard counts.
 
 ---
 
@@ -227,8 +234,8 @@ src/lib/
 
 - [ ] Zod `listQuery` schema: coerce `page` / `pageSize` from string, apply defaults, clamp `pageSize` to 100
 - [ ] Parse `status` / `priority` as both repeatable and comma-separated
-- [ ] `pagination.ts` — `skip` / `take` / `offset` and the `meta` builder
-- [ ] `tasks.repository.ts` — compose the where clause and sort
+- [ ] `src/lib/pagination.ts` — `skip` / `take` / `offset` and the `meta` builder
+- [ ] `src/repository/task.repository.ts` — compose the where clause and sort
 - [ ] Add the stable `id ASC` tiebreaker to every sort
 - [ ] Handle nullable `dueDate` ordering per §5.3
 - [ ] Migration: enable `pg_trgm`, add `citext` to `Task.title`

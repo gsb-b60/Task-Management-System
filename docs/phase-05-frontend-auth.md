@@ -235,7 +235,7 @@ frontend/src/
 ## 10. Environment
 
 ```dotenv
-VITE_API_URL="http://localhost:3000/api"
+VITE_API_URL="http://localhost:5004/api"
 ```
 
 `.env.example` at the repo root or in `frontend/`, placeholders only. Confirm `.env` is gitignored — `frontend/.gitignore` exists, verify it covers `.env*`.

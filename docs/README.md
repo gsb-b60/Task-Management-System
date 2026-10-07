@@ -25,6 +25,16 @@ PHASE 10 ──▶ 11 ──▶ 12 ──▶ 13 ──▶ 14      Quality / Infr
 
 ---
 
+## Architecture
+
+| Document | Covers |
+| -------- | ------ |
+| [Backend Layer Structure](architecture-backend.md) | presentation → service → repository, dependency rule, naming, request lifecycle, phase-to-file map |
+
+The API runs on **port 5004** in development.
+
+---
+
 ## Phase Index
 
 ### Backend — Mandatory
@@ -169,7 +179,7 @@ Each phase document contains:
 3.  Traceability       — requirement IDs → SRS clauses
 4.  Design decisions   — choices with rationale
 5.  API surface        — endpoints, requests, responses, errors
-6.  Code structure     — files to create or modify
+6.  Code structure     — files to create or modify (layout: see [Backend Layer Structure](architecture-backend.md))
 7.  Tasks              — checklist
 8.  Tests              — table of required cases
 9.  Acceptance criteria — verifiable statements

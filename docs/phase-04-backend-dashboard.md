@@ -159,17 +159,22 @@ Days are computed as calendar-day boundaries in the **user's timezone**, not raw
 
 ## 6. Code Structure
 
+Layer rules in [architecture-backend.md](architecture-backend.md) §3.
+
 ```text
-src/modules/dashboard/
+src/presentation/dashboard/
 ├── dashboard.routes.ts
 ├── dashboard.controller.ts
-├── dashboard.service.ts
 ├── dashboard.schemas.ts     # Zod: projectId query
+└── __tests__/
+
+src/service/
+├── dashboard.service.ts     # getSummary, getUpcoming
 ├── dueDate.ts               # isOverdue + daysUntilDue, timezone-aware
 └── __tests__/
 
-src/modules/tasks/
-└── tasks.repository.ts      # reused for the upcoming query
+src/repository/
+└── task.repository.ts       # Phase 03 builder, reused for the upcoming query
 ```
 
 `dueDate.ts` is extracted because the Roadmap (Phase 09) needs the same timezone-aware arithmetic and duplicating it invites drift.

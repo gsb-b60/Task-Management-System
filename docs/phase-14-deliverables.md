@@ -158,7 +158,7 @@ Every variable the application reads, with placeholder values:
 ```dotenv
 # Backend
 NODE_ENV=development
-PORT=3000
+PORT=5004
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todogit?schema=public"
 JWT_SECRET="change-me"
 JWT_EXPIRES_IN="7d"
@@ -166,10 +166,10 @@ BCRYPT_SALT_ROURS=12
 FRONTEND_ORIGIN="http://localhost:5173"
 GITHUB_CLIENT_ID=""
 GITHUB_CLIENT_SECRET=""
-GITHUB_CALLBACK_URL="http://localhost:3000/api/auth/github/callback"
+GITHUB_CALLBACK_URL="http://localhost:5004/api/auth/github/callback"
 
 # Frontend
-VITE_API_URL="http://localhost:3000/api"
+VITE_API_URL="http://localhost:5004/api"
 ```
 
 Rules:

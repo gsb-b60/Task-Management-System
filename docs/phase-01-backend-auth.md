@@ -213,19 +213,28 @@ Applied per-route: 10 attempts / 15 min on login, 5 / 15 min on register, keyed 
 
 ## 7. Code Structure
 
+Layer rules in [architecture-backend.md](architecture-backend.md) §3. The service calls repositories; it never touches Prisma.
+
 ```text
-src/modules/auth/
+src/presentation/auth/
 ├── auth.routes.ts
 ├── auth.controller.ts
-├── auth.service.ts
-├── auth.schemas.ts        # Zod request schemas
-├── password.ts            # hash + verify, constant-time dummy path
-├── token.ts               # randomBytes generation + hashing for storage
-├── github.service.ts      # OAuth exchange, profile fetch, linking rules
+├── auth.schemas.ts           # Zod request schemas
 └── __tests__/
+
+src/service/
+├── auth.service.ts           # register, login, logout, getSessionUser, linkGitHubUser
+├── github.service.ts         # OAuth exchange, profile fetch, linking rules
+├── password.ts               # hash + verify, constant-time dummy path
+├── token.ts                  # randomBytes generation + hashing for storage
+└── __tests__/
+
+src/repository/
+├── user.repository.ts
+└── session.repository.ts
 ```
 
-Middlewares added to the `src/middleware/` folder from Phase 00.
+Middlewares added to `src/middleware/` from Phase 00.
 
 ---
 
@@ -240,7 +249,7 @@ Middlewares added to the `src/middleware/` folder from Phase 00.
 - [ ] `auth.controller.ts` — HTTP boundary, cookie set/clear, status codes
 - [ ] `auth.routes.ts` — mount router
 - [ ] `requireAuth`, `requireOwnership`, `rateLimit` middleware
-- [ ] Register router in `src/routes/index.ts`
+- [ ] Register router in `src/presentation/index.ts`
 - [ ] Index `Session.expiresAt` is in the Phase 00 schema — confirm
 - [ ] Scheduled/lazy cleanup of expired sessions
 - [ ] Confirm no log statement ever receives a password or token

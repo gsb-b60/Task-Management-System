@@ -68,7 +68,7 @@ Internet
 Static Site  ──▶  dist/            (CDN, HTTPS)
    │
    ▼
-Web Service  ──▶  :3000  /api/*    (HTTPS)
+Web Service  ──▶  :5004  /api/*    (HTTPS)
    │
    ▼
 PostgreSQL                          (private network)

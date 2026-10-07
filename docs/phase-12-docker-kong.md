@@ -52,7 +52,7 @@ Make the whole application start with one command on any machine, with no global
 ```text
 ┌──────────────────────────────────────────────────────┐
 │  postgres      PostgreSQL 16          :5432          │
-│  api           Node API  TypeScript    :3000          │
+│  api           Node API  TypeScript    :5004          │
 │  web           React build via nginx   :8080          │
 │  kong          Kong Gateway  :8000     [profile]     │
 └──────────────────────────────────────────────────────┘
@@ -61,7 +61,7 @@ Make the whole application start with one command on any machine, with no global
 | Service | Image | Port | Profile |
 | ------- | ----- | ---- | ------- |
 | `postgres` | `postgres:16-alpine` | `5432` | default |
-| `api` | built from `backend/Dockerfile` | `3000` | default |
+| `api` | built from `backend/Dockerfile` | `5004` | default |
 | `web` | built from `frontend/Dockerfile` | `8080` | default |
 | `kong` | `kong:3.9` | `8000`, `8443` | `gateway` |
 
@@ -105,7 +105,7 @@ COPY --from=build /app/dist              ./dist
 COPY --from=build /app/prisma            ./prisma
 COPY package.json ./
 USER app
-EXPOSE 3000
+EXPOSE 5004
 CMD ["node", "dist/server.js"]
 ```
 
@@ -142,7 +142,7 @@ server {
 Vite inlines `VITE_*` variables at **build time**. A Docker build therefore bakes in the API URL at image build, not at container start.
 
 ```text
-Wrong:  build with VITE_API_URL=http://localhost:3000/api
+Wrong:  build with VITE_API_URL=http://localhost:5004/api
         → the image always points at localhost
 
 Right: build an argument
@@ -184,7 +184,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "fetch('http://localhost:5004/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 10s
       retries: 5
 
@@ -217,7 +217,7 @@ volumes:
 
 ### 6.2 Notes
 
-- **Service names over `localhost`** — inside the network the API is `api:3000`, not `localhost:3000`.
+- **Service names over `localhost`** — inside the network the API is `api:5004`, not `localhost:5004`.
 - **`depends_on: condition: service_healthy`** — Compose's default `depends_on` only waits for the container to start, not for Postgres to accept connections. Without the healthcheck condition the API crashes on first boot.
 - **Named volume `pgdata`** so data survives `docker compose down`. Plain `docker compose down -v` destroys it — note that in the README.
 - **Seed on first init only** — `docker-entrypoint-initdb.d` runs only when the volume is empty. Document how to re-seed.
@@ -232,7 +232,7 @@ Declarative configuration, no database.
 _format_version: "3.0"
 services:
   - name: api-service
-    url: http://api:3000
+    url: http://api:5004
     routes:
       - name: api-route
         paths:
@@ -262,7 +262,7 @@ services:
 
 | Concern | Configuration |
 | ------- | ------------- |
-| Request routing | Routes to `api:3000` and `web:8080` |
+| Request routing | Routes to `api:5004` and `web:8080` |
 | Rate limiting | 120 requests/minute per client, applied at the gateway |
 | CORS | Credentials allowed — required for the session cookie |
 | Single entry point | `:8000` serves both SPA and API |
@@ -274,11 +274,11 @@ The CORS `credentials: true` matters: without it the browser drops the session c
 Kong is **not** the source of truth. Every route must work without it:
 
 ```text
-API alone:      http://localhost:3000/api
+API alone:      http://localhost:5004/api
 With Kong:      http://localhost:8000/api
 ```
 
-Authentication is enforced in the API, not at the gateway. A Kong-only auth check would make the backend unauthenticated for anyone who bypasses the gateway — and in development, the API is directly reachable on `3000`.
+Authentication is enforced in the API, not at the gateway. A Kong-only auth check would make the backend unauthenticated for anyone who bypasses the gateway — and in development, the API is directly reachable on `5004`.
 
 ---
 
