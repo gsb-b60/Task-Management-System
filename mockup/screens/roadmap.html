@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Roadmap — UI Mockups</title>
+<link rel="stylesheet" href="../assets/mockup.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: {
+    colors: {
+      canvas:'#ffffff', subtle:'#f6f8fa', inset:'#eff2f5', fg:'#24292f', muted:'#57606a',
+      faint:'#6e7781', line:'#d0d7de', linesoft:'#d8dee4', accent:'#0969da',
+      ok:'#1a7f37', okbg:'#dafbe1', bad:'#cf222e', badbg:'#ffebe9', warn:'#9a6700',
+      warnbg:'#fff8c5', info:'#8250df', infobg:'#fbefff',
+    },
+    fontFamily: { sans:['-apple-system','BlinkMacSystemFont','Segoe UI','Noto Sans','Helvetica','Arial','sans-serif'],
+                   mono:['ui-monospace','SFMono-Regular','SF Mono','Menlo','Consolas','monospace'] },
+  } } };
+</script>
+</head>
+<body class="min-h-screen">
+
+<header class="border-b border-line bg-canvas no-print">
+  <div class="mx-auto max-w-7xl px-5 py-3 flex items-center gap-3">
+    <a href="../index.html" class="w-6 h-6 rounded-full border border-line bg-subtle flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></a>
+    <div class="leading-tight">
+      <h1 class="text-[15px] font-semibold text-fg">Roadmap</h1>
+      <p class="text-xs text-faint">SC-16 – SC-18 · time axis, bars, today line, undated lane</p>
+    </div>
+  </div>
+  <nav class="gallery-nav border-t border-line bg-subtle">
+    <div class="mx-auto max-w-7xl px-5 py-1.5 flex flex-wrap gap-1">
+      <a href="../index.html">Index</a>
+      <a href="auth.html">Auth &amp; Shell</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="tasks.html">Tasks &amp; Detail</a>
+      <a href="board.html">Board</a>
+      <a href="roadmap.html" aria-current="page">Roadmap</a>
+      <a href="projects.html">Projects</a>
+      <a href="github.html">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main class="mx-auto max-w-7xl px-5 py-8 space-y-12">
+
+  <div class="border border-line rounded-lg p-3 flex flex-wrap items-center gap-1.5 text-xs">
+    <span class="meta-key mr-1">Flow</span>
+    <a class="border border-line rounded px-2 py-1" href="board.html#sc-13">/board</a>
+    <span class="text-faint">→</span>
+    <span class="border border-accent rounded px-2 py-1 bg-blue-50 text-accent font-semibold">/roadmap</span>
+    <span class="text-faint">→</span>
+    <span class="border border-line rounded px-2 py-1" href="tasks.html#sc-12">/tasks/:id (click a bar)</span>
+    <span class="text-faint ml-1">· same task data as the board, fetched under a distinct cache key so a board drag never forces a re-layout</span>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-16 ROADMAP                                          -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-16" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-16</span>
+      <h2 class="text-lg font-semibold text-fg">Roadmap</h2>
+      <span class="state-label" data-kind="info">srs.md §13.7 · phase-09 §4, §6 · FR-27</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-16</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Roadmap — month scale, bars, today line, tooltip</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/roadmap?projectId=a13b…</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">board → roadmap → task detail</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop 1440</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet 834</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone 390</span></span>
+      </span>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Default — month scale, grouped by status</span><span class="text-xs text-faint">window: next 90 days · today 2026-10-07</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/roadmap?projectId=a13b</span><span class="ml-auto">Desktop · 1440</span></div>
+        <div class="device-viewport">
+
+          <div class="app-topbar">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full border border-line bg-subtle"></span>
+              <span class="text-[13px] font-semibold text-fg">Task Stream</span>
+            </div>
+            <div class="ml-3 flex items-center gap-1.5 border border-line rounded-md pl-2 pr-1.5 py-1 bg-canvas">
+              <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+              <span class="text-xs text-fg font-medium">Portfolio Website</span>
+              <svg viewBox="0 0 16 16" class="w-3 h-3 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+            </div>
+            <nav class="ml-6 flex items-center gap-1 text-xs">
+              <a class="px-2.5 py-1.5 rounded-md text-muted" href="dashboard.html">Dashboard</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted" href="tasks.html">Tasks</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted" href="board.html">Board</a>
+              <a class="px-2.5 py-1.5 rounded-md font-semibold text-fg bg-inset">Roadmap</a>
+            </nav>
+            <div class="ml-auto flex items-center gap-2">
+              <div class="flex border border-line rounded-md overflow-hidden">
+                <button class="px-2.5 py-1 text-[11px] text-muted bg-canvas">Board</button>
+                <button class="px-2.5 py-1 text-[11px] font-semibold bg-inset text-fg">Roadmap</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- controls -->
+          <div class="px-4 py-2.5 border-b border-line bg-canvas flex flex-wrap items-center gap-2">
+            <h2 class="text-sm font-semibold text-fg">Project Roadmap</h2>
+            <span class="text-[10px] font-mono text-faint">Portfolio Website · 200 tasks in window</span>
+
+            <div class="ml-auto flex items-center gap-2">
+              <div class="flex items-center gap-1.5">
+                <span class="text-[10px] font-semibold text-faint uppercase">Scale</span>
+                <div class="flex border border-line rounded overflow-hidden">
+                  <button class="px-2 py-1 text-[10px] text-muted bg-canvas">Week</button>
+                  <button class="px-2 py-1 text-[10px] font-semibold text-fg bg-inset">Month</button>
+                  <button class="px-2 py-1 text-[10px] text-muted bg-canvas">Quarter</button>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[10px] font-semibold text-faint uppercase">Range</span>
+                <button class="flex items-center gap-1.5 border border-line rounded px-2 py-1 text-[10px] text-fg bg-canvas">
+                  Next 90 days
+                  <svg viewBox="0 0 16 16" class="w-2.5 h-2.5 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+                </button>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[10px] font-semibold text-faint uppercase">Group</span>
+                <button class="flex items-center gap-1.5 border border-accent rounded px-2 py-1 text-[10px] text-fg bg-canvas">
+                  Status
+                  <svg viewBox="0 0 16 16" class="w-2.5 h-2.5 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- chart -->
+          <div class="p-4 bg-canvas">
+
+            <!-- month axis -->
+            <div class="flex">
+              <div class="w-40 flex-none border-r border-line pr-2">
+                <div class="h-7 border-b border-line"></div>
+                <!-- group label -->
+                <div class="h-7 flex items-center gap-1.5 border-b border-linesoft bg-subtle px-2">
+                  <span class="legend-dot bg-faint" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] font-semibold text-fg">Todo</span>
+                  <span class="ml-auto text-[9px] font-mono text-muted">37</span>
+                </div>
+                <div class="h-9 flex items-center px-2 border-b border-linesoft">
+                  <span class="text-[10px] text-muted truncate">#21 Write API docs</span>
+                </div>
+                <div class="h-9 flex items-center px-2 border-b border-linesoft">
+                  <span class="text-[10px] text-muted truncate">#18 Deploy staging</span>
+                </div>
+                <div class="h-9 flex items-center px-2 border-b border-linesoft">
+                  <span class="text-[10px] text-muted truncate">#31 Migrate session middleware</span>
+                </div>
+                <div class="h-9 flex items-center px-2">
+                  <span class="text-[10px] text-muted truncate">#40 Seed script</span>
+                </div>
+
+                <div class="h-7 flex items-center gap-1.5 border-b border-linesoft border-t-2 border-t-line bg-subtle px-2">
+                  <span class="legend-dot bg-info" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] font-semibold text-fg">In progress</span>
+                  <span class="ml-auto text-[9px] font-mono text-muted">52</span>
+                </div>
+                <div class="h-9 flex items-center px-2 border-b border-linesoft">
+                  <span class="text-[10px] text-muted truncate">#12 Fix login redirect</span>
+                </div>
+                <div class="h-9 flex items-center px-2 border-b border-linesoft">
+                  <span class="text-[10px] text-muted truncate">#19 Implement OAuth callback</span>
+                </div>
+                <div class="h-9 flex items-center px-2">
+                  <span class="text-[10px] text-muted truncate">#25 Add sitemap generation</span>
+                </div>
+
+                <div class="h-7 flex items-center gap-1.5 border-b border-linesoft border-t-2 border-t-line bg-subtle px-2">
+                  <span class="legend-dot bg-ok" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] font-semibold text-fg">Done</span>
+                  <span class="ml-auto text-[9px] font-mono text-muted">48</span>
+                </div>
+                <div class="h-9 flex items-center px-2 border-b border-linesoft">
+                  <span class="text-[10px] text-muted line-through truncate">#24 Refactor auth</span>
+                </div>
+                <div class="h-9 flex items-center px-2">
+                  <span class="text-[10px] text-muted line-through truncate">#26 Add repo filtering</span>
+                </div>
+              </div>
+
+              <!-- plot area -->
+              <div class="flex-1 relative overflow-hidden">
+                <!-- vertical month gridlines -->
+                <div class="absolute inset-0 flex">
+                  <div class="flex-1 border-r border-linesoft"></div>
+                  <div class="flex-1 border-r border-linesoft"></div>
+                  <div class="flex-1"></div>
+                </div>
+
+                <!-- month labels -->
+                <div class="h-7 border-b border-line flex items-end relative">
+                  <div class="flex-1 text-[10px] font-semibold text-muted pl-1 pb-1">Oct</div>
+                  <div class="flex-1 text-[10px] font-semibold text-muted pl-1 pb-1 border-l border-linesoft">Nov</div>
+                  <div class="flex-1 text-[10px] font-semibold text-muted pl-1 pb-1 border-l border-linesoft">Dec</div>
+                </div>
+
+                <!-- week ticks -->
+                <div class="absolute inset-x-0 top-7 bottom-0 flex pointer-events-none">
+                  <div class="flex-1 border-r border-dotted border-linesoft"></div>
+                  <div class="flex-1 border-r border-dotted border-linesoft"></div>
+                  <div class="flex-1 border-r border-dotted border-linesoft"></div>
+                  <div class="flex-1 border-r border-dotted border-linesoft"></div>
+                  <div class="flex-1 border-r border-dotted border-linesoft"></div>
+                  <div class="flex-1 border-r border-dotted border-linesoft"></div>
+                  <div class="flex-1 border-r border-dotted border-linesoft"></div>
+                  <div class="flex-1 border-r border-dotted border-linesoft"></div>
+                  <div class="flex-1 border-r border-dotted border-linesoft"></div>
+                </div>
+
+                <!-- TODAY line -->
+                <div class="absolute top-0 bottom-0" style="left: 3.6%">
+                  <div class="h-full w-px bg-accent"></div>
+                  <div class="absolute -top-0 left-0 bg-accent text-white text-[9px] font-semibold px-1 rounded-b">Today</div>
+                </div>
+
+                <!-- TODO group -->
+                <div class="h-7 border-b border-linesoft bg-subtle/60"></div>
+
+                <!-- row 1: TODO, dashed empty bar -->
+                <div class="h-9 border-b border-linesoft relative">
+                  <div class="absolute top-2 border border-dashed border-faint rounded" style="left:6%; width:22%; height:20px"></div>
+                  <div class="absolute top-[9px] text-[9px] text-muted" style="left:29%">Write API docs</div>
+                </div>
+                <!-- row 2: TODO, overdue dashed -->
+                <div class="h-9 border-b border-linesoft relative">
+                  <div class="absolute top-2 border border-dashed border-bad rounded bg-badbg" style="left:0.5%; width:2.5%; height:20px"></div>
+                  <div class="absolute top-[9px] text-[9px] text-bad font-semibold" style="left:4.5%">Deploy staging · overdue</div>
+                </div>
+                <!-- row 3 -->
+                <div class="h-9 border-b border-linesoft relative">
+                  <div class="absolute top-2 border border-dashed border-faint rounded" style="left:31%; width:30%; height:20px"></div>
+                  <div class="absolute top-[9px] text-[9px] text-muted" style="left:62%">Migrate session middleware</div>
+                </div>
+                <!-- row 4 -->
+                <div class="h-9 relative">
+                  <div class="absolute top-2 border border-dashed border-faint rounded" style="left:52%; width:38%; height:20px"></div>
+                  <div class="absolute top-[9px] text-[9px] text-muted" style="left:91%">Seed script</div>
+                </div>
+
+                <!-- IN PROGRESS group -->
+                <div class="h-7 border-b border-linesoft border-t-2 border-t-line bg-subtle"></div>
+
+                <!-- row 5: IN PROGRESS, overdue bar filled to today -->
+                <div class="h-9 border-b border-linesoft relative">
+                  <div class="absolute top-2 border border-bad rounded overflow-hidden" style="left:1%; width:9%; height:20px">
+                    <div class="absolute inset-y-0 left-0 bg-bad" style="width:40%"></div>
+                  </div>
+                  <div class="absolute top-[9px] text-[9px] text-bad font-semibold" style="left:11%">Fix login redirect · overdue by 2 days</div>
+                </div>
+                <!-- row 6: IN PROGRESS, half filled -->
+                <div class="h-9 border-b border-linesoft relative">
+                  <div class="absolute top-2 border border-info rounded overflow-hidden" style="left:20%; width:24%; height:20px">
+                    <div class="absolute inset-y-0 left-0 bg-info" style="width:45%"></div>
+                  </div>
+                  <div class="absolute top-[9px] text-[9px] text-muted" style="left:45%">Implement OAuth callback</div>
+                </div>
+                <!-- row 7 -->
+                <div class="h-9 relative">
+                  <div class="absolute top-2 border border-info rounded overflow-hidden" style="left:48%; width:34%; height:20px">
+                    <div class="absolute inset-y-0 left-0 bg-info" style="width:60%"></div>
+                  </div>
+                  <div class="absolute top-[9px] text-[9px] text-muted" style="left:83%">Add sitemap generation</div>
+                </div>
+
+                <!-- DONE group -->
+                <div class="h-7 border-b border-linesoft border-t-2 border-t-line bg-subtle"></div>
+
+                <!-- row 8: DONE solid -->
+                <div class="h-9 border-b border-linesoft relative">
+                  <div class="absolute top-2 bg-ok rounded opacity-80" style="left:38%; width:16%; height:20px"></div>
+                  <div class="absolute top-[9px] text-[9px] text-muted line-through" style="left:55%">Refactor auth</div>
+                </div>
+                <!-- row 9 -->
+                <div class="h-9 relative">
+                  <div class="absolute top-2 bg-ok rounded opacity-80" style="left:12%; width:14%; height:20px"></div>
+                  <div class="absolute top-[9px] text-[9px] text-muted line-through" style="left:27%">Add repo filtering</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4 mt-3 text-[10px] text-faint flex-wrap">
+              <span class="flex items-center gap-1.5"><span class="w-4 h-2.5 border border-dashed border-faint rounded"></span>Todo — dashed outline, empty</span>
+              <span class="flex items-center gap-1.5"><span class="w-4 h-2.5 border border-info rounded overflow-hidden"><span class="block h-full bg-info" style="width:45%"></span></span>In progress — filled to a conventional fraction</span>
+              <span class="flex items-center gap-1.5"><span class="w-4 h-2.5 bg-ok rounded"></span>Done — solid</span>
+              <span class="flex items-center gap-1.5"><span class="w-4 h-2.5 border border-bad bg-badbg rounded"></span>Overdue — from the server's isOverdue</span>
+              <span class="flex items-center gap-1.5"><span class="w-px h-3 bg-accent"></span>Today</span>
+            </div>
+
+            <p class="text-[10px] text-faint font-mono mt-2">
+              // left = (startDate − windowStart) / windowDuration · width = (dueDate − startDate) / windowDuration, both clamped to [0,1] with a minWidth · the fill fraction for IN PROGRESS is a convention, not a computed percentage
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- tooltip -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Hover tooltip</span><span class="text-xs text-faint">title, status, priority, date range</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">pointerover on a bar</span><span class="ml-auto">Desktop</span></div>
+        <div class="device-viewport grid place-items-center" style="min-height:18rem; background:#f6f8fa">
+          <div class="relative">
+            <div class="w-56 border border-line rounded bg-canvas p-3 opacity-40">
+              <div class="h-3 w-3/4 rounded skeleton"></div>
+            </div>
+            <!-- tooltip -->
+            <div class="absolute -top-2 left-16 w-56 border border-line rounded-md bg-canvas shadow-lg overflow-hidden">
+              <div class="px-3 py-2 border-b border-line">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-mono text-[10px] text-faint">#12</span>
+                  <span class="text-[9px] border border-bad rounded-full bg-badbg text-bad font-semibold px-1.5">High</span>
+                </div>
+                <div class="text-xs font-semibold text-fg mt-1">Fix login redirect</div>
+              </div>
+              <div class="px-3 py-2 space-y-1.5 text-[10px]">
+                <div class="flex items-center gap-2">
+                  <span class="legend-dot bg-info" style="width:7px;height:7px"></span>
+                  <span class="text-muted">Status</span>
+                  <span class="ml-auto font-semibold text-fg">In progress</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg viewBox="0 0 16 16" class="w-3 h-3 text-faint" fill="currentColor"><path d="M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784.784 2 1.75 2H3v-1.25A.75.75 0 0 1 3.75 0ZM2.5 7v7.25c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V7ZM2.5 5.5h11v-1.75a.25.25 0 0 0-.25-.25H2.75a.25.25 0 0 0-.25.25Z"/></svg>
+                  <span class="text-muted">Range</span>
+                  <span class="ml-auto font-semibold text-fg">1 Oct → 15 Oct</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg viewBox="0 0 16 16" class="w-3 h-3 text-bad" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                  <span class="text-muted">Due state</span>
+                  <span class="ml-auto font-semibold text-bad">overdue by 2 days</span>
+                </div>
+              </div>
+              <div class="px-3 py-1.5 bg-subtle border-t border-line text-[10px] text-accent">Click to open task detail →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- responsive -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">horizontal scroll on small widths; label column narrows, bars keep percentage positions</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834 — scrolled to today</span></div>
+          <div class="device-screen bg-canvas">
+            <div class="px-3 py-2 border-b border-line flex items-center gap-1.5">
+              <span class="text-[11px] font-semibold text-fg">Roadmap</span>
+              <span class="ml-auto flex border border-line rounded overflow-hidden">
+                <span class="px-1.5 py-0.5 text-[9px] text-muted bg-canvas">Week</span>
+                <span class="px-1.5 py-0.5 text-[9px] font-semibold text-fg bg-inset">Month</span>
+                <span class="px-1.5 py-0.5 text-[9px] text-muted bg-canvas">Qtr</span>
+              </span>
+            </div>
+            <div class="flex">
+              <div class="w-28 flex-none border-r border-line pr-1.5">
+                <div class="h-6 border-b border-line"></div>
+                <div class="h-5 flex items-center gap-1 px-1 bg-subtle border-b border-linesoft"><span class="legend-dot bg-faint" style="width:6px;height:6px"></span><span class="text-[9px] font-semibold text-fg">Todo</span></div>
+                <div class="h-7 flex items-center px-1 border-b border-linesoft"><span class="text-[9px] text-muted truncate">#21 API docs</span></div>
+                <div class="h-7 flex items-center px-1 border-b border-linesoft"><span class="text-[9px] text-muted truncate">#18 Deploy</span></div>
+                <div class="h-5 flex items-center gap-1 px-1 bg-subtle border-b border-linesoft border-t-2 border-t-line"><span class="legend-dot bg-info" style="width:6px;height:6px"></span><span class="text-[9px] font-semibold text-fg">In progress</span></div>
+                <div class="h-7 flex items-center px-1 border-b border-linesoft"><span class="text-[9px] text-muted truncate">#12 Login redirect</span></div>
+                <div class="h-7 flex items-center px-1"><span class="text-[9px] text-muted truncate">#19 OAuth</span></div>
+              </div>
+              <div class="flex-1 relative overflow-hidden">
+                <div class="h-6 border-b border-line flex">
+                  <div class="flex-1 text-[9px] font-semibold text-muted pl-1">Oct</div>
+                  <div class="flex-1 text-[9px] font-semibold text-muted pl-1 border-l border-linesoft">Nov</div>
+                  <div class="flex-1 text-[9px] font-semibold text-muted pl-1 border-l border-linesoft">Dec</div>
+                </div>
+                <div class="absolute top-6 bottom-0 inset-x-0 flex pointer-events-none">
+                  <div class="flex-1 border-r border-dotted border-linesoft"></div><div class="flex-1 border-r border-dotted border-linesoft"></div>
+                  <div class="flex-1 border-r border-dotted border-linesoft"></div><div class="flex-1"></div>
+                </div>
+                <div class="absolute top-0 bottom-0" style="left:4%"><div class="h-full w-px bg-accent"></div></div>
+                <div class="h-5 bg-subtle/60 border-b border-linesoft"></div>
+                <div class="h-7 border-b border-linesoft relative"><div class="absolute top-1.5 border border-dashed border-faint rounded" style="left:7%;width:24%;height:14px"></div></div>
+                <div class="h-7 border-b border-linesoft relative"><div class="absolute top-1.5 border border-dashed border-bad rounded bg-badbg" style="left:1%;width:3%;height:14px"></div><span class="absolute top-[6px] text-[8px] text-bad font-semibold" style="left:6%">overdue</span></div>
+                <div class="h-5 bg-subtle border-b border-linesoft border-t-2 border-t-line"></div>
+                <div class="h-7 border-b border-linesoft relative"><div class="absolute top-1.5 border border-bad rounded overflow-hidden" style="left:1%;width:11%;height:14px"><div class="h-full bg-bad" style="width:35%"></div></div><span class="absolute top-[6px] text-[8px] text-bad font-semibold" style="left:14%">#12</span></div>
+                <div class="h-7 relative"><div class="absolute top-1.5 border border-info rounded overflow-hidden" style="left:24%;width:26%;height:14px"><div class="h-full bg-info" style="width:45%"></div></div></div>
+              </div>
+            </div>
+            <div class="px-3 py-2 border-t border-line text-[9px] text-faint flex items-center gap-1.5">
+              <span>Swipe horizontally to see later months</span>
+              <svg viewBox="0 0 16 16" class="w-3 h-3" fill="currentColor"><path d="M8 2a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 8 2Z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas">
+            <div class="app-topbar">
+              <svg viewBox="0 0 16 16" class="w-4 h-4 text-muted" fill="currentColor"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"/></svg>
+              <span class="text-[11px] font-semibold text-fg">Roadmap</span>
+            </div>
+            <!-- compact per-task timeline instead of gantt -->
+            <div class="p-3">
+              <div class="flex items-center gap-1.5 mb-2">
+                <div class="flex border border-line rounded overflow-hidden">
+                  <span class="px-1.5 py-1 text-[9px] font-semibold text-fg bg-inset">Month</span>
+                  <span class="px-1.5 py-1 text-[9px] text-muted">Week</span>
+                </div>
+                <span class="ml-auto border border-line rounded px-1.5 py-1 text-[9px] text-fg">Next 90d ▾</span>
+              </div>
+              <div class="flex border-b border-line text-[9px] font-semibold text-muted">
+                <span class="flex-1 pl-1">Oct</span><span class="flex-1 pl-1 border-l border-linesoft">Nov</span><span class="flex-1 pl-1 border-l border-linesoft">Dec</span>
+              </div>
+              <div class="space-y-2 mt-2">
+                <div>
+                  <div class="flex items-center gap-1 mb-0.5">
+                    <span class="legend-dot bg-info" style="width:6px;height:6px"></span>
+                    <span class="text-[9px] text-fg font-medium truncate">#12 Fix login redirect</span>
+                    <span class="ml-auto text-[8px] border border-bad rounded-full bg-badbg text-bad font-semibold px-1">High</span>
+                  </div>
+                  <div class="relative h-4 border-b border-linesoft">
+                    <div class="absolute top-1 border border-bad rounded overflow-hidden" style="left:1%;width:12%;height:11px"><div class="h-full bg-bad" style="width:35%"></div></div>
+                    <div class="absolute top-0 bottom-0" style="left:4%"><div class="h-full w-px bg-accent"></div></div>
+                  </div>
+                  <div class="text-[8px] text-bad font-semibold mt-0.5">overdue by 2 days</div>
+                </div>
+                <div>
+                  <div class="flex items-center gap-1 mb-0.5">
+                    <span class="legend-dot bg-info" style="width:6px;height:6px"></span>
+                    <span class="text-[9px] text-fg font-medium truncate">#19 OAuth callback</span>
+                    <span class="ml-auto text-[8px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1">Med</span>
+                  </div>
+                  <div class="relative h-4 border-b border-linesoft">
+                    <div class="absolute top-1 border border-info rounded overflow-hidden" style="left:22%;width:26%;height:11px"><div class="h-full bg-info" style="width:45%"></div></div>
+                  </div>
+                  <div class="text-[8px] text-faint mt-0.5">1 Oct → 15 Oct</div>
+                </div>
+                <div>
+                  <div class="flex items-center gap-1 mb-0.5">
+                    <span class="legend-dot bg-faint" style="width:6px;height:6px"></span>
+                    <span class="text-[9px] text-fg font-medium truncate">#21 Write API docs</span>
+                  </div>
+                  <div class="relative h-4 border-b border-linesoft">
+                    <div class="absolute top-1 border border-dashed border-faint rounded" style="left:7%;width:22%;height:11px"></div>
+                  </div>
+                  <div class="text-[8px] text-faint mt-0.5">in 5 days</div>
+                </div>
+              </div>
+              <p class="text-[8px] text-faint font-mono mt-2">// Gantt is impractical at 390px — the roadmap lists tasks with a compact bar instead of collapsing the chart</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-17 ROADMAP STATES                                   -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-17" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-17</span>
+      <h2 class="text-lg font-semibold text-fg">Roadmap states &amp; scales</h2>
+      <span class="state-label" data-kind="info">phase-09 §6, §11</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-17</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Roadmap — loading, empty window, error, week/quarter scales</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/roadmap</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">scale / range change → axis redraw</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone</span></span>
+      </span>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-4">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Loading</span><span class="text-xs text-faint">bars skeleton in place</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">/roadmap</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4">
+              <div class="h-4 w-32 rounded skeleton mb-2"></div>
+              <div class="border border-line rounded p-3">
+                <div class="h-6 border-b border-line mb-2"><div class="h-2.5 w-20 rounded skeleton"></div></div>
+                <div class="flex h-6 items-center gap-1.5 bg-subtle px-2 mb-1"><div class="h-2 w-8 rounded skeleton"></div></div>
+                <div class="space-y-2.5 py-1">
+                  <div class="flex items-center gap-2"><div class="h-2.5 w-24 rounded skeleton"></div><div class="h-4 w-20 rounded skeleton"></div></div>
+                  <div class="flex items-center gap-2"><div class="h-2.5 w-28 rounded skeleton"></div><div class="h-4 w-16 rounded skeleton"></div></div>
+                  <div class="h-2.5 w-20 rounded skeleton"></div>
+                  <div class="h-4 w-24 rounded skeleton"></div>
+                  <div class="flex items-center gap-2"><div class="h-2.5 w-20 rounded skeleton"></div><div class="h-4 w-28 rounded skeleton"></div></div>
+                </div>
+              </div>
+              <p class="text-[10px] text-faint font-mono mt-2">// skeleton bars occupy the same rows they will fill — the layout does not jump on load</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="empty">Empty window</span><span class="text-xs text-faint">no tasks overlap the selected range</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">range: Next 90 days</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="text-sm font-semibold text-fg">Project Roadmap</span>
+                <span class="ml-auto border border-accent rounded px-2 py-1 text-[10px] text-fg">Next 90 days ▾</span>
+              </div>
+              <div class="border border-line rounded px-4 py-10 text-center">
+                <div class="inline-flex w-10 h-10 rounded-full border border-line bg-subtle items-center justify-center">
+                  <svg viewBox="0 0 16 16" class="w-5 h-5 text-faint" fill="currentColor"><path d="M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784.784 2 1.75 2H3v-1.25A.75.75 0 0 1 3.75 0ZM2.5 7v7.25c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V7ZM2.5 5.5h11v-1.75a.25.25 0 0 0-.25-.25H2.75a.25.25 0 0 0-.25.25Z"/></svg>
+                </div>
+                <h3 class="mt-2.5 text-sm font-semibold text-fg">Nothing scheduled in this window</h3>
+                <p class="text-xs text-muted mt-1 max-w-xs mx-auto">No tasks between <span class="font-mono">7 Oct</span> and <span class="font-mono">5 Jan</span>. 4 tasks exist outside this range.</p>
+                <div class="mt-3 flex items-center justify-center gap-2">
+                  <button class="bg-ok text-white rounded px-3 py-1.5 text-xs font-semibold">Widen to the full year</button>
+                  <button class="border border-line rounded px-3 py-1.5 text-xs font-medium text-fg bg-canvas">Jump to next task</button>
+                </div>
+                <p class="text-[10px] text-faint mt-3">Nearest scheduled task: #40 Seed script · starts 18 Jan</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="error">Error</span><span class="text-xs text-faint">retry</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">/roadmap → 500</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4 flex flex-col" style="min-height:20rem">
+              <div class="opacity-40 mb-3"><span class="text-sm font-semibold text-fg">Project Roadmap</span></div>
+              <div class="flex-1 grid place-items-center">
+                <div class="text-center max-w-[16rem]">
+                  <div class="inline-flex w-10 h-10 rounded-full border border-bad bg-badbg items-center justify-center">
+                    <svg viewBox="0 0 16 16" class="w-5 h-5 text-bad" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                  </div>
+                  <h3 class="mt-2.5 text-sm font-semibold text-fg">Could not load the roadmap</h3>
+                  <p class="text-xs text-muted mt-1">Your scale and range selections are kept — retrying repeats the same query.</p>
+                  <div class="text-[10px] text-faint font-mono mt-2 px-2 py-1 bg-subtle border border-line rounded">ApiError 500 INTERNAL_ERROR</div>
+                  <button class="mt-3 border border-line rounded px-3 py-1.5 text-xs font-medium text-fg bg-canvas inline-block">Retry</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Scale &amp; range selectors</span><span class="text-xs text-faint">week / month / quarter · axis redraws, bars keep their dates</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">scale change → TimeAxis redraw</span><span class="ml-auto">Desktop</span></div>
+        <div class="device-viewport">
+          <div class="grid md:grid-cols-3 gap-4 p-4">
+            <!-- week -->
+            <div class="border border-line rounded-md overflow-hidden">
+              <div class="px-3 py-2 border-b border-line bg-subtle flex items-center gap-2">
+                <span class="text-[10px] font-semibold text-fg">Week scale</span>
+                <span class="ml-auto text-[9px] text-faint">7 Oct – 28 Oct</span>
+              </div>
+              <div class="flex">
+                <div class="w-20 flex-none border-r border-line">
+                  <div class="h-5 border-b border-line"></div>
+                  <div class="h-6 flex items-center px-1.5 bg-subtle border-b border-linesoft"><span class="legend-dot bg-info" style="width:6px;height:6px"></span><span class="text-[9px] font-semibold text-fg ml-1">Doing</span></div>
+                  <div class="h-6 flex items-center px-1.5 border-b border-linesoft"><span class="text-[9px] text-muted truncate">#12 Login</span></div>
+                  <div class="h-6 flex items-center px-1.5"><span class="text-[9px] text-muted truncate">#19 OAuth</span></div>
+                </div>
+                <div class="flex-1 relative">
+                  <div class="h-5 border-b border-line flex">
+                    <div class="flex-1 text-[8px] text-muted pl-0.5 border-r border-linesoft">W41</div>
+                    <div class="flex-1 text-[8px] text-muted pl-0.5 border-r border-linesoft">W42</div>
+                    <div class="flex-1 text-[8px] text-muted pl-0.5 border-r border-linesoft">W43</div>
+                    <div class="flex-1 text-[8px] text-muted pl-0.5">W44</div>
+                  </div>
+                  <div class="h-6 bg-subtle/60 border-b border-linesoft"></div>
+                  <div class="h-6 border-b border-linesoft relative"><div class="absolute top-1 border border-bad rounded overflow-hidden" style="left:1%;width:9%;height:12px"><div class="h-full bg-bad" style="width:40%"></div></div></div>
+                  <div class="h-6 relative"><div class="absolute top-1 border border-info rounded overflow-hidden" style="left:24%;width:16%;height:12px"><div class="h-full bg-info" style="width:45%"></div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- month -->
+            <div class="border border-accent rounded-md overflow-hidden ring-2 ring-accent">
+              <div class="px-3 py-2 border-b border-line bg-blue-50 flex items-center gap-2">
+                <span class="text-[10px] font-semibold text-fg">Month scale</span>
+                <span class="ml-auto text-[9px] text-accent">default</span>
+              </div>
+              <div class="flex">
+                <div class="w-20 flex-none border-r border-line">
+                  <div class="h-5 border-b border-line"></div>
+                  <div class="h-6 flex items-center px-1.5 bg-subtle border-b border-linesoft"><span class="legend-dot bg-info" style="width:6px;height:6px"></span><span class="text-[9px] font-semibold text-fg ml-1">Doing</span></div>
+                  <div class="h-6 flex items-center px-1.5 border-b border-linesoft"><span class="text-[9px] text-muted truncate">#12 Login</span></div>
+                  <div class="h-6 flex items-center px-1.5"><span class="text-[9px] text-muted truncate">#19 OAuth</span></div>
+                </div>
+                <div class="flex-1 relative">
+                  <div class="h-5 border-b border-line flex">
+                    <div class="flex-1 text-[8px] text-muted pl-0.5 border-r border-linesoft">Oct</div>
+                    <div class="flex-1 text-[8px] text-muted pl-0.5 border-r border-linesoft">Nov</div>
+                    <div class="flex-1 text-[8px] text-muted pl-0.5">Dec</div>
+                  </div>
+                  <div class="h-6 bg-subtle/60 border-b border-linesoft"></div>
+                  <div class="h-6 border-b border-linesoft relative"><div class="absolute top-1 border border-bad rounded overflow-hidden" style="left:1%;width:8%;height:12px"><div class="h-full bg-bad" style="width:40%"></div></div></div>
+                  <div class="h-6 relative"><div class="absolute top-1 border border-info rounded overflow-hidden" style="left:20%;width:22%;height:12px"><div class="h-full bg-info" style="width:45%"></div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- quarter -->
+            <div class="border border-line rounded-md overflow-hidden">
+              <div class="px-3 py-2 border-b border-line bg-subtle flex items-center gap-2">
+                <span class="text-[10px] font-semibold text-fg">Quarter scale</span>
+                <span class="ml-auto text-[9px] text-faint">Q4 2026 – Q1 2027</span>
+              </div>
+              <div class="flex">
+                <div class="w-20 flex-none border-r border-line">
+                  <div class="h-5 border-b border-line"></div>
+                  <div class="h-6 flex items-center px-1.5 bg-subtle border-b border-linesoft"><span class="legend-dot bg-info" style="width:6px;height:6px"></span><span class="text-[9px] font-semibold text-fg ml-1">Doing</span></div>
+                  <div class="h-6 flex items-center px-1.5 border-b border-linesoft"><span class="text-[9px] text-muted truncate">#12 Login</span></div>
+                  <div class="h-6 flex items-center px-1.5"><span class="text-[9px] text-muted truncate">#19 OAuth</span></div>
+                </div>
+                <div class="flex-1 relative">
+                  <div class="h-5 border-b border-line flex">
+                    <div class="flex-1 text-[8px] text-muted pl-0.5 border-r border-linesoft">Q4</div>
+                    <div class="flex-1 text-[8px] text-muted pl-0.5">Q1</div>
+                  </div>
+                  <div class="h-6 bg-subtle/60 border-b border-linesoft"></div>
+                  <div class="h-6 border-b border-linesoft relative"><div class="absolute top-1 border border-bad rounded overflow-hidden" style="left:2%;width:5%;height:12px"><div class="h-full bg-bad" style="width:40%"></div></div></div>
+                  <div class="h-6 relative"><div class="absolute top-1 border border-info rounded overflow-hidden" style="left:14%;width:11%;height:12px"><div class="h-full bg-info" style="width:45%"></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="px-4 pb-3">
+            <p class="text-[10px] text-faint font-mono">// changing scale re-renders the axis only — bar left/width come from the same date math, so nothing shifts except the tick density</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">states hold on every device</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas p-3 text-center">
+            <div class="inline-flex w-9 h-9 rounded-full border border-line bg-subtle items-center justify-center">
+              <svg viewBox="0 0 16 16" class="w-4 h-4 text-faint" fill="currentColor"><path d="M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784.784 2 1.75 2H3v-1.25A.75.75 0 0 1 3.75 0ZM2.5 7v7.25c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V7ZM2.5 5.5h11v-1.75a.25.25 0 0 0-.25-.25H2.75a.25.25 0 0 0-.25.25Z"/></svg>
+            </div>
+            <div class="mt-2.5 text-sm font-semibold text-fg">Nothing scheduled</div>
+            <div class="text-[11px] text-muted mt-1">No tasks between 7 Oct and 5 Jan.</div>
+            <div class="mt-3 inline-block bg-ok text-white rounded px-3 py-2 text-xs font-semibold">Widen to the full year</div>
+          </div>
+        </div>
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834 — loading</span></div>
+          <div class="device-screen bg-canvas p-3">
+            <div class="border border-line rounded">
+              <div class="h-6 border-b border-line px-2 flex items-end pb-1"><div class="h-2.5 w-20 rounded skeleton"></div></div>
+              <div class="h-5 bg-subtle border-b border-linesoft px-2 flex items-center"><div class="h-2 w-8 rounded skeleton"></div></div>
+              <div class="p-2 space-y-2">
+                <div class="flex items-center gap-2"><div class="h-2 w-20 rounded skeleton"></div><div class="h-3.5 w-16 rounded skeleton"></div></div>
+                <div class="flex items-center gap-2"><div class="h-2 w-24 rounded skeleton"></div><div class="h-3.5 w-12 rounded skeleton"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-18 ROADMAP BAR VARIANTS                             -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-18" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-18</span>
+      <h2 class="text-lg font-semibold text-fg">Roadmap bar variants</h2>
+      <span class="state-label" data-kind="info">phase-09 §5.1, §6.2, §6.4</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-18</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Roadmap — undated lane, milestone, open-ended, grouping</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/roadmap</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">roadmap → group toggle → bar click → detail</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone</span></span>
+      </span>
+    </div>
+
+    <!-- bar anatomy -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Bar types</span><span class="text-xs text-faint">dated range · milestone diamond · open-ended · clamped at the window edge</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">/roadmap · bar variants</span><span class="ml-auto">Desktop</span></div>
+        <div class="device-viewport">
+          <div class="flex">
+            <div class="w-44 flex-none border-r border-line pr-2">
+              <div class="h-7 border-b border-line"></div>
+              <div class="h-9 flex items-center px-2 border-b border-linesoft"><span class="text-[10px] text-muted">Standard range</span></div>
+              <div class="h-9 flex items-center px-2 border-b border-linesoft"><span class="text-[10px] text-muted">Due date only</span></div>
+              <div class="h-9 flex items-center px-2 border-b border-linesoft"><span class="text-[10px] text-muted">Start date only</span></div>
+              <div class="h-9 flex items-center px-2 border-b border-linesoft"><span class="text-[10px] text-muted">Single-day task</span></div>
+              <div class="h-9 flex items-center px-2 border-b border-linesoft"><span class="text-[10px] text-muted">Before window</span></div>
+              <div class="h-9 flex items-center px-2"><span class="text-[10px] text-muted">After window</span></div>
+
+              <div class="h-7 flex items-center px-2 border-b border-linesoft border-t-2 border-t-line bg-insert" style="background:#f6f8fa">
+                <span class="text-[10px] font-semibold text-fg">Undated</span>
+                <span class="ml-auto text-[9px] font-mono text-warn bg-warnbg border border-warn rounded px-1">4</span>
+              </div>
+              <div class="h-9 flex items-center px-2 border-b border-linesoft"><span class="text-[10px] text-muted truncate">#44 Spike: offline mode</span></div>
+              <div class="h-9 flex items-center px-2 border-b border-linesoft"><span class="text-[10px] text-muted truncate">#46 Evaluate pgvector</span></div>
+              <div class="h-9 flex items-center px-2 border-b border-linesoft"><span class="text-[10px] text-muted truncate">#49 Tidy up dead code</span></div>
+              <div class="h-9 flex items-center px-2"><span class="text-[10px] text-muted truncate">#52 Research i18n</span></div>
+            </div>
+
+            <div class="flex-1 relative overflow-hidden">
+              <div class="h-7 border-b border-line flex items-end">
+                <div class="flex-1 text-[10px] font-semibold text-muted pl-1 pb-1">Oct</div>
+                <div class="flex-1 text-[10px] font-semibold text-muted pl-1 pb-1 border-l border-linesoft">Nov</div>
+                <div class="flex-1 text-[10px] font-semibold text-muted pl-1 pb-1 border-l border-linesoft">Dec</div>
+              </div>
+
+              <!-- standard range -->
+              <div class="h-9 border-b border-linesoft relative">
+                <div class="absolute top-2 border border-info rounded overflow-hidden" style="left:14%; width:28%; height:20px"><div class="h-full bg-info" style="width:50%"></div></div>
+                <div class="absolute top-[9px] text-[9px] text-muted" style="left:43%">start → due</div>
+              </div>
+
+              <!-- milestone diamond (due only) -->
+              <div class="h-9 border-b border-linesoft relative">
+                <div class="absolute top-[13px]" style="left:22%">
+                  <svg width="16" height="16" viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" transform="rotate(45 8 8)" fill="#fbefff" stroke="#8250df" stroke-width="1.5"/></svg>
+                </div>
+                <div class="absolute top-[9px] text-[9px] text-muted" style="left:26%">milestone · due only</div>
+              </div>
+
+              <!-- open-ended -->
+              <div class="h-9 border-b border-linesoft relative">
+                <div class="absolute top-2 border border-dashed border-faint rounded-r-none" style="left:36%; width:63%; height:20px"></div>
+                <div class="absolute top-2" style="left:99%"><svg width="8" height="20" viewBox="0 0 8 20"><path d="M0 0 L8 10 L0 20 Z" fill="transparent" stroke="#6e7781" stroke-width="1.5" stroke-dasharray="3 2"/></svg></div>
+                <div class="absolute top-[9px] text-[9px] text-muted" style="left:40%">no due date · runs to the window edge</div>
+              </div>
+
+              <!-- single day at minWidth -->
+              <div class="h-9 border-b border-linesoft relative">
+                <div class="absolute top-2 border border-info rounded overflow-hidden" style="left:52%; width:2%; min-width:10px; height:20px"><div class="h-full bg-info" style="width:45%"></div></div>
+                <div class="absolute top-[9px] text-[9px] text-muted" style="left:57%">one day · clamped to minWidth so it stays clickable</div>
+              </div>
+
+              <!-- before window -->
+              <div class="h-9 border-b border-linesoft relative">
+                <div class="absolute top-2 border border-faint rounded opacity-50" style="left:0; width:4%; height:20px"></div>
+                <div class="absolute top-[9px] text-[9px] text-faint" style="left:5.5%">clamped to the left edge</div>
+              </div>
+
+              <!-- after window -->
+              <div class="h-9 relative">
+                <div class="absolute top-2 border border-faint rounded opacity-50" style="left:96%; width:4%; height:20px"></div>
+                <div class="absolute top-[9px] text-[9px] text-faint" style="right:5%">clamped right</div>
+              </div>
+
+              <!-- undated lane -->
+              <div class="h-9 border-b border-linesoft bg-warnbg/40"></div>
+              <div class="px-3 py-2.5 border-b border-linesoft">
+                <div class="flex items-center gap-1.5">
+                  <span class="legend-dot bg-faint" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] text-fg font-medium">#44 Spike: offline mode</span>
+                  <span class="text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1.5">Unscheduled</span>
+                </div>
+              </div>
+              <div class="px-3 py-2.5 border-b border-linesoft">
+                <div class="flex items-center gap-1.5">
+                  <span class="legend-dot bg-info" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] text-fg font-medium">#46 Evaluate pgvector</span>
+                  <span class="text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1.5">Unscheduled</span>
+                </div>
+              </div>
+              <div class="px-3 py-2.5 border-b border-linesoft">
+                <div class="flex items-center gap-1.5">
+                  <span class="legend-dot bg-faint" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] text-fg font-medium">#49 Tidy up dead code</span>
+                  <span class="text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1.5">Unscheduled</span>
+                </div>
+              </div>
+              <div class="px-3 py-2.5">
+                <div class="flex items-center gap-1.5">
+                  <span class="legend-dot bg-faint" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] text-fg font-medium">#52 Research i18n</span>
+                  <span class="text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1.5">Unscheduled</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="px-4 py-3 border-t border-line bg-subtle">
+            <div class="border border-warn rounded bg-warnbg px-3 py-2 flex items-start gap-2">
+              <svg viewBox="0 0 16 16" class="w-4 h-4 text-warn mt-0.5 flex-none" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Zm0 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.75 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 6.75 4Zm0 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>
+              <div class="text-[11px] text-warn">
+                <span class="font-semibold">4 tasks have no dates.</span>
+                <div class="mt-0.5">They are shown in the Undated lane rather than hidden — silently dropping work is worse than showing it awkwardly, and the count is itself useful project information.</div>
+                <div class="mt-1.5 flex gap-1.5">
+                  <span class="border border-warn rounded px-2 py-0.5 bg-canvas font-medium">Schedule these</span>
+                  <span class="border border-warn rounded px-2 py-0.5 bg-canvas">Open task detail</span>
+                </div>
+              </div>
+            </div>
+            <p class="text-[10px] text-faint font-mono mt-2">// date-only values are parsed as local dates — a task due 2026-10-15 renders on 15 October, not the 14th in a negative-offset timezone</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- grouping -->
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Group toggle</span><span class="text-xs text-faint">by status · priority · assignee · flat</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">group menu open</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="text-sm font-semibold text-fg">Project Roadmap</span>
+                <div class="relative ml-auto">
+                  <button class="flex items-center gap-1.5 border border-accent rounded px-2 py-1 text-[10px] text-fg bg-canvas">
+                    Group: Status
+                    <svg viewBox="0 0 16 16" class="w-2.5 h-2.5 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+                  </button>
+                  <div class="absolute right-0 top-full mt-1 w-36 border border-line rounded bg-canvas shadow-lg overflow-hidden z-10">
+                    <div class="px-2.5 py-1.5 flex items-center gap-2 bg-blue-50 text-accent">
+                      <svg viewBox="0 0 16 16" class="w-3 h-3" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                      <span class="text-[10px] font-semibold">Status</span>
+                    </div>
+                    <div class="px-2.5 py-1.5 flex items-center gap-2 hover:bg-subtle"><span class="w-3 h-3"></span><span class="text-[10px] text-fg">Priority</span></div>
+                    <div class="px-2.5 py-1.5 flex items-center gap-2 hover:bg-subtle"><span class="w-3 h-3"></span><span class="text-[10px] text-fg">Assignee</span><span class="ml-auto text-[9px] text-faint">single assignee</span></div>
+                    <div class="px-2.5 py-1.5 flex items-center gap-2 hover:bg-subtle"><span class="w-3 h-3"></span><span class="text-[10px] text-fg">Flat</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="border border-line rounded overflow-hidden text-[10px]">
+                <div class="flex bg-subtle border-b border-line">
+                  <span class="w-32 px-2 py-1.5 font-semibold text-fg">Group by status</span>
+                  <span class="flex-1 px-2 py-1.5 font-semibold text-fg border-l border-linesoft">Oct</span>
+                  <span class="flex-1 px-2 py-1.5 font-semibold text-fg border-l border-linesoft">Nov</span>
+                  <span class="flex-1 px-2 py-1.5 font-semibold text-fg border-l border-linesoft">Dec</span>
+                </div>
+                <div class="flex border-b border-linesoft items-center">
+                  <span class="w-32 px-2 py-1.5 text-muted flex items-center gap-1.5"><span class="legend-dot bg-faint" style="width:6px;height:6px"></span>Todo</span>
+                  <span class="flex-1 px-2 py-1.5 border-l border-linesoft relative"><span class="absolute top-1.5 left-1 border border-dashed border-faint rounded" style="width:36%;height:12px"></span></span>
+                  <span class="flex-1 px-2 py-1.5 border-l border-linesoft relative"><span class="absolute top-1.5 left-1 border border-dashed border-faint rounded" style="width:44%;height:12px"></span></span>
+                  <span class="flex-1 px-2 py-1.5 border-l border-linesoft"></span>
+                </div>
+                <div class="flex border-b border-linesoft items-center">
+                  <span class="w-32 px-2 py-1.5 text-muted flex items-center gap-1.5"><span class="legend-dot bg-info" style="width:6px;height:6px"></span>In progress</span>
+                  <span class="flex-1 px-2 py-1.5 border-l border-linesoft relative"><span class="absolute top-1.5 left-1 border border-info rounded overflow-hidden" style="width:22%;height:12px"><span class="block h-full bg-info" style="width:45%"></span></span></span>
+                  <span class="flex-1 px-2 py-1.5 border-l border-linesoft relative"><span class="absolute top-1.5 left-1 border border-info rounded overflow-hidden" style="width:34%;height:12px"><span class="block h-full bg-info" style="width:60%"></span></span></span>
+                  <span class="flex-1 px-2 py-1.5 border-l border-linesoft"></span>
+                </div>
+                <div class="flex items-center">
+                  <span class="w-32 px-2 py-1.5 text-muted flex items-center gap-1.5"><span class="legend-dot bg-ok" style="width:6px;height:6px"></span>Done</span>
+                  <span class="flex-1 px-2 py-1.5 border-l border-linesoft relative"><span class="absolute top-1.5 left-1 bg-ok rounded opacity-80" style="width:18%;height:12px"></span></span>
+                  <span class="flex-1 px-2 py-1.5 border-l border-linesoft"></span>
+                  <span class="flex-1 px-2 py-1.5 border-l border-linesoft"></span>
+                </div>
+              </div>
+              <p class="text-[10px] text-faint font-mono mt-2">// grouping happens at render time via the query's select — no duplicate cache entry</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="success">Persisted across views</span><span class="text-xs text-faint">a board move does not force a roadmap re-layout</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">cache keys side by side</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4 space-y-3">
+              <div class="grid md:grid-cols-2 gap-3">
+                <div class="border border-line rounded-md overflow-hidden">
+                  <div class="px-3 py-2 border-b border-line bg-subtle text-[10px] font-semibold text-fg">Board query key</div>
+                  <div class="px-3 py-2 font-mono text-[10px] text-muted leading-relaxed break-all">
+                    ['tasks', { q: '',<br />
+                    status: ['TODO','IN_PROGRESS','DONE'],<br />
+                    page: 1, pageSize: 100,<br />
+                    sortBy: 'createdAt', sortOrder: 'asc' }]
+                  </div>
+                  <div class="px-3 py-2 bg-subtle border-t border-line text-[10px] text-muted">dragging a card invalidates this — and only this</div>
+                </div>
+                <div class="border border-accent rounded-md overflow-hidden ring-2 ring-accent">
+                  <div class="px-3 py-2 border-b border-line bg-blue-50 text-[10px] font-semibold text-fg">Roadmap query key</div>
+                  <div class="px-3 py-2 font-mono text-[10px] text-muted leading-relaxed break-all">
+                    ['tasks', { q: '',<br />
+                    status: ['TODO','IN_PROGRESS','DONE'],<br />
+                    page: 1, pageSize: 100,<br />
+                    sortBy: 'startDate', sortOrder: 'asc' }]
+                  </div>
+                  <div class="px-3 py-2 bg-blue-50 border-t border-line text-[10px] text-muted">sortBy differs → the two caches invalidate independently</div>
+                </div>
+              </div>
+              <div class="border border-line rounded-md p-3 bg-subtle">
+                <div class="text-[10px] font-semibold text-fg mb-1.5">Same underlying rows, different views</div>
+                <ul class="text-[10px] text-muted space-y-1 list-disc pl-4">
+                  <li>A card dropped on the board updates the board immediately.</li>
+                  <li>The roadmap re-reads its own key only when its sort differs — no full re-layout, no stale axis.</li>
+                  <li>Switching back to the board shows the moved card in its new column, because the board's key was the one invalidated.</li>
+                </ul>
+              </div>
+              <div class="border border-line rounded-md p-3">
+                <div class="text-[10px] font-semibold text-fg mb-1.5">Performance budget</div>
+                <div class="flex items-center gap-3">
+                  <span class="text-[10px] text-muted w-24">200 tasks</span>
+                  <div class="flex-1 h-3 bg-inset rounded overflow-hidden"><div class="h-full bg-ok" style="width:38%"></div></div>
+                  <span class="text-[10px] font-semibold text-fg w-12 text-right">0.4s</span>
+                </div>
+                <div class="flex items-center gap-3 mt-1.5">
+                  <span class="text-[10px] text-muted w-24">target</span>
+                  <div class="flex-1 h-3 bg-inset rounded overflow-hidden"><div class="h-full bg-line" style="width:50%"></div></div>
+                  <span class="text-[10px] text-faint w-12 text-right">&lt; 1s</span>
+                </div>
+                <p class="text-[10px] text-faint font-mono mt-1.5">// CSS absolute positioning, percentage left/width — no charting library</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">Undated lane on Phone</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas p-3">
+            <div class="border border-warn rounded bg-warnbg px-2.5 py-2 mb-2">
+              <div class="text-[10px] text-warn font-semibold flex items-center gap-1.5">
+                <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Zm0 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.75 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 6.75 4Zm0 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>
+                4 tasks have no dates
+              </div>
+            </div>
+            <div class="text-[9px] font-semibold text-fg uppercase tracking-wide mb-1">Undated lane</div>
+            <div class="space-y-1.5">
+              <div class="border border-line rounded p-2">
+                <div class="text-[10px] text-fg font-medium">#44 Spike: offline mode</div>
+                <div class="mt-1 inline-block text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1.5">Unscheduled</div>
+              </div>
+              <div class="border border-line rounded p-2">
+                <div class="text-[10px] text-fg font-medium">#46 Evaluate pgvector</div>
+                <div class="mt-1 inline-block text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1.5">Unscheduled</div>
+              </div>
+              <div class="border border-line rounded p-2">
+                <div class="text-[10px] text-fg font-medium">#49 Tidy up dead code</div>
+                <div class="mt-1 inline-block text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1.5">Unscheduled</div>
+              </div>
+              <div class="border border-line rounded p-2">
+                <div class="text-[10px] text-fg font-medium">#52 Research i18n</div>
+                <div class="mt-1 inline-block text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1.5">Unscheduled</div>
+              </div>
+            </div>
+            <div class="mt-2 text-center border border-warn rounded py-1.5 text-[10px] text-warn font-medium bg-canvas">Schedule these</div>
+          </div>
+        </div>
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834 — milestone + open-ended</span></div>
+          <div class="device-screen bg-canvas p-3">
+            <div class="border border-line rounded overflow-hidden">
+              <div class="px-2 py-1.5 border-b border-line bg-subtle text-[10px] font-semibold text-fg">Bar types</div>
+              <div class="divide-y divide-linesoft">
+                <div class="px-2.5 py-2 relative">
+                  <div class="text-[9px] text-muted">#21 Write API docs</div>
+                  <div class="mt-1 relative h-3 border-b border-linesoft">
+                    <div class="absolute top-0 border border-info rounded overflow-hidden" style="left:10%;width:24%;height:11px"><div class="h-full bg-info" style="width:45%"></div></div>
+                  </div>
+                </div>
+                <div class="px-2.5 py-2 relative">
+                  <div class="text-[9px] text-muted">#28 Release milestone</div>
+                  <div class="mt-1 relative h-3 border-b border-linesoft">
+                    <svg class="absolute top-0" width="12" height="12" viewBox="0 0 16 16" style="left:44%"><rect x="4" y="4" width="8" height="8" transform="rotate(45 8 8)" fill="#fbefff" stroke="#8250df" stroke-width="1.5"/></svg>
+                  </div>
+                </div>
+                <div class="px-2.5 py-2 relative">
+                  <div class="text-[9px] text-muted">#25 Add sitemap generation <span class="text-warn">(no due date)</span></div>
+                  <div class="mt-1 relative h-3 border-b border-linesoft">
+                    <div class="absolute top-0 border border-dashed border-faint" style="left:52%;width:47%;height:11px"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-line bg-subtle mt-10 no-print">
+  <div class="mx-auto max-w-7xl px-5 py-4 text-xs text-faint">
+    Roadmap · SC-16 – SC-18 · static mockup, not the implementation.
+  </div>
+</footer>
+
+</body>
+</html>

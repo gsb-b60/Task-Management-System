@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kanban Board — UI Mockups</title>
+<link rel="stylesheet" href="../assets/mockup.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: {
+    colors: {
+      canvas:'#ffffff', subtle:'#f6f8fa', inset:'#eff2f5', fg:'#24292f', muted:'#57606a',
+      faint:'#6e7781', line:'#d0d7de', linesoft:'#d8dee4', accent:'#0969da',
+      ok:'#1a7f37', okbg:'#dafbe1', bad:'#cf222e', badbg:'#ffebe9', warn:'#9a6700',
+      warnbg:'#fff8c5', info:'#8250df', infobg:'#fbefff',
+    },
+    fontFamily: { sans:['-apple-system','BlinkMacSystemFont','Segoe UI','Noto Sans','Helvetica','Arial','sans-serif'],
+                   mono:['ui-monospace','SFMono-Regular','SF Mono','Menlo','Consolas','monospace'] },
+  } } };
+</script>
+</head>
+<body class="min-h-screen">
+
+<header class="border-b border-line bg-canvas no-print">
+  <div class="mx-auto max-w-7xl px-5 py-3 flex items-center gap-3">
+    <a href="../index.html" class="w-6 h-6 rounded-full border border-line bg-subtle flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></a>
+    <div class="leading-tight">
+      <h1 class="text-[15px] font-semibold text-fg">Kanban Board</h1>
+      <p class="text-xs text-faint">SC-13 – SC-15 · drag, optimistic update, rollback, keyboard parity</p>
+    </div>
+  </div>
+  <nav class="gallery-nav border-t border-line bg-subtle">
+    <div class="mx-auto max-w-7xl px-5 py-1.5 flex flex-wrap gap-1">
+      <a href="../index.html">Index</a>
+      <a href="auth.html">Auth &amp; Shell</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="tasks.html">Tasks &amp; Detail</a>
+      <a href="board.html" aria-current="page">Board</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="projects.html">Projects</a>
+      <a href="github.html">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main class="mx-auto max-w-7xl px-5 py-8 space-y-12">
+
+  <div class="border border-line rounded-lg p-3 flex flex-wrap items-center gap-1.5 text-xs">
+    <span class="meta-key mr-1">Flow</span>
+    <a class="border border-line rounded px-2 py-1" href="tasks.html#sc-09">/tasks</a>
+    <span class="text-faint">→</span>
+    <span class="border border-accent rounded px-2 py-1 bg-blue-50 text-accent font-semibold">/board</span>
+    <span class="text-faint">→</span>
+    <span class="border border-line rounded px-2 py-1" href="tasks.html#sc-12">/tasks/:id (click a card)</span>
+    <span class="text-faint ml-1">· one paginated fetch for all three columns, grouped client-side — never three requests</span>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-13 BOARD                                            -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-13" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-13</span>
+      <h2 class="text-lg font-semibold text-fg">Kanban board</h2>
+      <span class="state-label" data-kind="info">srs.md §9.1 · phase-07 §4 · FR-21, FR-22</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-13</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Board — three columns, counts, cards</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/board?projectId=a13b…</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">task list → board → task detail</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop 1440</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet 834</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone 390</span></span>
+      </span>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Default</span><span class="text-xs text-faint">counts from the query; columns scroll independently</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/board?projectId=a13b</span><span class="ml-auto">Desktop · 1440</span></div>
+        <div class="device-viewport">
+
+          <div class="app-topbar">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full border border-line bg-subtle"></span>
+              <span class="text-[13px] font-semibold text-fg">Task Stream</span>
+            </div>
+            <div class="ml-3 flex items-center gap-1.5 border border-line rounded-md pl-2 pr-1.5 py-1 bg-canvas">
+              <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+              <span class="text-xs text-fg font-medium">Portfolio Website</span>
+              <svg viewBox="0 0 16 16" class="w-3 h-3 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+            </div>
+            <nav class="ml-6 flex items-center gap-1 text-xs">
+              <a class="px-2.5 py-1.5 rounded-md text-muted" href="dashboard.html">Dashboard</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted" href="tasks.html">Tasks</a>
+              <a class="px-2.5 py-1.5 rounded-md font-semibold text-fg bg-inset">Board</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted" href="roadmap.html">Roadmap</a>
+            </nav>
+            <div class="ml-auto flex items-center gap-2">
+              <div class="flex border border-line rounded-md overflow-hidden">
+                <button class="px-2.5 py-1 text-[11px] font-semibold bg-inset text-fg">Board</button>
+                <button class="px-2.5 py-1 text-[11px] text-muted bg-canvas border-l border-line">Roadmap</button>
+              </div>
+              <button class="bg-ok text-white rounded-md px-3 py-1.5 text-xs font-semibold">+ New task</button>
+            </div>
+          </div>
+
+          <div class="bg-subtle p-3">
+            <div class="flex items-center gap-2 mb-2.5">
+              <h2 class="text-sm font-semibold text-fg">Board · Portfolio Website</h2>
+              <span class="text-[10px] font-mono text-faint bg-canvas border border-line rounded px-1.5 py-0.5">status=TODO,IN_PROGRESS,DONE · pageSize=100</span>
+              <span class="ml-auto text-[10px] text-faint">137 tasks · one request</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+
+              <!-- TODO -->
+              <div class="border border-line rounded-md bg-canvas overflow-hidden">
+                <div class="px-3 py-2 border-b border-line bg-subtle flex items-center gap-2">
+                  <span class="legend-dot bg-faint" style="width:8px;height:8px"></span>
+                  <span class="text-xs font-semibold text-fg">Todo</span>
+                  <span class="ml-auto text-[10px] font-mono text-muted bg-canvas border border-line rounded px-1.5 py-0.5">37</span>
+                </div>
+                <div class="board-col-scroll p-2 space-y-2 bg-canvas">
+                  <!-- card -->
+                  <div class="border border-line rounded-md p-2.5 hover:border-muted cursor-pointer bg-canvas">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[10px] text-faint">#21</span>
+                      <span class="ml-auto inline-flex items-center gap-1 border border-line rounded-full bg-subtle text-muted text-[9px] font-semibold px-1.5 py-0.5">Low</span>
+                    </div>
+                    <div class="text-xs text-fg font-medium mt-1 leading-snug">Write API docs</div>
+                    <div class="flex items-center gap-2 mt-2 text-[10px] text-faint">
+                      <span class="flex items-center gap-1">
+                        <svg viewBox="0 0 16 16" class="w-3 h-3" fill="currentColor"><path d="M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784.784 2 1.75 2H3v-1.25A.75.75 0 0 1 3.75 0ZM2.5 7v7.25c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V7ZM2.5 5.5h11v-1.75a.25.25 0 0 0-.25-.25H2.75a.25.25 0 0 0-.25.25Z"/></svg>
+                        in 5 days
+                      </span>
+                      <span class="ml-auto flex items-center gap-1">
+                        <svg viewBox="0 0 16 16" class="w-3 h-3" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Z"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="border border-line rounded-md p-2.5 hover:border-muted cursor-pointer bg-canvas">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[10px] text-faint">#22</span>
+                      <span class="ml-auto inline-flex items-center gap-1 border border-warn rounded-full bg-warnbg text-warn text-[9px] font-semibold px-1.5 py-0.5">Medium</span>
+                    </div>
+                    <div class="text-xs text-fg font-medium mt-1 leading-snug">Redesign the settings page for mobile</div>
+                    <div class="flex items-center gap-2 mt-2 text-[10px] text-faint">
+                      <span class="flex items-center gap-1"><svg viewBox="0 0 16 16" class="w-3 h-3" fill="currentColor"><path d="M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784.784 2 1.75 2H3v-1.25A.75.75 0 0 1 3.75 0ZM2.5 7v7.25c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V7ZM2.5 5.5h11v-1.75a.25.25 0 0 0-.25-.25H2.75a.25.25 0 0 0-.25.25Z"/></svg>in 11 days</span>
+                    </div>
+                  </div>
+                  <div class="border border-line rounded-md p-2.5 hover:border-muted cursor-pointer bg-canvas">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[10px] text-faint">#23</span>
+                      <span class="ml-auto inline-flex items-center gap-1 border border-bad rounded-full bg-badbg text-bad text-[9px] font-semibold px-1.5 py-0.5">High</span>
+                    </div>
+                    <div class="text-xs text-fg font-medium mt-1 leading-snug">Fix flaky deployment webhook</div>
+                    <div class="flex items-center gap-2 mt-2 text-[10px] text-bad font-semibold">
+                      <span class="flex items-center gap-1">
+                        <svg viewBox="0 0 16 16" class="w-3 h-3" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                        overdue by 1 day
+                      </span>
+                    </div>
+                  </div>
+                  <div class="border border-line rounded-md p-2.5 hover:border-muted cursor-pointer bg-canvas">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[10px] text-faint">#25</span>
+                      <span class="ml-auto inline-flex items-center gap-1 border border-line rounded-full bg-subtle text-muted text-[9px] font-semibold px-1.5 py-0.5">Low</span>
+                    </div>
+                    <div class="text-xs text-fg font-medium mt-1 leading-snug">Add sitemap generation</div>
+                  </div>
+                  <div class="border border-dashed border-line rounded-md p-2.5 text-center text-[10px] text-faint">
+                    + 33 more
+                  </div>
+                </div>
+              </div>
+
+              <!-- IN PROGRESS -->
+              <div class="border border-line rounded-md bg-canvas overflow-hidden">
+                <div class="px-3 py-2 border-b border-line bg-subtle flex items-center gap-2">
+                  <span class="legend-dot bg-info" style="width:8px;height:8px"></span>
+                  <span class="text-xs font-semibold text-fg">In progress</span>
+                  <span class="ml-auto text-[10px] font-mono text-muted bg-canvas border border-line rounded px-1.5 py-0.5">52</span>
+                </div>
+                <div class="board-col-scroll p-2 space-y-2 bg-canvas">
+                  <div class="border border-line rounded-md p-2.5 hover:border-muted cursor-pointer bg-canvas">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[10px] text-faint">#12</span>
+                      <span class="ml-auto inline-flex items-center gap-1 border border-bad rounded-full bg-badbg text-bad text-[9px] font-semibold px-1.5 py-0.5">High</span>
+                    </div>
+                    <div class="text-xs text-fg font-medium mt-1 leading-snug">Fix login redirect</div>
+                    <div class="flex items-center gap-2 mt-2 text-[10px] text-bad font-semibold">
+                      <span class="flex items-center gap-1"><svg viewBox="0 0 16 16" class="w-3 h-3" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>overdue by 2 days</span>
+                    </div>
+                  </div>
+                  <div class="border border-line rounded-md p-2.5 hover:border-muted cursor-pointer bg-canvas">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[10px] text-faint">#18</span>
+                      <span class="ml-auto inline-flex items-center gap-1 border border-warn rounded-full bg-warnbg text-warn text-[9px] font-semibold px-1.5 py-0.5">Medium</span>
+                    </div>
+                    <div class="text-xs text-fg font-medium mt-1 leading-snug">Deploy staging</div>
+                    <div class="flex items-center gap-2 mt-2 text-[10px] text-warn font-semibold">
+                      <span class="flex items-center gap-1"><svg viewBox="0 0 16 16" class="w-3 h-3" fill="currentColor"><path d="M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784.784 2 1.75 2H3v-1.25A.75.75 0 0 1 3.75 0ZM2.5 7v7.25c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V7ZM2.5 5.5h11v-1.75a.25.25 0 0 0-.25-.25H2.75a.25.25 0 0 0-.25.25Z"/></svg>due today</span>
+                    </div>
+                  </div>
+                  <div class="border border-line rounded-md p-2.5 hover:border-muted cursor-pointer bg-canvas">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[10px] text-faint">#19</span>
+                      <span class="ml-auto inline-flex items-center gap-1 border border-warn rounded-full bg-warnbg text-warn text-[9px] font-semibold px-1.5 py-0.5">Medium</span>
+                    </div>
+                    <div class="text-xs text-fg font-medium mt-1 leading-snug">Implement OAuth callback route</div>
+                    <div class="flex items-center gap-2 mt-2 text-[10px] text-faint">
+                      <span class="flex items-center gap-1"><svg viewBox="0 0 16 16" class="w-3 h-3" fill="currentColor"><path d="M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784.784 2 1.75 2H3v-1.25A.75.75 0 0 1 3.75 0ZM2.5 7v7.25c0 .138.112.25.25.25h10.5a.25.25 0 0 0.25-.25V7ZM2.5 5.5h11v-1.75a.25.25 0 0 0-.25-.25H2.75a.25.25 0 0 0-.25.25Z"/></svg>in 3 days</span>
+                      <span class="ml-auto flex items-center gap-1">
+                        <svg viewBox="0 0 16 16" class="w-3 h-3" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Z"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="border border-dashed border-line rounded-md p-2.5 text-center text-[10px] text-faint">+ 49 more</div>
+                </div>
+              </div>
+
+              <!-- DONE -->
+              <div class="border border-line rounded-md bg-canvas overflow-hidden">
+                <div class="px-3 py-2 border-b border-line bg-subtle flex items-center gap-2">
+                  <span class="legend-dot bg-ok" style="width:8px;height:8px"></span>
+                  <span class="text-xs font-semibold text-fg">Done</span>
+                  <span class="ml-auto text-[10px] font-mono text-muted bg-canvas border border-line rounded px-1.5 py-0.5">48</span>
+                </div>
+                <div class="board-col-scroll p-2 space-y-2 bg-canvas">
+                  <div class="border border-line rounded-md p-2.5 opacity-70 hover:opacity-100 cursor-pointer bg-canvas">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[10px] text-faint">#24</span>
+                      <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-ok ml-1" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                      <span class="ml-auto inline-flex items-center gap-1 border border-line rounded-full bg-subtle text-muted text-[9px] font-semibold px-1.5 py-0.5">Low</span>
+                    </div>
+                    <div class="text-xs text-muted font-medium mt-1 leading-snug line-through">Refactor auth</div>
+                    <div class="flex items-center gap-2 mt-2 text-[10px] text-faint">
+                      <span class="flex items-center gap-1"><svg viewBox="0 0 16 16" class="w-3 h-3" fill="currentColor"><path d="M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784.784 2 1.75 2H3v-1.25A.75.75 0 0 1 3.75 0ZM2.5 7v7.25c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V7ZM2.5 5.5h11v-1.75a.25.25 0 0 0-.25-.25H2.75a.25.25 0 0 0-.25.25Z"/></svg>in 9 days</span>
+                    </div>
+                  </div>
+                  <div class="border border-line rounded-md p-2.5 opacity-70 hover:opacity-100 cursor-pointer bg-canvas">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[10px] text-faint">#15</span>
+                      <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-ok ml-1" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                      <span class="ml-auto inline-flex items-center gap-1 border border-line rounded-full bg-subtle text-muted text-[9px] font-semibold px-1.5 py-0.5">Low</span>
+                    </div>
+                    <div class="text-xs text-muted font-medium mt-1 leading-snug line-through">Set up the database</div>
+                  </div>
+                  <div class="border border-dashed border-line rounded-md p-2.5 text-center text-[10px] text-faint">+ 46 more</div>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-[10px] text-faint font-mono mt-2.5">
+              // one request: GET /api/tasks?status=TODO,IN_PROGRESS,DONE&amp;pageSize=100&amp;sortBy=createdAt&amp;sortOrder=asc — grouping happens client-side so counts stay consistent
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- responsive -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">3 columns → 2 → horizontally-snapping single column</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834 — two columns + peek</span></div>
+          <div class="device-screen bg-subtle">
+            <div class="app-topbar bg-canvas">
+              <span class="text-[11px] font-semibold text-fg">Board</span>
+              <span class="ml-auto border border-line rounded px-1.5 py-0.5 text-[9px] text-fg flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Portfolio ▾</span>
+            </div>
+            <div class="p-2.5 grid grid-cols-2 gap-2.5">
+              <div class="border border-line rounded bg-canvas overflow-hidden">
+                <div class="px-2 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                  <span class="legend-dot bg-faint" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] font-semibold text-fg">Todo</span>
+                  <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">37</span>
+                </div>
+                <div class="p-1.5 space-y-1.5">
+                  <div class="border border-line rounded p-1.5">
+                    <div class="flex items-center"><span class="font-mono text-[9px] text-faint">#21</span><span class="ml-auto text-[9px] border border-line rounded-full bg-subtle text-muted font-semibold px-1">Low</span></div>
+                    <div class="text-[10px] text-fg font-medium mt-0.5 leading-snug">Write API docs</div>
+                    <div class="text-[9px] text-faint mt-1">in 5 days</div>
+                  </div>
+                  <div class="border border-line rounded p-1.5">
+                    <div class="flex items-center"><span class="font-mono text-[9px] text-faint">#23</span><span class="ml-auto text-[9px] border border-bad rounded-full bg-badbg text-bad font-semibold px-1">High</span></div>
+                    <div class="text-[10px] text-fg font-medium mt-0.5 leading-snug">Fix flaky deployment webhook</div>
+                    <div class="text-[9px] text-bad font-semibold mt-1">overdue 1d</div>
+                  </div>
+                  <div class="border border-dashed border-line rounded p-1.5 text-center text-[9px] text-faint">+ 35 more</div>
+                </div>
+              </div>
+              <div class="border border-line rounded bg-canvas overflow-hidden">
+                <div class="px-2 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                  <span class="legend-dot bg-info" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] font-semibold text-fg">In progress</span>
+                  <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">52</span>
+                </div>
+                <div class="p-1.5 space-y-1.5">
+                  <div class="border border-line rounded p-1.5">
+                    <div class="flex items-center"><span class="font-mono text-[9px] text-faint">#12</span><span class="ml-auto text-[9px] border border-bad rounded-full bg-badbg text-bad font-semibold px-1">High</span></div>
+                    <div class="text-[10px] text-fg font-medium mt-0.5 leading-snug">Fix login redirect</div>
+                    <div class="text-[9px] text-bad font-semibold mt-1">overdue 2d</div>
+                  </div>
+                  <div class="border border-line rounded p-1.5">
+                    <div class="flex items-center"><span class="font-mono text-[9px] text-faint">#18</span><span class="ml-auto text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1">Med</span></div>
+                    <div class="text-[10px] text-fg font-medium mt-0.5 leading-snug">Deploy staging</div>
+                    <div class="text-[9px] text-warn font-semibold mt-1">today</div>
+                  </div>
+                  <div class="border border-dashed border-line rounded p-1.5 text-center text-[9px] text-faint">+ 50 more</div>
+                </div>
+              </div>
+            </div>
+            <div class="px-2.5 pb-2.5 -mx-0.5 flex gap-2 overflow-hidden">
+              <div class="border border-line rounded bg-canvas px-2.5 py-1.5 flex items-center gap-1.5 flex-none">
+                <span class="legend-dot bg-ok" style="width:7px;height:7px"></span>
+                <span class="text-[10px] font-semibold text-fg">Done</span>
+                <span class="text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">48</span>
+                <svg viewBox="0 0 16 16" class="w-3 h-3 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-subtle">
+            <div class="app-topbar bg-canvas">
+              <svg viewBox="0 0 16 16" class="w-4 h-4 text-muted" fill="currentColor"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"/></svg>
+              <span class="text-[11px] font-semibold text-fg">Board</span>
+              <span class="ml-auto bg-ok text-white rounded px-2 py-1 text-[9px] font-semibold">+ New</span>
+            </div>
+            <!-- column switcher -->
+            <div class="flex border-b border-line bg-canvas text-[10px]">
+              <span class="flex-1 py-2 text-center border-b-2 border-accent font-semibold text-fg">Todo<span class="ml-1 text-faint">37</span></span>
+              <span class="flex-1 py-2 text-center border-b-2 border-transparent text-muted">Doing<span class="ml-1 text-faint">52</span></span>
+              <span class="flex-1 py-2 text-center border-b-2 border-transparent text-muted">Done<span class="ml-1 text-faint">48</span></span>
+            </div>
+            <div class="p-2.5 space-y-1.5">
+              <div class="border border-line rounded bg-canvas p-2">
+                <div class="flex items-center"><span class="font-mono text-[9px] text-faint">#21</span><span class="ml-auto text-[9px] border border-line rounded-full bg-subtle text-muted font-semibold px-1.5">Low</span></div>
+                <div class="text-[11px] text-fg font-medium mt-0.5">Write API docs</div>
+                <div class="flex items-center gap-1.5 mt-1.5">
+                  <span class="text-[9px] text-faint">in 5 days</span>
+                  <span class="ml-auto border border-line rounded px-1.5 py-0.5 text-[9px] text-fg">Todo ▾</span>
+                </div>
+              </div>
+              <div class="border border-line rounded bg-canvas p-2">
+                <div class="flex items-center"><span class="font-mono text-[9px] text-faint">#22</span><span class="ml-auto text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1.5">Medium</span></div>
+                <div class="text-[11px] text-fg font-medium mt-0.5">Redesign the settings page for mobile</div>
+                <div class="flex items-center gap-1.5 mt-1.5">
+                  <span class="text-[9px] text-faint">in 11 days</span>
+                  <span class="ml-auto border border-line rounded px-1.5 py-0.5 text-[9px] text-fg">Todo ▾</span>
+                </div>
+              </div>
+              <div class="border border-line rounded bg-canvas p-2">
+                <div class="flex items-center"><span class="font-mono text-[9px] text-faint">#23</span><span class="ml-auto text-[9px] border border-bad rounded-full bg-badbg text-bad font-semibold px-1.5">High</span></div>
+                <div class="text-[11px] text-fg font-medium mt-0.5">Fix flaky deployment webhook</div>
+                <div class="flex items-center gap-1.5 mt-1.5">
+                  <span class="text-[9px] text-bad font-semibold">overdue 1d</span>
+                  <span class="ml-auto border border-line rounded px-1.5 py-0.5 text-[9px] text-fg">Todo ▾</span>
+                </div>
+              </div>
+              <div class="border border-dashed border-line rounded p-2 text-center text-[9px] text-faint">+ 34 more</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-14 BOARD MOVE & ROLLBACK                            -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-14" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-14</span>
+      <h2 class="text-lg font-semibold text-fg">Board move &amp; rollback</h2>
+      <span class="state-label" data-kind="info">phase-07 §6 — srs §9.3 no silent state loss</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-14</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Board — dragging, in-flight, rollback, truncation, empty column</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/board</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">drop → PATCH → refetch (2xx keep · error restore)</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone</span></span>
+      </span>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-4">
+
+      <!-- dragging -->
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Dragging</span><span class="text-xs text-faint">card lifts immediately; source slot shows a placeholder</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">pointer beyond 8px threshold</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="grid grid-cols-3 gap-2 p-3 bg-subtle">
+              <div class="border border-line rounded bg-canvas overflow-hidden">
+                <div class="px-2 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                  <span class="legend-dot bg-faint" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] font-semibold text-fg">Todo</span>
+                  <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">37</span>
+                </div>
+                <div class="p-1.5 space-y-1.5">
+                  <!-- placeholder -->
+                  <div class="border-2 border-dashed border-accent rounded h-[4.5rem] grid-dots"></div>
+                  <div class="border border-line rounded p-1.5">
+                    <div class="font-mono text-[9px] text-faint">#22</div>
+                    <div class="text-[10px] text-fg font-medium mt-0.5">Redesign settings page</div>
+                  </div>
+                </div>
+              </div>
+              <div class="border border-accent rounded bg-canvas overflow-hidden ring-2 ring-accent">
+                <div class="px-2 py-1.5 border-b border-line bg-blue-50 flex items-center gap-1.5">
+                  <span class="legend-dot bg-info" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] font-semibold text-fg">In progress</span>
+                  <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">52</span>
+                </div>
+                <div class="p-1.5 space-y-1.5">
+                  <div class="border border-line rounded p-1.5">
+                    <div class="flex items-center"><span class="font-mono text-[9px] text-faint">#12</span><span class="ml-auto text-[9px] border border-bad rounded-full bg-badbg text-bad font-semibold px-1">High</span></div>
+                    <div class="text-[10px] text-fg font-medium mt-0.5">Fix login redirect</div>
+                  </div>
+                  <!-- drop indicator -->
+                  <div class="border-2 border-accent rounded h-16 bg-blue-50/60 grid place-items-center">
+                    <span class="text-[9px] font-semibold text-accent">Drop here</span>
+                  </div>
+                  <div class="border border-line rounded p-1.5">
+                    <div class="font-mono text-[9px] text-faint">#19</div>
+                    <div class="text-[10px] text-fg font-medium mt-0.5">Implement OAuth callback</div>
+                  </div>
+                </div>
+              </div>
+              <div class="border border-line rounded bg-canvas overflow-hidden opacity-60">
+                <div class="px-2 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                  <span class="legend-dot bg-ok" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] font-semibold text-fg">Done</span>
+                  <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">48</span>
+                </div>
+              </div>
+            </div>
+            <!-- drag overlay -->
+            <div class="px-3 pb-3 bg-subtle">
+              <div class="text-[10px] text-faint font-mono mb-1">drag overlay follows the pointer, rotated 3°, shadowed</div>
+              <div class="relative h-0">
+                <div class="absolute left-1/3 -top-14 w-40 border border-accent rounded-md p-2 bg-canvas shadow-2xl rotate-3">
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-mono text-[9px] text-faint">#21</span>
+                    <span class="ml-auto text-[9px] border border-line rounded-full bg-subtle text-muted font-semibold px-1">Low</span>
+                  </div>
+                  <div class="text-[10px] text-fg font-medium mt-0.5">Write API docs</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- in flight -->
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Dropped — PATCH in flight</span><span class="text-xs text-faint">card already moved; no spinner blocks the board</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">PATCH /api/tasks/21 → pending</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-3 bg-subtle">
+              <div class="mb-2 border border-accent rounded bg-blue-50 px-2.5 py-1.5 flex items-center gap-2">
+                <svg class="w-3 h-3 animate-spin" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#0969da" stroke-opacity=".3" stroke-width="2"/><path d="M14 8a6 6 0 0 0-6-6" stroke="#0969da" stroke-width="2" stroke-linecap="round"/></svg>
+                <span class="text-[10px] text-accent font-medium">Moving "Write API docs" to In progress…</span>
+                <span class="ml-auto text-[9px] font-mono text-accent/70">onMutate → patched</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2">
+                <div class="border border-line rounded bg-canvas overflow-hidden">
+                  <div class="px-2 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                    <span class="legend-dot bg-faint" style="width:7px;height:7px"></span><span class="text-[10px] font-semibold text-fg">Todo</span>
+                    <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">36</span>
+                  </div>
+                  <div class="p-1.5"><div class="border border-line rounded p-1.5"><div class="font-mono text-[9px] text-faint">#22</div><div class="text-[10px] text-fg font-medium mt-0.5">Redesign settings page</div></div></div>
+                </div>
+                <div class="border border-accent rounded bg-canvas overflow-hidden">
+                  <div class="px-2 py-1.5 border-b border-line bg-blue-50 flex items-center gap-1.5">
+                    <span class="legend-dot bg-info" style="width:7px;height:7px"></span><span class="text-[10px] font-semibold text-fg">In progress</span>
+                    <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">53</span>
+                  </div>
+                  <div class="p-1.5 space-y-1.5">
+                    <div class="border border-line rounded p-1.5 opacity-60">
+                      <div class="font-mono text-[9px] text-faint">#21</div><div class="text-[10px] text-muted font-medium mt-0.5">Write API docs</div>
+                      <div class="text-[9px] text-faint mt-0.5">pending…</div>
+                    </div>
+                    <div class="border border-line rounded p-1.5"><div class="font-mono text-[9px] text-faint">#12</div><div class="text-[10px] text-fg font-medium mt-0.5">Fix login redirect</div></div>
+                  </div>
+                </div>
+                <div class="border border-line rounded bg-canvas overflow-hidden">
+                  <div class="px-2 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                    <span class="legend-dot bg-ok" style="width:7px;height:7px"></span><span class="text-[10px] font-semibold text-fg">Done</span>
+                    <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">48</span>
+                  </div>
+                </div>
+              </div>
+              <p class="text-[10px] text-faint font-mono mt-2">// counts already reflect the move; the PATCH is fire-and-await, not blocking</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- rollback -->
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="error">Rollback — PATCH failed</span><span class="text-xs text-faint">exact previous column restored, plus a toast naming the failure</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">PATCH /api/tasks/21 → 500</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-3 bg-subtle">
+              <!-- error toast -->
+              <div class="mb-2.5 border border-bad rounded bg-badbg px-3 py-2.5 flex items-start gap-2">
+                <svg viewBox="0 0 16 16" class="w-4 h-4 text-bad mt-0.5 flex-none" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                <div class="flex-1">
+                  <div class="text-xs font-semibold text-bad">Could not move "Write API docs"</div>
+                  <div class="text-[11px] text-bad/90">It was returned to <span class="font-semibold">Todo</span>. Something went wrong on our end.</div>
+                  <div class="text-[10px] font-mono text-bad/80 mt-0.5">ApiError 500 INTERNAL_ERROR · card restored from its own snapshot</div>
+                </div>
+                <span class="text-[10px] font-mono text-bad/70">Undo</span>
+              </div>
+
+              <div class="grid grid-cols-3 gap-2">
+                <div class="border border-accent rounded bg-canvas overflow-hidden ring-2 ring-accent">
+                  <div class="px-2 py-1.5 border-b border-line bg-blue-50 flex items-center gap-1.5">
+                    <span class="legend-dot bg-faint" style="width:7px;height:7px"></span><span class="text-[10px] font-semibold text-fg">Todo</span>
+                    <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">37</span>
+                  </div>
+                  <div class="p-1.5 space-y-1.5">
+                    <!-- restored card, back at its exact prior index -->
+                    <div class="border border-bad rounded p-1.5 bg-badbg/30">
+                      <div class="flex items-center"><span class="font-mono text-[9px] text-faint">#21</span><span class="ml-auto text-[9px] border border-line rounded-full bg-subtle text-muted font-semibold px-1">Low</span></div>
+                      <div class="text-[10px] text-fg font-medium mt-0.5">Write API docs</div>
+                      <div class="text-[9px] text-bad font-semibold mt-1 flex items-center gap-1">
+                        <svg viewBox="0 0 16 16" class="w-2.5 h-2.5" fill="currentColor"><path d="M8 2.5a5.5 5.5 0 1 0 5.24 3.83.75.75 0 1 1 1.427-.55 7 7 0 1 1-6.667-4.83v1.62l3.03-2.24a.75.75 0 0 1 .94 1.163l-4.25 3.5a.75.75 0 0 1-1.06 0l-4.25-3.5A.75.75 0 0 1 6.5 1.98Z"/></svg>
+                        move failed — restored
+                      </div>
+                    </div>
+                    <div class="border border-line rounded p-1.5"><div class="font-mono text-[9px] text-faint">#22</div><div class="text-[10px] text-fg font-medium mt-0.5">Redesign settings page</div></div>
+                  </div>
+                </div>
+                <div class="border border-line rounded bg-canvas overflow-hidden">
+                  <div class="px-2 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                    <span class="legend-dot bg-info" style="width:7px;height:7px"></span><span class="text-[10px] font-semibold text-fg">In progress</span>
+                    <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">52</span>
+                  </div>
+                  <div class="p-1.5"><div class="border border-line rounded p-1.5"><div class="font-mono text-[9px] text-faint">#12</div><div class="text-[10px] text-fg font-medium mt-0.5">Fix login redirect</div></div></div>
+                </div>
+                <div class="border border-line rounded bg-canvas overflow-hidden">
+                  <div class="px-2 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                    <span class="legend-dot bg-ok" style="width:7px;height:7px"></span><span class="text-[10px] font-semibold text-fg">Done</span>
+                    <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">48</span>
+                  </div>
+                </div>
+              </div>
+              <p class="text-[10px] text-faint font-mono mt-2">// the rollback also invalidates, so a refetch can never resurrect the wrong column — the snapshot is per-mutation, so overlapping drops do not cross-contaminate</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- truncation + empty column -->
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="empty">Truncation &amp; empty column</span><span class="text-xs text-faint">the header shows the true total; truncation is visible, never silent</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">pageSize=100 · column has 137</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-3 bg-subtle">
+              <div class="mb-2.5 border border-warn rounded bg-warnbg px-2.5 py-2 flex items-start gap-2">
+                <svg viewBox="0 0 16 16" class="w-4 h-4 text-warn mt-0.5 flex-none" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                <div class="text-[11px] text-warn">
+                  <span class="font-semibold">Showing the first 100 of 137 tasks.</span>
+                  <div class="mt-0.5">Load more, or narrow the board with a filter — the count above stays 137 either way.</div>
+                  <div class="mt-1.5 flex gap-1.5">
+                    <span class="border border-warn rounded px-2 py-0.5 bg-canvas font-medium">Load 37 more</span>
+                    <span class="border border-warn rounded px-2 py-0.5 bg-canvas">Filter to this project</span>
+                  </div>
+                </div>
+              </div>
+              <div class="grid grid-cols-3 gap-2">
+                <div class="border border-line rounded bg-canvas overflow-hidden">
+                  <div class="px-2 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                    <span class="legend-dot bg-faint" style="width:7px;height:7px"></span><span class="text-[10px] font-semibold text-fg">Todo</span>
+                    <span class="ml-auto text-[9px] font-mono font-semibold text-warn bg-warnbg border border-warn rounded px-1">137</span>
+                  </div>
+                  <div class="p-1.5 space-y-1.5">
+                    <div class="border border-line rounded p-1.5"><div class="font-mono text-[9px] text-faint">#21</div><div class="text-[10px] text-fg font-medium mt-0.5">Write API docs</div></div>
+                    <div class="border border-dashed border-line rounded p-1.5 text-center text-[9px] text-faint">100 of 137 loaded</div>
+                  </div>
+                </div>
+                <div class="border border-line rounded bg-canvas overflow-hidden border-dashed">
+                  <div class="px-2 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                    <span class="legend-dot bg-info" style="width:7px;height:7px"></span><span class="text-[10px] font-semibold text-fg">In progress</span>
+                    <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">0</span>
+                  </div>
+                  <div class="p-1.5 grid place-items-center text-center py-6">
+                    <div class="w-7 h-7 rounded-full border border-line bg-subtle grid place-items-center">
+                      <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-faint" fill="currentColor"><path d="M8 2a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 8 2Z"/></svg>
+                    </div>
+                    <div class="text-[10px] text-fg font-semibold mt-1.5">Nothing in progress</div>
+                    <div class="text-[9px] text-faint mt-0.5">Drop a card here</div>
+                  </div>
+                </div>
+                <div class="border border-line rounded bg-canvas overflow-hidden border-dashed">
+                  <div class="px-2 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                    <span class="legend-dot bg-ok" style="width:7px;height:7px"></span><span class="text-[10px] font-semibold text-fg">Done</span>
+                    <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">0</span>
+                  </div>
+                  <div class="p-1.5 grid place-items-center text-center py-6">
+                    <div class="w-7 h-7 rounded-full border border-line bg-subtle grid place-items-center">
+                      <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                    </div>
+                    <div class="text-[10px] text-fg font-semibold mt-1.5">Nothing completed yet</div>
+                    <div class="text-[9px] text-faint mt-0.5">Drop a card here</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label" data-kind="success">After success — refetched</span><span class="text-xs text-faint">a refresh proves persistence; no manual reload of the page</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">PATCH 200 → invalidate ['tasks'] + ['dashboard']</span><span class="ml-auto">Desktop</span></div>
+        <div class="device-viewport">
+          <div class="p-3">
+            <div class="mb-2.5 border border-ok rounded bg-okbg px-2.5 py-2 flex items-center gap-2">
+              <svg viewBox="0 0 16 16" class="w-4 h-4 text-ok flex-none" fill="currentColor"><path fill-rule="evenodd" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"/></svg>
+              <span class="text-[11px] text-ok font-medium">"Write API docs" moved to In progress. Dashboard counts refreshed.</span>
+              <span class="ml-auto text-[10px] font-mono text-ok/70">2xx</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-[10px]">
+              <div class="border border-line rounded p-2 bg-canvas"><div class="text-faint">Todo</div><div class="text-lg font-semibold text-fg">36</div></div>
+              <div class="border border-accent rounded p-2 bg-canvas ring-2 ring-accent"><div class="text-faint">In progress</div><div class="text-lg font-semibold text-fg">53</div></div>
+              <div class="border border-line rounded p-2 bg-canvas"><div class="text-faint">Done</div><div class="text-lg font-semibold text-fg">48</div></div>
+            </div>
+            <div class="mt-2.5 border border-line rounded p-2.5 bg-subtle font-mono text-[10px] text-faint leading-relaxed">
+              1. user drops card on "In progress"<br>
+              2. card moves locally — instant feedback<br>
+              3. PATCH /api/tasks/21 { status: 'IN_PROGRESS' }<br>
+              4a. 2xx → keep, invalidate ['tasks'] + ['dashboard']<br>
+              4b. error → restore from the snapshot, toast, invalidate
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">drag is disabled on touch — the status control is the path</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-subtle">
+            <div class="app-topbar bg-canvas">
+              <svg viewBox="0 0 16 16" class="w-4 h-4 text-muted" fill="currentColor"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"/></svg>
+              <span class="text-[11px] font-semibold text-fg">Board</span>
+            </div>
+            <div class="flex border-b border-line bg-canvas text-[10px]">
+              <span class="flex-1 py-2 text-center border-b-2 border-accent font-semibold text-fg">Todo<span class="ml-1 text-faint">37</span></span>
+              <span class="flex-1 py-2 text-center border-b-2 border-transparent text-muted">Doing<span class="ml-1 text-faint">52</span></span>
+              <span class="flex-1 py-2 text-center border-b-2 border-transparent text-muted">Done<span class="ml-1 text-faint">48</span></span>
+            </div>
+            <div class="px-2.5 py-1.5 bg-warnbg border-b border-warn">
+              <div class="text-[9px] text-warn font-semibold">Drag is unavailable on touch</div>
+              <div class="text-[9px] text-warn/90 mt-0.5">Use the status control on each card — it runs the same mutation.</div>
+            </div>
+            <div class="p-2.5 space-y-1.5">
+              <div class="border border-line rounded bg-canvas p-2">
+                <div class="flex items-center"><span class="font-mono text-[9px] text-faint">#21</span><span class="ml-auto text-[9px] border border-line rounded-full bg-subtle text-muted font-semibold px-1.5">Low</span></div>
+                <div class="text-[11px] text-fg font-medium mt-0.5">Write API docs</div>
+                <div class="mt-1.5 border border-line rounded bg-canvas px-2 py-1.5 text-[10px] text-fg flex items-center gap-1.5">
+                  <span class="legend-dot bg-faint" style="width:7px;height:7px"></span>Todo
+                  <svg viewBox="0 0 16 16" class="w-3 h-3 ml-auto text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834 — empty column drop target</span></div>
+          <div class="device-screen bg-subtle p-2.5 grid grid-cols-2 gap-2">
+            <div class="border border-dashed border-accent rounded bg-canvas p-3 grid place-items-center text-center">
+              <span class="legend-dot bg-info" style="width:8px;height:8px"></span>
+              <div class="text-[10px] font-semibold text-fg mt-1">In progress · 0</div>
+              <div class="text-[9px] text-faint mt-0.5">Drop a card here</div>
+              <div class="border border-accent rounded px-2 py-1 text-[9px] text-accent mt-2 bg-blue-50">Drop here</div>
+            </div>
+            <div class="border border-dashed border-line rounded bg-canvas p-3 grid place-items-center text-center">
+              <span class="legend-dot bg-ok" style="width:8px;height:8px"></span>
+              <div class="text-[10px] font-semibold text-fg mt-1">Done · 0</div>
+              <div class="text-[9px] text-faint mt-0.5">Drop a card here</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-15 BOARD KEYBOARD PATH                              -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-15" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-15</span>
+      <h2 class="text-lg font-semibold text-fg">Board keyboard path</h2>
+      <span class="state-label" data-kind="info">phase-07 §7 — a11y parity</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-15</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Board — focus, status control, accessible names</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/board</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">focus card → status control → same mutation &amp; optimistic path</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone</span></span>
+      </span>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Card focused — status control open</span><span class="text-xs text-faint">no pointer required at any step</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">Tab → card #12 → Enter → status menu</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-3 bg-subtle">
+              <div class="max-w-xs mx-auto border border-line rounded bg-canvas overflow-hidden">
+                <div class="px-2.5 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                  <span class="legend-dot bg-info" style="width:7px;height:7px"></span>
+                  <span class="text-[10px] font-semibold text-fg">In progress</span>
+                  <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">52</span>
+                </div>
+                <div class="p-2">
+                  <!-- focused card -->
+                  <div class="border-2 border-accent rounded-md p-2.5 bg-canvas" tabindex="0" role="button" aria-label="Fix login redirect, in progress, priority High, due 2 days overdue">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[10px] text-faint">#12</span>
+                      <span class="ml-auto inline-flex items-center gap-1 border border-bad rounded-full bg-badbg text-bad text-[9px] font-semibold px-1.5 py-0.5">High</span>
+                    </div>
+                    <div class="text-xs text-fg font-medium mt-1">Fix login redirect</div>
+                    <div class="text-[10px] text-bad font-semibold mt-1.5">overdue by 2 days</div>
+
+                    <!-- status control -->
+                    <div class="mt-2 relative">
+                      <div class="flex items-center gap-1.5 border border-accent rounded bg-canvas px-2 py-1.5 text-[10px] text-fg" role="combobox" aria-expanded="true" aria-haspopup="listbox" tabindex="0">
+                        <svg viewBox="0 0 16 16" class="w-3 h-3 text-accent" fill="currentColor"><path d="M8 2a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 8 2Z"/></svg>
+                        Change status
+                        <span class="ml-auto text-[9px] font-mono text-faint">▾</span>
+                      </div>
+                      <div class="absolute left-0 right-0 top-full mt-0.5 border border-line rounded bg-canvas shadow-lg z-10" role="listbox">
+                        <div class="px-2.5 py-1.5 flex items-center gap-1.5 hover:bg-subtle" role="option" aria-selected="false">
+                          <span class="legend-dot bg-faint" style="width:7px;height:7px"></span><span class="text-[10px] text-fg">Todo</span>
+                        </div>
+                        <div class="px-2.5 py-1.5 flex items-center gap-1.5 bg-blue-50 text-accent" role="option" aria-selected="true">
+                          <svg viewBox="0 0 16 16" class="w-3 h-3 text-accent" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                          <span class="text-[10px] font-semibold">In progress</span>
+                          <span class="ml-auto text-[9px] font-mono text-accent/70">current</span>
+                        </div>
+                        <div class="px-2.5 py-1.5 flex items-center gap-1.5 hover:bg-subtle" role="option" aria-selected="false">
+                          <span class="legend-dot bg-ok" style="width:7px;height:7px"></span><span class="text-[10px] text-fg">Done</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="text-[10px] text-faint font-mono mt-2.5 text-center">// choosing an option runs the identical optimistic mutation as a drop</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label">Accessible names &amp; announcements</span><span class="text-xs text-faint">a screen reader says title + status, priority, overdue</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">aria / screen-reader output</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4 space-y-3">
+              <div class="border border-line rounded-md p-3">
+                <div class="text-[10px] font-semibold text-fg uppercase mb-2">Screen-reader announcement</div>
+                <div class="border border-line rounded bg-subtle px-3 py-2 text-[11px] text-muted font-mono leading-relaxed">
+                  "Fix login redirect, in progress, priority High, due 2 days overdue, card"
+                </div>
+                <p class="text-[10px] text-faint mt-1.5">Priority and overdue are stated in words — the red tint is not the only signal.</p>
+              </div>
+
+              <div class="border border-line rounded-md overflow-hidden">
+                <div class="px-3 py-2 border-b border-line bg-subtle text-[10px] font-semibold text-fg">Keyboard interactions</div>
+                <table class="w-full text-[11px]">
+                  <tbody class="divide-y divide-linesoft">
+                    <tr><td class="px-3 py-2 font-mono text-fg w-24">Tab</td><td class="px-3 py-2 text-muted">move between cards and controls</td></tr>
+                    <tr><td class="px-3 py-2 font-mono text-fg">Enter</td><td class="px-3 py-2 text-muted">open the card, or activate the focused control</td></tr>
+                    <tr><td class="px-3 py-2 font-mono text-fg">Space</td><td class="px-3 py-2 text-muted">toggle the status listbox</td></tr>
+                    <tr><td class="px-3 py-2 font-mono text-fg">↑ ↓</td><td class="px-3 py-2 text-muted">move between the three statuses</td></tr>
+                    <tr><td class="px-3 py-2 font-mono text-fg">Esc</td><td class="px-3 py-2 text-muted">close without changing anything</td></tr>
+                    <tr><td class="px-3 py-2 font-mono text-fg">Dnd-kit</td><td class="px-3 py-2 text-muted">Space to lift · arrows to move · Space to drop · Esc to cancel</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="border border-line rounded-md p-3">
+                <div class="text-[10px] font-semibold text-fg uppercase mb-2">Drag &amp; click do not fight</div>
+                <div class="flex items-center gap-2 text-[11px]">
+                  <span class="border border-line rounded px-2 py-1 font-mono text-fg bg-canvas">pointer down</span>
+                  <span class="text-faint">→</span>
+                  <span class="border border-line rounded px-2 py-1 font-mono text-fg bg-canvas">&lt; 8px movement</span>
+                  <span class="text-faint">→</span>
+                  <span class="border border-accent rounded px-2 py-1 font-mono text-accent bg-blue-50">click → opens detail</span>
+                </div>
+                <div class="flex items-center gap-2 text-[11px] mt-1.5">
+                  <span class="border border-line rounded px-2 py-1 font-mono text-fg bg-canvas">pointer down</span>
+                  <span class="text-faint">→</span>
+                  <span class="border border-line rounded px-2 py-1 font-mono text-fg bg-canvas">&gt; 8px movement</span>
+                  <span class="text-faint">→</span>
+                  <span class="border border-accent rounded px-2 py-1 font-mono text-accent bg-blue-50">drag → no navigation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">the same control is present on every device — the focus ring is never removed</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834</span></div>
+          <div class="device-screen bg-subtle p-3">
+            <div class="max-w-[14rem] mx-auto">
+              <div class="border-2 border-accent rounded-md p-2.5 bg-canvas">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-mono text-[9px] text-faint">#12</span>
+                  <span class="ml-auto text-[9px] border border-bad rounded-full bg-badbg text-bad font-semibold px-1">High</span>
+                </div>
+                <div class="text-[11px] text-fg font-medium mt-1">Fix login redirect</div>
+                <div class="text-[10px] text-bad font-semibold mt-1">overdue 2d</div>
+                <div class="mt-2 flex items-center gap-1.5 border border-accent rounded bg-canvas px-2 py-1.5 text-[10px] text-fg">
+                  <svg viewBox="0 0 16 16" class="w-3 h-3 text-accent" fill="currentColor"><path d="M8 2a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 8 2Z"/></svg>
+                  Change status <span class="ml-auto text-faint">▾</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-subtle p-3">
+            <div class="border-2 border-accent rounded-md p-2.5 bg-canvas">
+              <div class="flex items-center gap-1.5">
+                <span class="font-mono text-[9px] text-faint">#12</span>
+                <span class="ml-auto text-[9px] border border-bad rounded-full bg-badbg text-bad font-semibold px-1.5">High</span>
+              </div>
+              <div class="text-[11px] text-fg font-semibold mt-1">Fix login redirect</div>
+              <div class="text-[10px] text-bad font-semibold mt-1">overdue by 2 days</div>
+              <div class="mt-2 border border-accent rounded bg-canvas">
+                <div class="flex items-center gap-1.5 px-2 py-2 text-[10px] text-fg">
+                  <span class="legend-dot bg-info" style="width:7px;height:7px"></span>In progress
+                  <svg viewBox="0 0 16 16" class="w-3 h-3 ml-auto text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+                </div>
+                <div class="border-t border-line px-2 py-2 flex items-center gap-1.5 text-[10px] text-fg">
+                  <span class="legend-dot bg-faint" style="width:7px;height:7px"></span>Todo
+                </div>
+                <div class="border-t border-line px-2 py-2 flex items-center gap-1.5 text-[10px] text-fg">
+                  <span class="legend-dot bg-ok" style="width:7px;height:7px"></span>Done
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-line bg-subtle mt-10 no-print">
+  <div class="mx-auto max-w-7xl px-5 py-4 text-xs text-faint">
+    Kanban Board · SC-13 – SC-15 · static mockup, not the implementation.
+  </div>
+</footer>
+
+</body>
+</html>

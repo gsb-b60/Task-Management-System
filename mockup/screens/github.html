@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GitHub Integration — UI Mockups</title>
+<link rel="stylesheet" href="../assets/mockup.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: {
+    colors: {
+      canvas:'#ffffff', subtle:'#f6f8fa', inset:'#eff2f5', fg:'#24292f', muted:'#57606a',
+      faint:'#6e7781', line:'#d0d7de', linesoft:'#d8dee4', accent:'#0969da',
+      ok:'#1a7f37', okbg:'#dafbe1', bad:'#cf222e', badbg:'#ffebe9', warn:'#9a6700',
+      warnbg:'#fff8c5', info:'#8250df', infobg:'#fbefff',
+    },
+    fontFamily: { sans:['-apple-system','BlinkMacSystemFont','Segoe UI','Noto Sans','Helvetica','Arial','sans-serif'],
+                   mono:['ui-monospace','SFMono-Regular','SF Mono','Menlo','Consolas','monospace'] },
+  } } };
+</script>
+</head>
+<body class="min-h-screen">
+
+<header class="border-b border-line bg-canvas no-print">
+  <div class="mx-auto max-w-7xl px-5 py-3 flex items-center gap-3">
+    <a href="../index.html" class="w-6 h-6 rounded-full border border-line bg-subtle flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></a>
+    <div class="leading-tight">
+      <h1 class="text-[15px] font-semibold text-fg">GitHub Integration</h1>
+      <p class="text-xs text-faint">SC-22 – SC-24 · repositories, issue import, degraded states</p>
+    </div>
+  </div>
+  <nav class="gallery-nav border-t border-line bg-subtle">
+    <div class="mx-auto max-w-7xl px-5 py-1.5 flex flex-wrap gap-1">
+      <a href="../index.html">Index</a>
+      <a href="auth.html">Auth &amp; Shell</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="tasks.html">Tasks &amp; Detail</a>
+      <a href="board.html">Board</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="projects.html">Projects</a>
+      <a href="github.html" aria-current="page">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main class="mx-auto max-w-7xl px-5 py-8 space-y-12">
+
+  <div class="border border-line rounded-lg p-3 flex flex-wrap items-center gap-1.5 text-xs">
+    <span class="meta-key mr-1">Flow</span>
+    <a class="border border-line rounded px-2 py-1" href="projects.html#sc-19">/projects</a>
+    <span class="text-faint">→</span>
+    <span class="border border-accent rounded px-2 py-1 bg-blue-50 text-accent font-semibold">repo picker</span>
+    <span class="text-faint">→</span>
+    <span class="border border-line rounded px-2 py-1">issue import</span>
+    <span class="text-faint">→</span>
+    <a class="border border-line rounded px-2 py-1" href="board.html#sc-13">board card</a>
+    <span class="text-faint ml-1">· imported issues <span class="font-medium text-fg">are</span> local tasks — the board, roadmap and list need no structural change</span>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-22 REPOSITORY PICKER                               -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-22" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-22</span>
+      <h2 class="text-lg font-semibold text-fg">Repository picker</h2>
+      <span class="state-label" data-kind="info">srs.md §10.1 · phase-11 §8.1</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-22</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Repository picker — rows, visibility, link action</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/projects (lower section) · GET /api/github/repositories</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">/projects → repo picker → link → project row gains a repo badge</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop 1440</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet 834</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone 390</span></span>
+      </span>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Default</span><span class="text-xs text-faint">accessibility is verified before listing — an inaccessible repo never appears</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">/projects → GitHub Repositories</span><span class="ml-auto">Desktop · 1440</span></div>
+        <div class="device-viewport">
+          <div class="app-topbar">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full border border-line bg-subtle"></span>
+              <span class="text-[13px] font-semibold text-fg">Task Stream</span>
+            </div>
+            <nav class="ml-6 flex items-center gap-1 text-xs">
+              <span class="px-2.5 py-1.5 rounded-md text-muted">Dashboard</span>
+              <span class="px-2.5 py-1.5 rounded-md text-muted">Tasks</span>
+              <span class="px-2.5 py-1.5 rounded-md text-muted">Board</span>
+              <span class="px-2.5 py-1.5 rounded-md text-muted">Roadmap</span>
+              <span class="px-2.5 py-1.5 rounded-md font-semibold text-fg bg-inset">Projects</span>
+            </nav>
+            <div class="ml-auto flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded-full border border-line">
+              <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+              <span class="text-xs text-ok font-semibold">Connected as dihie</span>
+            </div>
+          </div>
+
+          <div class="p-5">
+            <div class="max-w-3xl">
+              <div class="flex items-center gap-2 mb-3">
+                <h2 class="text-base font-semibold text-fg">GitHub Repositories</h2>
+                <span class="text-[10px] font-mono text-faint bg-subtle border border-line rounded px-1.5 py-0.5">GET /api/github/repositories</span>
+                <button class="ml-auto border border-line rounded px-2.5 py-1.5 text-[11px] font-medium text-fg bg-canvas inline-flex items-center gap-1.5">
+                  <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M8 2.5a5.5 5.5 0 1 0 5.24 3.83.75.75 0 1 1 1.427-.55 7 7 0 1 1-6.667-4.83v1.62l3.03-2.24a.75.75 0 0 1 .94 1.163l-4.25 3.5a.75.75 0 0 1-1.06 0l-4.25-3.5A.75.75 0 0 1 6.5 1.98Z"/></svg>
+                  Refresh
+                </button>
+              </div>
+
+              <!-- rate budget -->
+              <div class="mb-3 border border-line rounded-md bg-subtle px-3 py-2 flex items-center gap-3">
+                <span class="text-[10px] font-semibold text-fg whitespace-nowrap">API budget</span>
+                <div class="flex-1 h-1.5 bg-inset rounded-full overflow-hidden">
+                  <div class="h-full bg-ok" style="width:96%"></div>
+                </div>
+                <span class="text-[10px] text-muted font-mono whitespace-nowrap">4,812 / 5,000</span>
+                <span class="text-[10px] text-faint whitespace-nowrap">resets in 38 min</span>
+              </div>
+
+              <div class="border border-line rounded-md overflow-hidden">
+                <div class="px-3 py-2 border-b border-line bg-subtle flex items-center gap-2">
+                  <span class="text-[10px] font-semibold text-fg">Repository</span>
+                  <span class="ml-auto text-[10px] font-semibold text-fg">Visibility</span>
+                  <span class="text-[10px] font-semibold text-fg w-28 text-right">Last push</span>
+                  <span class="text-[10px] font-semibold text-fg w-32 text-right">Actions</span>
+                </div>
+                <div class="divide-y divide-linesoft text-xs">
+                  <div class="px-3 py-2.5 flex items-center gap-2 hover:bg-subtle">
+                    <svg viewBox="0 0 16 16" class="w-4 h-4 text-faint flex-none" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Z"/></svg>
+                    <span class="text-fg font-medium">dihie/portfolio-site</span>
+                    <span class="ml-auto text-[10px] border border-ok rounded-full bg-okbg text-ok font-semibold px-1.5">public</span>
+                    <span class="text-[10px] text-faint w-28 text-right">2 days ago</span>
+                    <span class="w-32 flex justify-end gap-1.5">
+                      <button class="border border-line rounded px-2 py-1 text-[10px] text-fg bg-canvas">Link</button>
+                      <button class="border border-line rounded px-2 py-1 text-[10px] text-fg bg-canvas">Import issues</button>
+                    </span>
+                  </div>
+                  <div class="px-3 py-2.5 flex items-center gap-2 hover:bg-subtle">
+                    <svg viewBox="0 0 16 16" class="w-4 h-4 text-faint flex-none" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Z"/></svg>
+                    <span class="text-fg font-medium">secobapCoop/handbook</span>
+                    <span class="ml-auto text-[10px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1.5">private</span>
+                    <span class="text-[10px] text-faint w-28 text-right">1 week ago</span>
+                    <span class="w-32 flex justify-end gap-1.5">
+                      <button class="border border-line rounded px-2 py-1 text-[10px] text-fg bg-canvas">Link</button>
+                      <button class="border border-line rounded px-2 py-1 text-[10px] text-fg bg-canvas">Import issues</button>
+                    </span>
+                  </div>
+                  <div class="px-3 py-2.5 flex items-center gap-2 hover:bg-subtle">
+                    <svg viewBox="0 0 16 16" class="w-4 h-4 text-faint flex-none" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Z"/></svg>
+                    <span class="text-fg font-medium">secobapCoop/northwind-app</span>
+                    <span class="ml-auto text-[10px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1.5">private</span>
+                    <span class="text-[10px] text-faint w-28 text-right">3 weeks ago</span>
+                    <span class="w-32 flex justify-end gap-1.5">
+                      <button class="border border-line rounded px-2 py-1 text-[10px] text-fg bg-canvas">Link</button>
+                      <button class="border border-line rounded px-2 py-1 text-[10px] text-fg bg-canvas">Import issues</button>
+                    </span>
+                  </div>
+                  <div class="px-3 py-2.5 flex items-center gap-2 hover:bg-subtle">
+                    <svg viewBox="0 0 16 16" class="w-4 h-4 text-faint flex-none" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Z"/></svg>
+                    <span class="text-fg font-medium">dihie/dotfiles</span>
+                    <span class="ml-auto text-[10px] border border-ok rounded-full bg-okbg text-ok font-semibold px-1.5">public</span>
+                    <span class="text-[10px] text-faint w-28 text-right">5 months ago</span>
+                    <span class="w-32 flex justify-end gap-1.5">
+                      <button class="border border-line rounded px-2 py-1 text-[10px] text-fg bg-canvas">Link</button>
+                      <button class="border border-line rounded px-2 py-1 text-[10px] text-fg bg-canvas">Import issues</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-[10px] text-faint font-mono mt-2">// ['github', 'repositories'] — a distinct cache key, so refreshing this list never invalidates the board</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- link dialog -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Link a repository to a project</span><span class="text-xs text-faint">two paths: link, or import issues directly</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">modal over /projects</span><span class="ml-auto">Desktop</span></div>
+        <div class="device-viewport grid-dots" style="min-height:20rem; padding:2rem">
+          <div class="grid place-items-center">
+            <div class="w-full max-w-sm border border-line rounded-lg bg-canvas shadow-xl overflow-hidden" role="dialog" aria-modal="true">
+              <div class="px-4 py-3 border-b border-line">
+                <h3 class="text-sm font-semibold text-fg">Link dihie/portfolio-site</h3>
+                <p class="text-[11px] text-muted mt-0.5">Linking attaches the repository to a project. It does not import anything.</p>
+              </div>
+              <div class="px-4 py-3 space-y-3">
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Link to project</label>
+                  <div class="border border-accent rounded-md px-3 py-2 text-sm text-fg bg-canvas flex items-center gap-2 ring-2 ring-accent">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-muted" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Z"/></svg>
+                    Portfolio Website
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 ml-auto text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+                  </div>
+                </div>
+                <div class="border border-line rounded bg-subtle px-2.5 py-2">
+                  <div class="text-[10px] font-semibold text-fg mb-1">Or import issues instead</div>
+                  <div class="text-[10px] text-muted">Create local tasks from this repository's open issues. Idempotent — re-importing skips issues already imported.</div>
+                  <button class="mt-1.5 border border-line rounded px-2 py-1 text-[10px] text-fg bg-canvas">Import issues from dihie/portfolio-site</button>
+                </div>
+                <p class="text-[10px] text-faint">Import is reversible per issue (the task can be deleted); unlinking a repository is always available from the project row.</p>
+              </div>
+              <div class="px-4 py-3 bg-subtle border-t border-line flex items-center gap-2">
+                <button class="bg-ok text-white rounded px-4 py-2 text-sm font-semibold">Link repository</button>
+                <button class="border border-line rounded px-3 py-2 text-sm font-medium text-muted bg-canvas">Cancel</button>
+                <span class="ml-auto text-[10px] font-mono text-faint">POST /api/projects/:id/github</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- responsive -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">columns collapse; actions become full-width row footers</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834</span></div>
+          <div class="device-screen bg-canvas">
+            <div class="app-topbar"><span class="text-[11px] font-semibold text-fg">GitHub Repositories</span></div>
+            <div class="p-3">
+              <div class="border border-line rounded bg-subtle px-2.5 py-1.5 flex items-center gap-2 mb-2">
+                <span class="text-[9px] font-semibold text-fg">API</span>
+                <div class="flex-1 h-1 bg-inset rounded-full overflow-hidden"><div class="h-full bg-ok" style="width:96%"></div></div>
+                <span class="text-[9px] font-mono text-muted">4,812/5,000</span>
+              </div>
+              <div class="space-y-2">
+                <div class="border border-line rounded p-2.5">
+                  <div class="text-[11px] text-fg font-medium">dihie/portfolio-site</div>
+                  <div class="flex items-center gap-2 mt-1">
+                    <span class="text-[9px] border border-ok rounded-full bg-okbg text-ok font-semibold px-1">public</span>
+                    <span class="text-[9px] text-faint">2 days ago</span>
+                  </div>
+                  <div class="mt-2 flex gap-1.5">
+                    <div class="flex-1 border border-line rounded py-1 text-[10px] text-fg text-center bg-canvas">Link</div>
+                    <div class="flex-1 border border-line rounded py-1 text-[10px] text-fg text-center bg-canvas">Import issues</div>
+                  </div>
+                </div>
+                <div class="border border-line rounded p-2.5">
+                  <div class="text-[11px] text-fg font-medium">secobapCoop/handbook</div>
+                  <div class="flex items-center gap-2 mt-1">
+                    <span class="text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1">private</span>
+                    <span class="text-[9px] text-faint">1 week ago</span>
+                  </div>
+                  <div class="mt-2 flex gap-1.5">
+                    <div class="flex-1 border border-line rounded py-1 text-[10px] text-fg text-center bg-canvas">Link</div>
+                    <div class="flex-1 border border-line rounded py-1 text-[10px] text-fg text-center bg-canvas">Import issues</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas">
+            <div class="app-topbar">
+              <svg viewBox="0 0 16 16" class="w-4 h-4 text-muted" fill="currentColor"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"/></svg>
+              <span class="text-[11px] font-semibold text-fg">Repositories</span>
+              <span class="ml-auto w-5 h-5 rounded-full bg-inset text-[8px] font-semibold text-muted flex items-center justify-center">AL</span>
+            </div>
+            <div class="p-3">
+              <div class="border border-line rounded bg-subtle px-2.5 py-1.5 mb-2">
+                <div class="flex items-center gap-1.5">
+                  <svg viewBox="0 0 16 16" class="w-3 h-3 text-ok" fill="currentColor"><path fill-rule="evenodd" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"/></svg>
+                  <span class="text-[10px] text-ok font-semibold">Connected as dihie</span>
+                  <span class="ml-auto text-[9px] font-mono text-faint">4,812 left</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="border border-line rounded p-2.5">
+                  <div class="text-[11px] text-fg font-medium truncate">dihie/portfolio-site</div>
+                  <div class="flex items-center gap-1.5 mt-1">
+                    <span class="text-[9px] border border-ok rounded-full bg-okbg text-ok font-semibold px-1">public</span>
+                    <span class="text-[9px] text-faint">2d ago</span>
+                  </div>
+                  <div class="mt-2 flex gap-1.5">
+                    <div class="flex-1 border border-line rounded py-1.5 text-[10px] text-fg text-center bg-canvas">Link</div>
+                    <div class="flex-1 bg-ok text-white rounded py-1.5 text-[10px] font-semibold text-center">Import</div>
+                  </div>
+                </div>
+                <div class="border border-line rounded p-2.5">
+                  <div class="text-[11px] text-fg font-medium truncate">secobapCoop/handbook</div>
+                  <div class="flex items-center gap-1.5 mt-1">
+                    <span class="text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1">private</span>
+                    <span class="text-[9px] text-faint">1w ago</span>
+                  </div>
+                  <div class="mt-2 flex gap-1.5">
+                    <div class="flex-1 border border-line rounded py-1.5 text-[10px] text-fg text-center bg-canvas">Link</div>
+                    <div class="flex-1 bg-ok text-white rounded py-1.5 text-[10px] font-semibold text-center">Import</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-23 REPOSITORY STATES                               -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-23" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-23</span>
+      <h2 class="text-lg font-semibold text-fg">Repository states</h2>
+      <span class="state-label" data-kind="info">phase-11 §7 · srs §15 Reliability</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-23</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Repo picker — loading, not connected, rate limited, degraded</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/projects</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">fetch fails or is throttled → local work keeps working</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone</span></span>
+      </span>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-4">
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Loading</span><span class="text-xs text-faint">row skeletons, refresh button disabled</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">GET /api/github/repositories</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="h-4 w-32 rounded skeleton"></div>
+                <div class="ml-auto h-7 w-24 rounded skeleton"></div>
+              </div>
+              <div class="border border-line rounded-md divide-y divide-linesoft">
+                <div class="px-3 py-2.5 flex items-center gap-3"><div class="h-3.5 w-3.5 rounded-full skeleton skeleton-circle"></div><div class="h-3 w-44 rounded skeleton"></div><div class="ml-auto h-3 w-10 rounded skeleton"></div><div class="h-3 w-16 rounded skeleton"></div></div>
+                <div class="px-3 py-2.5 flex items-center gap-3"><div class="h-3.5 w-3.5 rounded-full skeleton skeleton-circle"></div><div class="h-3 w-52 rounded skeleton"></div><div class="ml-auto h-3 w-10 rounded skeleton"></div><div class="h-3 w-16 rounded skeleton"></div></div>
+                <div class="px-3 py-2.5 flex items-center gap-3"><div class="h-3.5 w-3.5 rounded-full skeleton skeleton-circle"></div><div class="h-3 w-36 rounded skeleton"></div><div class="ml-auto h-3 w-10 rounded skeleton"></div><div class="h-3 w-16 rounded skeleton"></div></div>
+                <div class="px-3 py-2.5 flex items-center gap-3"><div class="h-3.5 w-3.5 rounded-full skeleton skeleton-circle"></div><div class="h-3 w-48 rounded skeleton"></div><div class="ml-auto h-3 w-10 rounded skeleton"></div><div class="h-3 w-16 rounded skeleton"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="empty">GitHub not connected</span><span class="text-xs text-faint">OAuth never completed</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">/projects → 400 GITHUB_NOT_LINKED</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4">
+              <div class="border border-line rounded-md px-5 py-10 text-center">
+                <div class="inline-flex w-11 h-11 rounded-full border border-line bg-subtle items-center justify-center">
+                  <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+                </div>
+                <h3 class="mt-3 text-sm font-semibold text-fg">Connect GitHub to browse your repositories</h3>
+                <p class="text-xs text-muted mt-1 max-w-sm mx-auto">Linking issues as tasks is optional. Everything else in the app works without it — local projects, the board and the roadmap are unaffected.</p>
+                <button class="mt-3 bg-ok text-white rounded px-3.5 py-2 text-xs font-semibold inline-flex items-center gap-2">
+                  <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+                  Connect GitHub
+                </button>
+                <p class="text-[10px] text-faint mt-3">Requests <span class="font-mono">repo</span> · <span class="font-mono">read:user</span> · <span class="font-mono">read:org</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="error">Rate limited</span><span class="text-xs text-faint">cached data still shown, with a notice — never a blank screen</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">403 · x-ratelimit-remaining: 0</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4">
+              <div class="mb-3 border border-warn rounded-md bg-warnbg px-3 py-2.5 flex items-start gap-2">
+                <svg viewBox="0 0 16 16" class="w-4 h-4 text-warn mt-0.5 flex-none" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Zm0 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm.75 3h-1.5v4.5h1.5V4.5Zm0 5.75a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Z"/></svg>
+                <div class="flex-1 text-xs text-warn">
+                  <span class="font-semibold">GitHub's hourly API limit is reached.</span>
+                  <div class="mt-0.5 text-[11px]">Showing the last known repository list. Requests resume in <span class="font-semibold">38 minutes</span>, at 16:04.</div>
+                  <div class="text-[10px] font-mono text-warn/80 mt-0.5">200 OK with a RATE_LIMITED notice — 200, not an error page</div>
+                </div>
+                <span class="text-[10px] font-mono text-warn/70">Refresh</span>
+              </div>
+
+              <div class="opacity-70 border border-line rounded-md divide-y divide-linesoft">
+                <div class="px-3 py-2.5 flex items-center gap-2 text-xs">
+                  <svg viewBox="0 0 16 16" class="w-4 h-4 text-faint flex-none" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Z"/></svg>
+                  <span class="text-fg font-medium">dihie/portfolio-site</span>
+                  <span class="ml-auto text-[10px] border border-line rounded-full bg-subtle text-muted font-semibold px-1.5">stale</span>
+                  <button disabled class="w-32 text-right text-[10px] text-faint">Import issues</button>
+                </div>
+                <div class="px-3 py-2.5 flex items-center gap-2 text-xs">
+                  <svg viewBox="0 0 16 16" class="w-4 h-4 text-faint flex-none" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Z"/></svg>
+                  <span class="text-fg font-medium">secobapCoop/handbook</span>
+                  <span class="ml-auto text-[10px] border border-line rounded-full bg-subtle text-muted font-semibold px-1.5">stale</span>
+                  <button disabled class="w-32 text-right text-[10px] text-faint">Import issues</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="error">GitHub outage — degraded</span><span class="text-xs text-faint">a GitHub failure never crashes the app</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">502 after 2 retries</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4">
+              <div class="border border-bad rounded-md bg-badbg px-3 py-2.5 flex items-start gap-2 mb-3">
+                <svg viewBox="0 0 16 16" class="w-4 h-4 text-bad mt-0.5 flex-none" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                <div class="flex-1 text-xs text-bad">
+                  <span class="font-semibold">Could not reach GitHub.</span>
+                  <div class="mt-0.5 text-[11px] text-bad/90">Two retries with exponential backoff failed. Retried 3 times over 6 seconds.</div>
+                  <div class="text-[10px] font-mono text-bad/80 mt-0.5">502 BAD_GATEWAY · upstream status 503</div>
+                </div>
+                <span class="text-[10px] font-mono text-bad/70">Retry</span>
+              </div>
+
+              <div class="border border-line rounded-md overflow-hidden">
+                <div class="px-3 py-2 border-b border-line bg-subtle text-[10px] font-semibold text-fg">The rest of the app is unaffected</div>
+                <div class="divide-y divide-linesoft text-xs">
+                  <div class="px-3 py-2 flex items-center gap-2">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-ok flex-none" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                    <span class="text-fg">Local projects</span>
+                    <span class="ml-auto text-[10px] text-faint">3 projects, fully usable</span>
+                  </div>
+                  <div class="px-3 py-2 flex items-center gap-2">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-ok flex-none" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                    <span class="text-fg">Task list &amp; detail</span>
+                    <span class="ml-auto text-[10px] text-faint">137 tasks, CRUD unaffected</span>
+                  </div>
+                  <div class="px-3 py-2 flex items-center gap-2">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-ok flex-none" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                    <span class="text-fg">Board &amp; roadmap</span>
+                    <span class="ml-auto text-[10px] text-faint">drag, optimistic rollback intact</span>
+                  </div>
+                  <div class="px-3 py-2 flex items-center gap-2 opacity-60">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-faint flex-none" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                    <span class="text-muted">Repository &amp; issue views</span>
+                    <span class="ml-auto text-[10px] text-faint">temporarily unavailable</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">rate-limit notice on Phone; not-connected on Tablet</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas">
+            <div class="app-topbar">
+              <svg viewBox="0 0 16 16" class="w-4 h-4 text-muted" fill="currentColor"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"/></svg>
+              <span class="text-[11px] font-semibold text-fg">Repositories</span>
+            </div>
+            <div class="p-3">
+              <div class="border border-warn rounded bg-warnbg px-2.5 py-2">
+                <div class="text-[10px] text-warn font-semibold flex items-center gap-1.5">
+                  <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Zm0 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm.75 3h-1.5v4.5h1.5V4.5Zm0 5.75a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Z"/></svg>
+                  API limit reached
+                </div>
+                <div class="text-[10px] text-warn/90 mt-0.5">Showing the last known list. Resumes in 38 min.</div>
+              </div>
+              <div class="mt-2 space-y-1.5 opacity-70">
+                <div class="border border-line rounded p-2">
+                  <div class="text-[10px] text-fg font-medium truncate">dihie/portfolio-site</div>
+                  <div class="text-[9px] text-faint mt-0.5">public · stale</div>
+                </div>
+                <div class="border border-line rounded p-2">
+                  <div class="text-[10px] text-fg font-medium truncate">secobapCoop/handbook</div>
+                  <div class="text-[9px] text-faint mt-0.5">private · stale</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834 — not connected</span></div>
+          <div class="device-screen bg-canvas p-4">
+            <div class="border border-line rounded-md px-5 py-10 text-center">
+              <div class="inline-flex w-10 h-10 rounded-full border border-line bg-subtle items-center justify-center mx-auto">
+                <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+              </div>
+              <div class="mt-2.5 text-sm font-semibold text-fg">Connect GitHub to browse repositories</div>
+              <div class="text-xs text-muted mt-1 max-w-sm mx-auto">Linking issues as tasks is optional. Local projects, the board and the roadmap are unaffected.</div>
+              <div class="mt-3 inline-block bg-ok text-white rounded px-3.5 py-2 text-xs font-semibold">Connect GitHub</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-24 ISSUE IMPORT LIST                               -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-24" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-24</span>
+      <h2 class="text-lg font-semibold text-fg">Issue import list</h2>
+      <span class="state-label" data-kind="info">srs.md §10.3 · phase-11 §8.2, §8.3</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-24</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Issue import — rows, bulk select, idempotency, result card</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/projects → repo → issues · POST /api/projects/:id/import-issues</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">repo → issues → bulk select → import → board card</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop 1440</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet 834</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone 390</span></span>
+      </span>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Default — bulk selection</span><span class="text-xs text-faint">labels, state, author; closed issues shown but not importable by default</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">GET /api/github/repositories/:id/issues?state=open</span><span class="ml-auto">Desktop · 1440</span></div>
+        <div class="device-viewport">
+
+          <div class="app-topbar">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full border border-line bg-subtle"></span>
+              <span class="text-[13px] font-semibold text-fg">Task Stream</span>
+            </div>
+            <nav class="ml-6 flex items-center gap-1 text-xs">
+              <span class="px-2.5 py-1.5 rounded-md text-muted">Dashboard</span>
+              <span class="px-2.5 py-1.5 rounded-md text-muted">Tasks</span>
+              <span class="px-2.5 py-1.5 rounded-md text-muted">Board</span>
+              <span class="px-2.5 py-1.5 rounded-md text-muted">Roadmap</span>
+              <span class="px-2.5 py-1.5 rounded-md font-semibold text-fg bg-inset">Projects</span>
+            </nav>
+            <div class="ml-auto text-[11px] font-mono text-faint border border-line rounded px-2 py-1 bg-subtle">['github', 'issues', { githubId, state, labels }]</div>
+          </div>
+
+          <div class="p-5">
+            <div class="max-w-4xl">
+              <!-- breadcrumbs -->
+              <div class="flex items-center gap-1.5 text-[11px] mb-2">
+                <span class="text-faint font-mono">/projects</span>
+                <span class="text-faint">›</span>
+                <span class="text-faint font-mono">dihie/portfolio-site</span>
+                <span class="text-faint">›</span>
+                <span class="text-fg font-medium">Issues</span>
+              </div>
+
+              <div class="flex items-center gap-2 mb-3">
+                <h2 class="text-base font-semibold text-fg">Issues · dihie/portfolio-site</h2>
+                <span class="text-[10px] text-muted">into <span class="font-medium text-fg">Portfolio Website</span></span>
+
+                <!-- filters -->
+                <div class="ml-auto flex items-center gap-2">
+                  <div class="flex border border-line rounded overflow-hidden">
+                    <button class="px-2.5 py-1 text-[11px] font-semibold text-fg bg-inset">Open</button>
+                    <button class="px-2.5 py-1 text-[11px] text-muted bg-canvas border-l border-line">Closed</button>
+                    <button class="px-2.5 py-1 text-[11px] text-muted bg-canvas border-l border-line">All</button>
+                  </div>
+                  <button class="flex items-center gap-1.5 border border-line rounded px-2 py-1 text-[11px] text-fg bg-canvas">
+                    Labels
+                    <svg viewBox="0 0 16 16" class="w-2.5 h-2.5 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- bulk action bar (selection active) -->
+              <div class="mb-2 border border-accent rounded-md bg-blue-50 px-3 py-2 flex items-center gap-2">
+                <span class="checkbox" data-checked="false"></span>
+                <span class="text-[11px] text-accent font-medium">3 selected</span>
+                <button class="border border-accent rounded px-2 py-1 text-[10px] text-accent bg-canvas font-medium ml-2">Select all 18</button>
+                <button class="border border-accent rounded px-2 py-1 text-[10px] text-accent bg-canvas">Clear</button>
+                <div class="ml-auto flex items-center gap-2">
+                  <span class="text-[10px] font-mono text-accent/70">POST /api/projects/a13b7c…/import-issues</span>
+                  <button class="bg-ok text-white rounded px-3 py-1.5 text-[11px] font-semibold">Import 3 issues</button>
+                </div>
+              </div>
+
+              <div class="border border-line rounded-md overflow-hidden">
+                <table class="w-full text-xs">
+                  <thead class="bg-subtle text-[10px] uppercase tracking-wide text-faint border-b border-line">
+                    <tr class="text-left">
+                      <th class="px-3 py-2 w-8"><span class="checkbox" data-checked="true"></span></th>
+                      <th class="px-2 py-2 font-semibold w-12">#</th>
+                      <th class="px-2 py-2 font-semibold">Title</th>
+                      <th class="px-2 py-2 font-semibold w-20">State</th>
+                      <th class="px-2 py-2 font-semibold w-40">Labels</th>
+                      <th class="px-2 py-2 font-semibold w-28">Author</th>
+                      <th class="px-3 py-2 font-semibold text-right w-28">Imported</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-linesoft">
+                    <!-- selected -->
+                    <tr class="bg-blue-50/40">
+                      <td class="px-3 py-2.5"><span class="checkbox" data-checked="true"></span></td>
+                      <td class="px-2 py-2.5 font-mono text-faint">#24</td>
+                      <td class="px-2 py-2.5"><span class="text-fg font-medium">Fix login redirect</span></td>
+                      <td class="px-2 py-2.5"><span class="inline-flex items-center gap-1 border border-ok rounded-full bg-okbg text-ok text-[10px] font-semibold px-1.5 py-0.5"><svg viewBox="0 0 16 16" class="w-2.5 h-2.5" fill="currentColor"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"/></svg>open</span></td>
+                      <td class="px-2 py-2.5">
+                        <span class="inline-flex items-center gap-1 text-[10px] border rounded-full px-1.5 py-0.5 font-semibold" style="border:#fbca0a;background:#fff8c5;color:#9a6700">
+                          <span class="legend-dot" style="width:6px;height:6px;background:#fbca0a"></span>bug
+                        </span>
+                        <span class="inline-flex items-center gap-1 text-[10px] border rounded-full px-1.5 py-0.5 font-semibold ml-1" style="border:#a2c4f5;background:#ddf4ff;color:#0969da">
+                          <span class="legend-dot" style="width:6px;height:6px;background:#0969da"></span>auth
+                        </span>
+                      </td>
+                      <td class="px-2 py-2.5">
+                        <span class="flex items-center gap-1.5">
+                          <span class="w-4 h-4 rounded-full bg-inset text-[8px] font-semibold text-muted flex items-center justify-center">DL</span>
+                          <span class="text-[11px] text-muted">dihie</span>
+                        </span>
+                      </td>
+                      <td class="px-3 py-2.5 text-right"><span class="text-[10px] text-faint">—</span></td>
+                    </tr>
+                    <tr class="bg-blue-50/40">
+                      <td class="px-3 py-2.5"><span class="checkbox" data-checked="true"></span></td>
+                      <td class="px-2 py-2.5 font-mono text-faint">#25</td>
+                      <td class="px-2 py-2.5"><span class="text-fg font-medium">Improve mobile layout</span></td>
+                      <td class="px-2 py-2.5"><span class="inline-flex items-center gap-1 border border-ok rounded-full bg-okbg text-ok text-[10px] font-semibold px-1.5 py-0.5"><svg viewBox="0 0 16 16" class="w-2.5 h-2.5" fill="currentColor"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"/></svg>open</span></td>
+                      <td class="px-2 py-2.5">
+                        <span class="inline-flex items-center gap-1 text-[10px] border rounded-full px-1.5 py-0.5 font-semibold" style="border:#d4c5f9;background:#fbefff;color:#8250df">
+                          <span class="legend-dot" style="width:6px;height:6px;background:#8250df"></span>ui
+                        </span>
+                      </td>
+                      <td class="px-2 py-2.5">
+                        <span class="flex items-center gap-1.5">
+                          <span class="w-4 h-4 rounded-full bg-inset text-[8px] font-semibold text-muted flex items-center justify-center">DL</span>
+                          <span class="text-[11px] text-muted">dihie</span>
+                        </span>
+                      </td>
+                      <td class="px-3 py-2.5 text-right"><span class="text-[10px] text-faint">—</span></td>
+                    </tr>
+                    <tr class="bg-blue-50/40">
+                      <td class="px-3 py-2.5"><span class="checkbox" data-checked="true"></span></td>
+                      <td class="px-2 py-2.5 font-mono text-faint">#27</td>
+                      <td class="px-2 py-2.5"><span class="text-fg font-medium">Cache the roadmap query</span></td>
+                      <td class="px-2 py-2.5"><span class="inline-flex items-center gap-1 border border-ok rounded-full bg-okbg text-ok text-[10px] font-semibold px-1.5 py-0.5"><svg viewBox="0 0 16 16" class="w-2.5 h-2.5" fill="currentColor"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"/></svg>open</span></td>
+                      <td class="px-2 py-2.5"><span class="text-[10px] text-faint">none</span></td>
+                      <td class="px-2 py-2.5">
+                        <span class="flex items-center gap-1.5">
+                          <span class="w-4 h-4 rounded-full bg-inset text-[8px] font-semibold text-muted flex items-center justify-center">CT</span>
+                          <span class="text-[11px] text-muted">contributor</span>
+                        </span>
+                      </td>
+                      <td class="px-3 py-2.5 text-right"><span class="text-[10px] text-faint">—</span></td>
+                    </tr>
+
+                    <!-- already imported — idempotent -->
+                    <tr class="opacity-70">
+                      <td class="px-3 py-2.5"><span class="checkbox" data-checked="false"></span></td>
+                      <td class="px-2 py-2.5 font-mono text-faint">#22</td>
+                      <td class="px-2 py-2.5"><span class="text-muted font-medium">Add repo filtering</span></td>
+                      <td class="px-2 py-2.5"><span class="inline-flex items-center gap-1 border border-line rounded-full bg-subtle text-muted text-[10px] font-semibold px-1.5 py-0.5"><svg viewBox="0 0 16 16" class="w-2.5 h-2.5" fill="currentColor"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.75.75 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"/></svg>closed</span></td>
+                      <td class="px-2 py-2.5"><span class="text-[10px] text-faint">none</span></td>
+                      <td class="px-2 py-2.5">
+                        <span class="flex items-center gap-1.5">
+                          <span class="w-4 h-4 rounded-full bg-inset text-[8px] font-semibold text-muted flex items-center justify-center">DL</span>
+                          <span class="text-[11px] text-muted">dihie</span>
+                        </span>
+                      </td>
+                      <td class="px-3 py-2.5 text-right">
+                        <span class="inline-flex items-center gap-1 text-[10px] border border-ok rounded-full bg-okbg text-ok font-semibold px-1.5 py-0.5">
+                          <svg viewBox="0 0 16 16" class="w-2.5 h-2.5" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                          task #26
+                        </span>
+                      </td>
+                    </tr>
+
+                    <!-- not selected -->
+                    <tr class="hover:bg-subtle">
+                      <td class="px-3 py-2.5"><span class="checkbox" data-checked="false"></span></td>
+                      <td class="px-2 py-2.5 font-mono text-faint">#28</td>
+                      <td class="px-2 py-2.5"><span class="text-fg font-medium">Reduce bundle size below 200 kB</span></td>
+                      <td class="px-2 py-2.5"><span class="inline-flex items-center gap-1 border border-ok rounded-full bg-okbg text-ok text-[10px] font-semibold px-1.5 py-0.5"><svg viewBox="0 0 16 16" class="w-2.5 h-2.5" fill="currentColor"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"/></svg>open</span></td>
+                      <td class="px-2 py-2.5">
+                        <span class="inline-flex items-center gap-1 text-[10px] border rounded-full px-1.5 py-0.5 font-semibold" style="border:#4ac26b;background:#dafbe1;color:#1a7f37">
+                          <span class="legend-dot" style="width:6px;height:6px;background:#1a7f37"></span>perf
+                        </span>
+                      </td>
+                      <td class="px-2 py-2.5">
+                        <span class="flex items-center gap-1.5">
+                          <span class="w-4 h-4 rounded-full bg-inset text-[8px] font-semibold text-muted flex items-center justify-center">DL</span>
+                          <span class="text-[11px] text-muted">dihie</span>
+                        </span>
+                      </td>
+                      <td class="px-3 py-2.5 text-right"><span class="text-[10px] text-faint">—</span></td>
+                    </tr>
+                    <tr class="hover:bg-subtle">
+                      <td class="px-3 py-2.5"><span class="checkbox" data-checked="false"></span></td>
+                      <td class="px-2 py-2.5 font-mono text-faint">#29</td>
+                      <td class="px-2 py-2.5"><span class="text-fg font-medium">Add a dark theme</span></td>
+                      <td class="px-2 py-2.5"><span class="inline-flex items-center gap-1 border border-ok rounded-full bg-okbg text-ok text-[10px] font-semibold px-1.5 py-0.5"><svg viewBox="0 0 16 16" class="w-2.5 h-2.5" fill="currentColor"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"/></svg>open</span></td>
+                      <td class="px-2 py-2.5">
+                        <span class="inline-flex items-center gap-1 text-[10px] border rounded-full px-1.5 py-0.5 font-semibold" style="border:#d4c5f9;background:#fbefff;color:#8250df">
+                          <span class="legend-dot" style="width:6px;height:6px;background:#8250df"></span>ui
+                        </span>
+                      </td>
+                      <td class="px-2 py-2.5">
+                        <span class="flex items-center gap-1.5">
+                          <span class="w-4 h-4 rounded-full bg-inset text-[8px] font-semibold text-muted flex items-center justify-center">DL</span>
+                          <span class="text-[11px] text-muted">dihie</span>
+                        </span>
+                      </td>
+                      <td class="px-3 py-2.5 text-right"><span class="text-[10px] text-faint">—</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="px-3 py-2.5 border-t border-line bg-subtle flex items-center gap-3 text-xs">
+                  <span class="text-[11px] text-muted">Showing <span class="font-semibold text-fg">6</span> of <span class="font-semibold text-fg">18</span> open issues</span>
+                  <span class="text-[10px] text-faint">· 1 already imported</span>
+                  <div class="ml-auto flex items-center gap-1">
+                    <button disabled class="border border-line rounded px-2 py-1 text-[11px] text-faint bg-inset">‹ Prev</button>
+                    <span class="px-2 py-1 text-[11px] font-semibold text-fg bg-inset rounded">1</span>
+                    <span class="px-2 py-1 text-[11px] text-muted">2</span>
+                    <span class="px-2 py-1 text-[11px] text-muted">3</span>
+                    <button class="border border-line rounded px-2 py-1 text-[11px] text-fg bg-canvas">Next ›</button>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-[10px] text-faint font-mono mt-2">
+                // idempotent by (githubRepositoryId, issueNumber) — re-importing skips issues already imported rather than creating duplicates
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- import result + resulting board card -->
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="success">Import result</span><span class="text-xs text-faint">partial success is reported per issue</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">200 OK · 3 created, 1 skipped</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4 space-y-3">
+              <div class="border border-ok rounded-md bg-okbg px-3 py-2.5 flex items-start gap-2">
+                <svg viewBox="0 0 16 16" class="w-4 h-4 text-ok mt-0.5 flex-none" fill="currentColor"><path fill-rule="evenodd" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"/></svg>
+                <div class="flex-1">
+                  <div class="text-xs font-semibold text-ok">Imported 3 issues into Portfolio Website</div>
+                  <div class="text-[11px] text-ok/90 mt-0.5">They are ordinary local tasks — edit them, drag them on the board, plot them on the roadmap.</div>
+                </div>
+              </div>
+
+              <div class="border border-line rounded-md overflow-hidden">
+                <div class="px-3 py-2 border-b border-line bg-subtle text-[10px] font-semibold text-fg">Result per issue</div>
+                <div class="divide-y divide-linesoft text-[11px]">
+                  <div class="px-3 py-2 flex items-center gap-2">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-ok flex-none" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                    <span class="font-mono text-faint">#24</span>
+                    <span class="text-fg flex-1">Fix login redirect</span>
+                    <span class="text-faint">→</span>
+                    <span class="font-mono text-ok">task #12</span>
+                  </div>
+                  <div class="px-3 py-2 flex items-center gap-2">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-ok flex-none" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                    <span class="font-mono text-faint">#25</span>
+                    <span class="text-fg flex-1">Improve mobile layout</span>
+                    <span class="text-faint">→</span>
+                    <span class="font-mono text-ok">task #13</span>
+                  </div>
+                  <div class="px-3 py-2 flex items-center gap-2">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-ok flex-none" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+                    <span class="font-mono text-faint">#27</span>
+                    <span class="text-fg flex-1">Cache the roadmap query</span>
+                    <span class="text-faint">→</span>
+                    <span class="font-mono text-ok">task #14</span>
+                  </div>
+                  <div class="px-3 py-2 flex items-center gap-2 opacity-70">
+                    <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+                    <span class="font-mono text-faint">#22</span>
+                    <span class="text-muted flex-1">Add repo filtering</span>
+                    <span class="text-faint">skipped</span>
+                    <span class="font-mono text-muted">already task #26</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border border-line rounded-md p-3 bg-subtle">
+                <div class="text-[10px] font-semibold text-fg mb-1.5">Field mapping — srs §10.3</div>
+                <div class="text-[10px] text-muted font-mono leading-relaxed">
+                  issue.title → task.title<br />
+                  issue.body → task.description<br />
+                  issue.state → task.githubState (local status starts at TODO)<br />
+                  issue.labels → task.description (leading tag list)<br />
+                  issue.author → recorded for display only<br />
+                  githubIssueNumber + githubRepositoryId → the GitHub badge
+                </div>
+                <p class="text-[10px] text-faint mt-1.5">// GitHub's open/closed state is independent of the local status — closing an issue on GitHub does not complete the task, and dragging the card does not close the issue</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="success">The result on the board</span><span class="text-xs text-faint">a <span class="font-mono">GitHub #n</span> badge replaces the local sequence number</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">/board?projectId=a13b7c…</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="bg-subtle p-3">
+              <div class="flex items-center gap-2 mb-2.5">
+                <h2 class="text-sm font-semibold text-fg">Board · Portfolio Website</h2>
+                <span class="ml-auto text-[10px] text-faint">15 tasks</span>
+              </div>
+              <div class="grid grid-cols-3 gap-3">
+                <div class="border border-line rounded bg-canvas overflow-hidden">
+                  <div class="px-2.5 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                    <span class="legend-dot bg-faint" style="width:7px;height:7px"></span>
+                    <span class="text-[10px] font-semibold text-fg">Todo</span>
+                    <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">5</span>
+                  </div>
+                  <div class="p-1.5 space-y-1.5">
+                    <!-- imported card -->
+                    <div class="border border-line rounded p-2 hover:border-muted cursor-pointer">
+                      <div class="flex items-center gap-1.5">
+                        <span class="inline-flex items-center gap-1 text-[9px] border border-line rounded bg-subtle px-1 py-px font-mono font-semibold text-muted">
+                          <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+                          #25
+                        </span>
+                        <span class="ml-auto inline-flex items-center gap-1 border border-warn rounded-full bg-warnbg text-warn text-[9px] font-semibold px-1.5 py-0.5">Medium</span>
+                      </div>
+                      <div class="text-[10px] text-fg font-medium mt-1 leading-snug">Improve mobile layout</div>
+                      <div class="flex items-center gap-1.5 mt-1.5">
+                        <span class="text-[9px] border rounded-full px-1 font-semibold" style="border:#d4c5f9;background:#fbefff;color:#8250df">ui</span>
+                        <span class="ml-auto text-[9px] text-faint">open</span>
+                      </div>
+                    </div>
+                    <div class="border border-line rounded p-2 hover:border-muted cursor-pointer">
+                      <div class="flex items-center gap-1.5">
+                        <span class="inline-flex items-center gap-1 text-[9px] border border-line rounded bg-subtle px-1 py-px font-mono font-semibold text-muted">
+                          <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+                          #28
+                        </span>
+                        <span class="ml-auto inline-flex items-center gap-1 border border-ok rounded-full bg-okbg text-ok text-[9px] font-semibold px-1.5 py-0.5">Low</span>
+                      </div>
+                      <div class="text-[10px] text-fg font-medium mt-1 leading-snug">Reduce bundle size</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="border border-accent rounded bg-canvas overflow-hidden">
+                  <div class="px-2.5 py-1.5 border-b border-line bg-blue-50 flex items-center gap-1.5">
+                    <span class="legend-dot bg-info" style="width:7px;height:7px"></span>
+                    <span class="text-[10px] font-semibold text-fg">In progress</span>
+                    <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">3</span>
+                  </div>
+                  <div class="p-1.5 space-y-1.5">
+                    <div class="border border-accent rounded p-2 cursor-pointer" style="border-style:dashed">
+                      <div class="flex items-center gap-1.5">
+                        <span class="inline-flex items-center gap-1 text-[9px] border border-line rounded bg-subtle px-1 py-px font-mono font-semibold text-muted">
+                          <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+                          #24
+                        </span>
+                        <span class="ml-auto inline-flex items-center gap-1 border border-bad rounded-full bg-badbg text-bad text-[9px] font-semibold px-1.5 py-0.5">High</span>
+                      </div>
+                      <div class="text-[10px] text-fg font-medium mt-1 leading-snug">Fix login redirect</div>
+                      <div class="flex items-center gap-1.5 mt-1.5">
+                        <span class="text-[9px] border rounded-full px-1 font-semibold" style="border:#fbca0a;background:#fff8c5;color:#9a6700">bug</span>
+                        <span class="ml-auto text-[9px] text-ok font-semibold">open</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="border border-line rounded bg-canvas overflow-hidden">
+                  <div class="px-2.5 py-1.5 border-b border-line bg-subtle flex items-center gap-1.5">
+                    <span class="legend-dot bg-ok" style="width:7px;height:7px"></span>
+                    <span class="text-[10px] font-semibold text-fg">Done</span>
+                    <span class="ml-auto text-[9px] font-mono text-muted border border-line rounded bg-canvas px-1">7</span>
+                  </div>
+                  <div class="p-1.5">
+                    <div class="border border-line rounded p-2 opacity-70">
+                      <div class="flex items-center gap-1.5">
+                        <span class="inline-flex items-center gap-1 text-[9px] border border-line rounded bg-subtle px-1 py-px font-mono font-semibold text-muted">
+                          <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+                          #22
+                        </span>
+                        <span class="ml-auto text-[9px] text-muted">closed</span>
+                      </div>
+                      <div class="text-[10px] text-muted font-medium mt-1 leading-snug line-through">Add repo filtering</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3 border border-line rounded-md p-3 bg-canvas">
+                <div class="text-[10px] font-semibold text-fg mb-1.5">Status independence — srs §10.4</div>
+                <ul class="text-[10px] text-muted space-y-1 list-disc pl-4">
+                  <li>Dragging the card moves only the <span class="font-medium text-fg">local</span> status. The GitHub issue stays open.</li>
+                  <li>Closing the issue on GitHub does not complete the local task — the board shows both signals independently.</li>
+                  <li>The board, roadmap and task list need no structural change: imported issues <span class="font-medium text-fg">are</span> local tasks.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- responsive -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">table → stacked issue cards with a sticky bulk-action bar</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834 — issue list</span></div>
+          <div class="device-screen bg-canvas">
+            <div class="app-topbar"><span class="text-[11px] font-semibold text-fg">dihie/portfolio-site · Issues</span></div>
+            <div class="flex border-b border-line bg-subtle text-[10px]">
+              <span class="flex-1 py-1.5 text-center font-semibold text-fg border-b-2 border-accent">Open 18</span>
+              <span class="flex-1 py-1.5 text-center text-muted">Closed 7</span>
+              <span class="flex-1 py-1.5 text-center text-muted">All 25</span>
+            </div>
+            <div class="p-2.5 space-y-1.5">
+              <div class="border border-accent rounded p-2 bg-blue-50/40">
+                <div class="flex items-center gap-1.5">
+                  <span class="checkbox" data-checked="true"></span>
+                  <span class="font-mono text-[9px] text-faint">#24</span>
+                  <span class="text-[10px] text-fg font-medium flex-1">Fix login redirect</span>
+                  <span class="text-[9px] border border-ok rounded-full bg-okbg text-ok font-semibold px-1">open</span>
+                </div>
+                <div class="flex items-center gap-1 mt-1 pl-5">
+                  <span class="text-[9px] border rounded-full px-1 font-semibold" style="border:#fbca0a;background:#fff8c5;color:#9a6700">bug</span>
+                  <span class="text-[9px] border rounded-full px-1 font-semibold" style="border:#a2c4f5;background:#ddf4ff;color:#0969da">auth</span>
+                  <span class="ml-auto text-[9px] text-faint">dihie</span>
+                </div>
+              </div>
+              <div class="border border-line rounded p-2 opacity-70">
+                <div class="flex items-center gap-1.5">
+                  <span class="checkbox" data-checked="false"></span>
+                  <span class="font-mono text-[9px] text-faint">#22</span>
+                  <span class="text-[10px] text-muted font-medium flex-1">Add repo filtering</span>
+                  <span class="text-[9px] border border-ok rounded-full bg-okbg text-ok font-semibold px-1">task #26</span>
+                </div>
+              </div>
+            </div>
+            <div class="sticky bottom-0 bg-canvas border-t border-line px-2.5 py-2 flex items-center gap-2">
+              <span class="text-[10px] text-accent font-medium">1 selected</span>
+              <div class="ml-auto bg-ok text-white rounded px-3 py-1.5 text-[10px] font-semibold">Import 1</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas">
+            <div class="app-topbar">
+              <svg viewBox="0 0 16 16" class="w-4 h-4 text-muted" fill="currentColor"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"/></svg>
+              <span class="text-[11px] font-semibold text-fg">Issues</span>
+              <span class="ml-auto text-[9px] font-mono text-faint">18 open</span>
+            </div>
+            <div class="p-3 space-y-1.5">
+              <div class="border border-accent rounded p-2.5 bg-blue-50/40">
+                <div class="flex items-start gap-1.5">
+                  <span class="checkbox mt-0.5" data-checked="true"></span>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[9px] text-faint">#24</span>
+                      <span class="text-[11px] text-fg font-semibold flex-1">Fix login redirect</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 mt-1">
+                      <span class="text-[9px] border border-ok rounded-full bg-okbg text-ok font-semibold px-1">open</span>
+                      <span class="text-[9px] text-faint">dihie</span>
+                    </div>
+                    <div class="flex items-center gap-1 mt-1">
+                      <span class="text-[9px] border rounded-full px-1 font-semibold" style="border:#fbca0a;background:#fff8c5;color:#9a6700">bug</span>
+                      <span class="text-[9px] border rounded-full px-1 font-semibold" style="border:#a2c4f5;background:#ddf4ff;color:#0969da">auth</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="border border-line rounded p-2.5">
+                <div class="flex items-start gap-1.5">
+                  <span class="checkbox mt-0.5" data-checked="false"></span>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[9px] text-faint">#28</span>
+                      <span class="text-[11px] text-fg font-semibold flex-1">Reduce bundle size</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 mt-1">
+                      <span class="text-[9px] border border-ok rounded-full bg-okbg text-ok font-semibold px-1">open</span>
+                      <span class="text-[9px] text-faint">dihie</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="border border-line rounded p-2.5 opacity-70">
+                <div class="flex items-start gap-1.5">
+                  <span class="checkbox mt-0.5" data-checked="false"></span>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[9px] text-faint">#22</span>
+                      <span class="text-[11px] text-muted font-semibold flex-1">Add repo filtering</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 mt-1">
+                      <span class="text-[9px] border border-ok rounded-full bg-okbg text-ok font-semibold px-1">task #26</span>
+                      <span class="text-[9px] text-faint">already imported</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sticky bottom-0 bg-canvas border-t border-line px-3 py-2.5 flex items-center gap-2">
+              <span class="text-[10px] text-accent font-medium">1 selected</span>
+              <button class="ml-auto text-[10px] text-accent">All 18</button>
+              <div class="bg-ok text-white rounded px-3 py-1.5 text-[10px] font-semibold">Import 1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-line bg-subtle mt-10 no-print">
+  <div class="mx-auto max-w-7xl px-5 py-4 text-xs text-faint">
+    GitHub Integration · SC-22 – SC-24 · static mockup, not the implementation.
+  </div>
+</footer>
+
+</body>
+</html>

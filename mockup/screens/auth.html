@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Auth &amp; Shell — UI Mockups</title>
+<link rel="stylesheet" href="../assets/mockup.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: {
+    colors: {
+      canvas:'#ffffff', subtle:'#f6f8fa', inset:'#eff2f5', fg:'#24292f', muted:'#57606a',
+      faint:'#6e7781', line:'#d0d7de', linesoft:'#d8dee4', accent:'#0969da',
+      ok:'#1a7f37', okbg:'#dafbe1', bad:'#cf222e', badbg:'#ffebe9', warn:'#9a6700',
+      warnbg:'#fff8c5', info:'#8250df', infobg:'#fbefff',
+    },
+    fontFamily: { sans:['-apple-system','BlinkMacSystemFont','Segoe UI','Noto Sans','Helvetica','Arial','sans-serif'],
+                   mono:['ui-monospace','SFMono-Regular','SF Mono','Menlo','Consolas','monospace'] },
+  } } };
+</script>
+</head>
+<body class="min-h-screen">
+
+<!-- ══════════ HEADER ══════════ -->
+<header class="border-b border-line bg-canvas no-print">
+  <div class="mx-auto max-w-7xl px-5 py-3 flex items-center gap-3">
+    <a href="../index.html" class="w-6 h-6 rounded-full border border-line bg-subtle flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></a>
+    <div class="leading-tight">
+      <h1 class="text-[15px] font-semibold text-fg">Auth &amp; Shell</h1>
+      <p class="text-xs text-faint">SC-01 – SC-05 · guest entry, session establishment, app shell</p>
+    </div>
+  </div>
+  <nav class="gallery-nav border-t border-line bg-subtle">
+    <div class="mx-auto max-w-7xl px-5 py-1.5 flex flex-wrap gap-1">
+      <a href="../index.html">Index</a>
+      <a href="auth.html" aria-current="page">Auth &amp; Shell</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="tasks.html">Tasks &amp; Detail</a>
+      <a href="board.html">Board</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="projects.html">Projects</a>
+      <a href="github.html">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main class="mx-auto max-w-7xl px-5 py-8 space-y-12">
+
+  <!-- flow strip -->
+  <div class="border border-line rounded-lg p-3 flex flex-wrap items-center gap-1.5 text-xs">
+    <span class="meta-key mr-1">Flow</span>
+    <span class="border border-line rounded px-2 py-1">/register</span>
+    <span class="text-faint">or</span>
+    <span class="border border-line rounded px-2 py-1">/login</span>
+    <span class="text-faint">→</span>
+    <span class="border border-line rounded px-2 py-1">/auth/github/callback</span>
+    <span class="text-faint">→</span>
+    <span class="border border-accent rounded px-2 py-1 bg-blue-50 font-semibold text-accent">app shell</span>
+    <span class="text-faint ml-1 text-faint">· protected area renders only after <span class="font-mono">GET /api/auth/me</span> resolves</span>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-01 REGISTER                                          -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-01" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-01</span>
+      <h2 class="text-lg font-semibold text-fg">Register</h2>
+      <span class="state-label" data-kind="info">srs.md §13.1 · phase-05 §5.1 · FR-01</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-01</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Register</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/register (public)</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">guest → /register → session → /dashboard</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop 1440</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet 834</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone 390</span></span>
+      </span>
+    </div>
+
+    <!-- ── state: default ── -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Default</span><span class="text-xs text-faint">all fields empty, submit enabled, no server contact yet</span></div>
+      <div class="device-frame">
+        <div class="device-bar">
+          <span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span>
+          <span class="font-mono">todogit.app/register</span>
+          <span class="ml-auto">Desktop · 1440</span>
+        </div>
+        <div class="device-viewport">
+          <div class="grid place-items-center py-12 px-6">
+            <div class="w-full max-w-sm">
+              <div class="text-center mb-6">
+                <div class="inline-flex w-10 h-10 rounded-full border border-line bg-subtle items-center justify-center"><svg viewBox="0 0 24 24" class="w-5 h-5" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></div>
+                <h3 class="mt-3 text-xl font-semibold text-fg">Create your account</h3>
+                <p class="text-sm text-muted mt-1">Track projects, tasks and GitHub issues in one place.</p>
+              </div>
+
+              <form class="space-y-4">
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Name</label>
+                  <input class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg placeholder:text-faint bg-canvas focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" placeholder="Ada Lovelace" />
+                  <p class="text-xs text-faint mt-1">2 – 60 characters.</p>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Email</label>
+                  <input class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg placeholder:text-faint bg-canvas focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" placeholder="ada@example.com" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Password</label>
+                  <input type="password" class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg placeholder:text-faint bg-canvas focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" placeholder="••••••••" />
+                  <div class="mt-1.5 flex items-center gap-1.5 text-[11px] text-faint">
+                    <span class="w-16 h-1 rounded-full bg-ok"></span>
+                    <span class="w-16 h-1 rounded-full bg-ok"></span>
+                    <span class="w-16 h-1 rounded-full bg-ok"></span>
+                    <span class="w-16 h-1 rounded-full bg-line"></span>
+                    <span class="ml-1">Strong · 8+ chars, upper, lower, digit</span>
+                  </div>
+                </div>
+                <button class="w-full bg-ok text-white text-sm font-semibold rounded-md px-4 py-2 hover:bg-[#116329]">Create account</button>
+              </form>
+
+              <div class="flex items-center gap-3 my-5"><div class="h-px flex-1 bg-line"></div><span class="text-[11px] text-faint">or</span><div class="h-px flex-1 bg-line"></div></div>
+
+              <button class="w-full border border-line rounded-md px-4 py-2 text-sm font-medium text-fg bg-canvas hover:bg-subtle flex items-center justify-center gap-2">
+                <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+                Continue with GitHub
+              </button>
+
+              <p class="text-center text-sm text-muted mt-5">Already have an account? <a class="text-accent hover:underline" href="#sc-02">Sign in</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── state: field validation ── -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label" data-kind="error">Client validation — submit blocked</span><span class="text-xs text-faint">no request sent; mirrors server Zod rules for feedback speed only</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/register</span><span class="ml-auto">Desktop · 1440</span></div>
+        <div class="device-viewport">
+          <div class="grid place-items-center py-12 px-6">
+            <div class="w-full max-w-sm">
+              <h3 class="text-xl font-semibold text-fg text-center mb-6">Create your account</h3>
+              <form class="space-y-4">
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Name</label>
+                  <input value="A" class="w-full border border-bad rounded-md px-3 py-2 text-sm text-fg bg-canvas focus:outline-none focus:ring-2 focus:ring-bad" />
+                  <p class="text-xs text-bad mt-1 flex items-center gap-1">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                    Name must be at least 2 characters.
+                  </p>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Email</label>
+                  <input value="ada@@example" class="w-full border border-bad rounded-md px-3 py-2 text-sm text-fg bg-canvas focus:outline-none focus:ring-2 focus:ring-bad" />
+                  <p class="text-xs text-bad mt-1 flex items-center gap-1">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                    Enter a valid email address.
+                  </p>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Password</label>
+                  <input type="password" value="abc" class="w-full border border-bad rounded-md px-3 py-2 text-sm text-fg bg-canvas focus:outline-none focus:ring-2 focus:ring-bad" />
+                  <p class="text-xs text-bad mt-1 flex items-center gap-1">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                    Password must be at least 8 characters.
+                  </p>
+                </div>
+                <button disabled class="w-full bg-ok text-white text-sm font-semibold rounded-md px-4 py-2 opacity-40 cursor-not-allowed">Create account</button>
+              </form>
+              <p class="text-center text-xs text-faint mt-4">Submit is disabled until the form is valid — no network call is made.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── state: 409 conflict + 400 details[] ── -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label" data-kind="error">Server 409 CONFLICT</span><span class="text-xs text-faint">branch on <span class="font-mono">ApiError.code</span>, never on message text</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/register</span><span class="ml-auto">Desktop · 1440</span></div>
+        <div class="device-viewport">
+          <div class="grid place-items-center py-12 px-6">
+            <div class="w-full max-w-sm">
+              <h3 class="text-xl font-semibold text-fg text-center mb-6">Create your account</h3>
+
+              <div class="mb-4 border border-bad rounded-md bg-badbg px-3 py-2.5 flex items-start gap-2">
+                <svg viewBox="0 0 16 16" class="w-4 h-4 text-bad mt-0.5 flex-none" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm0 1a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Zm0 2a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4.5Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>
+                <div class="text-xs text-bad"><span class="font-semibold">Email is already in use.</span> Try signing in instead, or reset the password.</div>
+              </div>
+
+              <form class="space-y-4">
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Name</label>
+                  <input value="Ada Lovelace" class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg bg-canvas" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Email</label>
+                  <input value="ada@example.com" class="w-full border border-bad rounded-md px-3 py-2 text-sm text-fg bg-canvas focus:outline-none focus:ring-2 focus:ring-bad" />
+                  <p class="text-xs text-bad mt-1 flex items-center gap-1">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                    Email is already in use. (409 CONFLICT)
+                  </p>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Password</label>
+                  <input type="password" value="hunter2000" class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg bg-canvas" />
+                </div>
+                <button class="w-full bg-ok text-white text-sm font-semibold rounded-md px-4 py-2">Create account</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label" data-kind="error">Server 400 VALIDATION_ERROR — details[] mapped per field</span><span class="text-xs text-faint">server is authoritative; client Zod is for speed only</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/register</span><span class="ml-auto">Desktop · 1440</span></div>
+        <div class="device-viewport">
+          <div class="grid place-items-center py-12 px-6">
+            <div class="w-full max-w-sm">
+              <h3 class="text-xl font-semibold text-fg text-center mb-6">Create your account</h3>
+              <form class="space-y-4">
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Name</label>
+                  <input value="Ada Lovelace" class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg bg-canvas" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Email</label>
+                  <input value="ada@example.com" class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg bg-canvas" />
+                  <p class="text-xs text-faint mt-1">Looks fine — another field failed.</p>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Password</label>
+                  <input type="password" value="Passw0rd!" class="w-full border border-bad rounded-md px-3 py-2 text-sm text-fg bg-canvas focus:outline-none focus:ring-2 focus:ring-bad" />
+                  <p class="text-xs text-bad mt-1 flex items-start gap-1">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 mt-px flex-none" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                    <span>Password must contain at least one lowercase letter and one digit.<span class="block text-faint">field: <span class="font-mono">password</span></span></span>
+                  </p>
+                </div>
+                <button class="w-full bg-ok text-white text-sm font-semibold rounded-md px-4 py-2">Create account</button>
+              </form>
+              <p class="text-center text-[11px] text-faint mt-4">Errors are routed by the <span class="font-mono">field</span> key in each <span class="font-mono">details[]</span> entry.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── state: submitting ── -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Submitting</span><span class="text-xs text-faint">button disabled, fields locked, in-flight</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/register</span><span class="ml-auto">Desktop · 1440</span></div>
+        <div class="device-viewport">
+          <div class="grid place-items-center py-12 px-6">
+            <div class="w-full max-w-sm">
+              <h3 class="text-xl font-semibold text-fg text-center mb-6">Create your account</h3>
+              <form class="space-y-4 opacity-70">
+                <div><label class="block text-xs font-semibold text-fg mb-1">Name</label><input value="Ada Lovelace" disabled class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg bg-inset" /></div>
+                <div><label class="block text-xs font-semibold text-fg mb-1">Email</label><input value="ada@example.com" disabled class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg bg-inset" /></div>
+                <div><label class="block text-xs font-semibold text-fg mb-1">Password</label><input type="password" value="••••••••" disabled class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg bg-inset" /></div>
+                <button disabled class="w-full bg-ok text-white text-sm font-semibold rounded-md px-4 py-2 flex items-center justify-center gap-2">
+                  <svg class="w-3.5 h-3.5 animate-spin" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-opacity=".3" stroke-width="2"/><path d="M14 8a6 6 0 0 0-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  Creating account…
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── responsive: tablet + phone ── -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">single centred column, no horizontal scroll at either width</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834</span></div>
+          <div class="device-screen bg-canvas">
+            <div class="px-5 py-8">
+              <h3 class="text-lg font-semibold text-fg text-center">Create your account</h3>
+              <p class="text-xs text-muted text-center mt-1 mb-5">Track projects, tasks and GitHub issues.</p>
+              <div class="space-y-3 max-w-xs mx-auto">
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Name</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-faint">Ada Lovelace</div></div>
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Email</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-faint">ada@example.com</div></div>
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Password</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-faint">••••••••</div></div>
+                <div class="bg-ok text-white text-xs font-semibold rounded px-3 py-1.5 text-center">Create account</div>
+                <div class="flex items-center gap-2"><div class="h-px flex-1 bg-line"></div><span class="text-[9px] text-faint">or</span><div class="h-px flex-1 bg-line"></div></div>
+                <div class="border border-line rounded px-3 py-1.5 text-xs text-fg text-center bg-canvas">Continue with GitHub</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas">
+            <div class="px-4 py-6">
+              <div class="text-center mb-5">
+                <div class="inline-flex w-8 h-8 rounded-full border border-line bg-subtle items-center justify-center"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></div>
+                <h3 class="mt-2 text-base font-semibold text-fg">Create your account</h3>
+              </div>
+              <div class="space-y-3">
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Name</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-fg">Ada Lovelace</div></div>
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Email</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-fg">ada@example.com</div></div>
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Password</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-fg">••••••••</div></div>
+                <div class="bg-ok text-white text-xs font-semibold rounded px-3 py-2 text-center">Create account</div>
+                <div class="flex items-center gap-2"><div class="h-px flex-1 bg-line"></div><span class="text-[9px] text-faint">or</span><div class="h-px flex-1 bg-line"></div></div>
+                <div class="border border-line rounded px-3 py-2 text-xs text-fg text-center">Continue with GitHub</div>
+                <p class="text-[11px] text-muted text-center pt-1">Already have an account? <span class="text-accent">Sign in</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-02 LOGIN                                             -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-02" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-02</span>
+      <h2 class="text-lg font-semibold text-fg">Login</h2>
+      <span class="state-label" data-kind="info">srs.md §13.2 · phase-05 §5.2 · FR-02</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-02</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Login</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/login (public)</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">/tasks (guarded) → /login → session → intended path</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop 1440</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet 834</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone 390</span></span>
+      </span>
+    </div>
+
+    <!-- default -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Default</span><span class="text-xs text-faint">intended destination preserved from the guarded route</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/login?redirect=/tasks?status=TODO</span><span class="ml-auto">Desktop · 1440</span></div>
+        <div class="device-viewport">
+          <div class="grid place-items-center py-12 px-6">
+            <div class="w-full max-w-sm">
+              <div class="text-center mb-6">
+                <div class="inline-flex w-10 h-10 rounded-full border border-line bg-subtle items-center justify-center"><svg viewBox="0 0 24 24" class="w-5 h-5" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></div>
+                <h3 class="mt-3 text-xl font-semibold text-fg">Sign in to your account</h3>
+                <p class="text-sm text-muted mt-1">You'll be returned to the page you requested.</p>
+              </div>
+
+              <div class="mb-4 border border-line rounded-md bg-subtle px-3 py-2 text-xs text-muted flex items-center gap-2">
+                <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-none" fill="currentColor"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm.93-5.59-3.2 3.2a.75.75 0 0 1-1.06-1.06l2.47-2.47H3.75a.75.75 0 0 1 0-1.5h3.89L4.67 7.47a.75.75 0 1 1 1.06-1.06l3.2 3.2a.75.75 0 0 1 0 1.06Z"/></svg>
+                Continuing to <span class="font-mono text-fg">/tasks?status=TODO</span>
+              </div>
+
+              <form class="space-y-4">
+                <div>
+                  <label class="block text-xs font-semibold text-fg mb-1">Email</label>
+                  <input value="ada@example.com" class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg bg-canvas focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" />
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="text-xs font-semibold text-fg">Password</label>
+                    <span class="text-[11px] text-faint">password reset deferred</span>
+                  </div>
+                  <input type="password" value="••••••••" class="w-full border border-line rounded-md px-3 py-2 text-sm text-fg bg-canvas focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" />
+                </div>
+                <button class="w-full bg-ok text-white text-sm font-semibold rounded-md px-4 py-2">Sign in</button>
+              </form>
+
+              <div class="flex items-center gap-3 my-5"><div class="h-px flex-1 bg-line"></div><span class="text-[11px] text-faint">or</span><div class="h-px flex-1 bg-line"></div></div>
+
+              <button class="w-full border border-line rounded-md px-4 py-2 text-sm font-medium text-fg bg-canvas hover:bg-subtle flex items-center justify-center gap-2">
+                <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+                Continue with GitHub
+              </button>
+
+              <p class="text-center text-sm text-muted mt-5">New to Task Stream? <a class="text-accent hover:underline" href="#sc-01">Create an account</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 401 + 429 -->
+    <div class="grid lg:grid-cols-2 gap-4 space-y-2">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="error">401 UNAUTHENTICATED</span><span class="text-xs text-faint">form-level, generic</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="grid place-items-center py-10 px-6">
+              <div class="w-full max-w-xs">
+                <h3 class="text-lg font-semibold text-fg text-center mb-5">Sign in to your account</h3>
+                <div class="mb-4 border border-bad rounded-md bg-badbg px-3 py-2.5 flex items-start gap-2">
+                  <svg viewBox="0 0 16 16" class="w-4 h-4 text-bad mt-0.5 flex-none" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm0 1a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Zm0 2a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4.5Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>
+                  <p class="text-xs text-bad">Invalid email or password.</p>
+                </div>
+                <div class="space-y-3">
+                  <div><div class="text-[10px] font-semibold text-fg mb-1">Email</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-fg">ada@example.com</div></div>
+                  <div><div class="text-[10px] font-semibold text-fg mb-1">Password</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-fg">••••••••</div></div>
+                  <div class="bg-ok text-white text-xs font-semibold rounded px-3 py-1.5 text-center">Sign in</div>
+                </div>
+                <p class="text-[11px] text-muted mt-3 flex items-start gap-1">
+                  <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 mt-px flex-none text-faint" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm0 1a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Zm-.75 3h1.5v4.5h-1.5V5.5Zm0 5.25a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Z"/></svg>
+                  Neither field is marked — the message never reveals which one was wrong.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="error">429 RATE_LIMITED</span><span class="text-xs text-faint">retry hint shown</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="grid place-items-center py-10 px-6">
+              <div class="w-full max-w-xs">
+                <h3 class="text-lg font-semibold text-fg text-center mb-5">Sign in to your account</h3>
+                <div class="mb-4 border border-warn rounded-md bg-warnbg px-3 py-2.5 flex items-start gap-2">
+                  <svg viewBox="0 0 16 16" class="w-4 h-4 text-warn mt-0.5 flex-none" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                  <div class="text-xs text-warn">
+                    <span class="font-semibold">Too many attempts.</span> Try again in 4 minutes.
+                    <div class="text-[11px] mt-0.5 text-warn/80">Attempt 6 of 10 before the account is locked.</div>
+                  </div>
+                </div>
+                <div class="space-y-3">
+                  <div><div class="text-[10px] font-semibold text-fg mb-1">Email</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-fg">ada@example.com</div></div>
+                  <div><div class="text-[10px] font-semibold text-fg mb-1">Password</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-fg">••••••••</div></div>
+                  <div class="bg-ok/40 text-white text-xs font-semibold rounded px-3 py-1.5 text-center cursor-not-allowed">Sign in</div>
+                </div>
+                <p class="text-[11px] text-faint mt-3">Submit disabled until the window reopens.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- submitting -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Submitting</span><span class="text-xs text-faint">double-submit prevented</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="ml-auto">Desktop</span></div>
+        <div class="device-viewport">
+          <div class="grid place-items-center py-10 px-6">
+            <div class="w-full max-w-xs">
+              <h3 class="text-lg font-semibold text-fg text-center mb-5">Sign in to your account</h3>
+              <div class="space-y-3 opacity-70">
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Email</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-fg bg-inset">ada@example.com</div></div>
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Password</div><div class="border border-line rounded px-2.5 py-1.5 text-xs text-fg bg-inset">••••••••</div></div>
+                <div class="bg-ok text-white text-xs font-semibold rounded px-3 py-1.5 text-center flex items-center justify-center gap-1.5">
+                  <svg class="w-3 h-3 animate-spin" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-opacity=".3" stroke-width="2"/><path d="M14 8a6 6 0 0 0-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  Signing in…
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- responsive -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">Tablet and Phone — controls stay full-width and 44px tall</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834</span></div>
+          <div class="device-screen bg-canvas">
+            <div class="px-6 py-8">
+              <h3 class="text-lg font-semibold text-fg text-center">Sign in to your account</h3>
+              <div class="max-w-xs mx-auto mt-5 space-y-3">
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Email</div><div class="border border-line rounded px-2.5 py-2 text-xs text-fg">ada@example.com</div></div>
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Password</div><div class="border border-line rounded px-2.5 py-2 text-xs text-fg">••••••••</div></div>
+                <div class="bg-ok text-white text-xs font-semibold rounded px-3 py-2 text-center">Sign in</div>
+                <div class="flex items-center gap-2"><div class="h-px flex-1 bg-line"></div><span class="text-[9px] text-faint">or</span><div class="h-px flex-1 bg-line"></div></div>
+                <div class="border border-line rounded px-3 py-2 text-xs text-fg text-center">Continue with GitHub</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas">
+            <div class="px-4 py-6">
+              <div class="text-center mb-5">
+                <div class="inline-flex w-8 h-8 rounded-full border border-line bg-subtle items-center justify-center"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></div>
+                <h3 class="mt-2 text-base font-semibold text-fg">Sign in</h3>
+              </div>
+              <div class="space-y-3">
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Email</div><div class="border border-line rounded px-2.5 py-2 text-xs text-fg">ada@example.com</div></div>
+                <div><div class="text-[10px] font-semibold text-fg mb-1">Password</div><div class="border border-line rounded px-2.5 py-2 text-xs text-fg">••••••••</div></div>
+                <div class="bg-ok text-white text-xs font-semibold rounded px-3 py-2 text-center">Sign in</div>
+                <div class="flex items-center gap-2"><div class="h-px flex-1 bg-line"></div><span class="text-[9px] text-faint">or</span><div class="h-px flex-1 bg-line"></div></div>
+                <div class="border border-line rounded px-3 py-2 text-xs text-fg text-center">Continue with GitHub</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-03 OAUTH CALLBACK                                    -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-03" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-03</span>
+      <h2 class="text-lg font-semibold text-fg">GitHub OAuth callback</h2>
+      <span class="state-label" data-kind="info">phase-05 §5.4 · FR-04</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-03</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">GitHub OAuth callback</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/auth/github/callback (public)</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">/login → GitHub consent → backend → session → /dashboard</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone</span></span>
+      </span>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Waiting</span><span class="text-xs text-faint">session establishing</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">/auth/github/callback?code=…</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="grid place-items-center py-16 px-6">
+              <div class="text-center">
+                <svg class="w-7 h-7 mx-auto animate-spin" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#d0d7de" stroke-width="2"/><path d="M14 8a6 6 0 0 0-6-6" stroke="#0969da" stroke-width="2" stroke-linecap="round"/></svg>
+                <h3 class="mt-4 text-base font-semibold text-fg">Signing you in with GitHub…</h3>
+                <p class="text-xs text-muted mt-1">Exchanging the authorisation code for a session.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="error">Backend error</span><span class="text-xs text-faint">error forwarded verbatim from the API</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">/auth/github/callback?error=access_denied</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="grid place-items-center py-16 px-6">
+              <div class="text-center max-w-xs">
+                <div class="inline-flex w-10 h-10 rounded-full border border-bad bg-badbg items-center justify-center">
+                  <svg viewBox="0 0 16 16" class="w-5 h-5 text-bad" fill="currentColor"><path d="M2.34 2.34a8 8 0 1 1 11.32 11.32l-1.41-1.42a6.5 6.5 0 1 0-8.49-8.49l1.41 1.42A5 5 0 0 1 13 8H9l1.5 1.5L9 11H2V4l1.5 1.5L5 4l-2.66-1.66Z"/></svg>
+                </div>
+                <h3 class="mt-3 text-base font-semibold text-fg">GitHub sign-in failed</h3>
+                <p class="text-xs text-muted mt-1">Authorisation was denied. No account was linked.</p>
+                <div class="mt-4 flex items-center justify-center gap-2">
+                  <button class="border border-line rounded px-3 py-1.5 text-xs font-medium text-fg bg-canvas">Back to sign in</button>
+                  <button class="bg-ok text-white rounded px-3 py-1.5 text-xs font-semibold">Retry with GitHub</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">centred on all three widths; no shell renders until the session resolves</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834</span></div>
+          <div class="device-screen bg-canvas grid place-items-center py-14">
+            <div class="text-center">
+              <svg class="w-6 h-6 mx-auto animate-spin" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#d0d7de" stroke-width="2"/><path d="M14 8a6 6 0 0 0-6-6" stroke="#0969da" stroke-width="2" stroke-linecap="round"/></svg>
+              <div class="mt-3 text-sm font-semibold text-fg">Signing you in with GitHub…</div>
+              <div class="text-[11px] text-muted mt-0.5">Exchanging the authorisation code.</div>
+            </div>
+          </div>
+        </div>
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas grid place-items-center py-16">
+            <div class="text-center px-4">
+              <svg class="w-6 h-6 mx-auto animate-spin" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#d0d7de" stroke-width="2"/><path d="M14 8a6 6 0 0 0-6-6" stroke="#0969da" stroke-width="2" stroke-linecap="round"/></svg>
+              <div class="mt-3 text-sm font-semibold text-fg">Signing you in…</div>
+              <div class="text-[11px] text-muted mt-0.5">With GitHub</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-04 APP SHELL                                         -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-04" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-04</span>
+      <h2 class="text-lg font-semibold text-fg">App shell</h2>
+      <span class="state-label" data-kind="info">phase-05 §5.3 · FR-03, FR-05</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-04</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">App shell — header, nav, project switcher, user menu</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">wraps every protected route</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">session → dashboard → tasks → board → roadmap → projects</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop 1440</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet 834</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone 390</span></span>
+      </span>
+    </div>
+
+    <!-- desktop -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Desktop 1440</span><span class="text-xs text-faint">horizontal header + persistent sidebar</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/dashboard</span><span class="ml-auto">Desktop · 1440</span></div>
+        <div class="device-viewport">
+          <!-- header -->
+          <div class="app-topbar">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full border border-line bg-subtle flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></span>
+              <span class="text-[13px] font-semibold text-fg">Task Stream</span>
+            </div>
+
+            <!-- project switcher -->
+            <div class="ml-4 relative">
+              <div class="flex items-center gap-1.5 border border-line rounded-md pl-2 pr-1.5 py-1 bg-canvas hover:bg-subtle">
+                <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-faint" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/></svg>
+                <span class="text-xs text-fg font-medium">Portfolio Website</span>
+                <svg viewBox="0 0 16 16" class="w-3 h-3 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+              </div>
+              <!-- open menu -->
+              <div class="absolute left-0 top-full mt-1 w-64 border border-line rounded-md bg-canvas shadow-lg overflow-hidden z-10 text-xs">
+                <div class="px-2.5 py-1.5 text-[10px] font-semibold text-faint uppercase tracking-wide bg-subtle border-b border-line">Scope</div>
+                <div class="px-2.5 py-1.5 flex items-center justify-between hover:bg-subtle cursor-pointer"><span class="text-fg">All projects</span><svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-accent" fill="currentColor"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L4.22 6.28a.75.75 0 0 1 1.06-1.06L8 7.94l3.72-3.72a.75.75 0 0 1 1.06 0Z"/></svg></div>
+                <div class="border-t border-line">
+                  <div class="px-2.5 py-1.5 flex items-center justify-between bg-subtle"><span class="text-fg font-semibold">Portfolio Website</span><span class="text-[10px] text-muted">12 tasks</span></div>
+                  <div class="px-2.5 py-1.5 flex items-center justify-between hover:bg-subtle cursor-pointer"><span class="text-fg">Task Stream</span><span class="text-[10px] text-muted">0 tasks</span></div>
+                  <div class="px-2.5 py-1.5 flex items-center justify-between hover:bg-subtle cursor-pointer"><span class="text-fg">docs-site</span><span class="text-[10px] text-muted flex items-center gap-1">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg>
+                    linked
+                  </span></div>
+                </div>
+                <div class="border-t border-line px-2.5 py-1.5 text-accent hover:underline cursor-pointer">Manage projects</div>
+              </div>
+            </div>
+
+            <!-- nav -->
+            <nav class="ml-6 flex items-center gap-1 text-xs">
+              <a class="px-2.5 py-1.5 rounded-md font-semibold text-fg bg-inset">Dashboard</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted hover:bg-subtle">Tasks</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted hover:bg-subtle">Board</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted hover:bg-subtle">Roadmap</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted hover:bg-subtle">Projects</a>
+            </nav>
+
+            <!-- user menu -->
+            <div class="ml-auto relative">
+              <div class="flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded-full border border-line bg-canvas hover:bg-subtle">
+                <span class="w-5 h-5 rounded-full bg-inset text-[9px] font-semibold text-muted flex items-center justify-center">AL</span>
+                <span class="text-xs text-fg font-medium">Ada</span>
+                <svg viewBox="0 0 16 16" class="w-3 h-3 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+              </div>
+              <div class="absolute right-0 top-full mt-1 w-56 border border-line rounded-md bg-canvas shadow-lg overflow-hidden z-10 text-xs">
+                <div class="px-3 py-2.5 border-b border-line">
+                  <div class="text-xs font-semibold text-fg">Ada Lovelace</div>
+                  <div class="text-[11px] text-muted">ada@example.com</div>
+                </div>
+                <div class="p-1">
+                  <div class="px-2 py-1.5 rounded hover:bg-subtle text-fg cursor-pointer flex items-center gap-2">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-faint" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Zm0 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Z"/></svg>
+                    Settings <span class="ml-auto text-[10px] text-faint">deferred</span>
+                  </div>
+                  <div class="px-2 py-1.5 rounded hover:bg-subtle text-fg cursor-pointer flex items-center gap-2">
+                    <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.15" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+                    Disconnect GitHub
+                  </div>
+                </div>
+                <div class="border-t border-line p-1">
+                  <div class="px-2 py-1.5 rounded hover:bg-badbg text-bad cursor-pointer flex items-center gap-2 font-medium">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M2 2.75C2 1.784 2.784 1 3.75 1h2.5a.75.75 0 0 1 0 1.5h-2.5a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h2.5a.75.75 0 0 1 0 1.5h-2.5A1.75 1.75 0 0 1 2 13.25Zm6.44 3.53 2.72-2.72a.75.75 0 1 1 1.06 1.06L10.56 6.28h4.19a.75.75 0 0 1 0 1.5h-4.19l1.66 1.66a.75.75 0 1 1-1.06 1.06l-2.72-2.72a.75.75 0 0 1 0-1.06Z"/></svg>
+                    Sign out
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- body -->
+          <div class="flex" style="min-height:23rem">
+            <aside class="app-sidebar">
+              <div class="text-[10px] font-semibold text-faint uppercase tracking-wide mb-1.5">Views</div>
+              <a class="flex items-center gap-2 text-xs px-2 py-1.5 rounded-md font-semibold text-fg bg-inset">
+                <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M1.75 1h4.5A1.75 1.75 0 0 1 8 2.75v4.5A1.75 1.75 0 0 1 6.25 9h-4.5A1.75 1.75 0 0 1 0 7.25v-4.5C0 1.784.784 1 1.75 1Zm0 1.5a.25.25 0 0 0-.25.25v4.5c0 .138.112.25.25.25h4.5a.25.25 0 0 0 .25-.25v-4.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Dashboard
+              </a>
+              <a class="flex items-center gap-2 text-xs px-2 py-1.5 rounded-md text-muted hover:bg-subtle">
+                <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path fill-rule="evenodd" d="M1.5 3.25a2.25 2.25 0 0 1 3-2.122l5.5 3.063a2.25 2.25 0 0 1 0 4.018l-1.1.612a1 1 0 0 0 0 1.73l.2.11a2.25 2.25 0 0 1-.984 4.11l-1.05-.244a1 1 0 0 0-.93.276l-.3.326a2.25 2.25 0 0 1-3.017 0l-.3-.326a1 1 0 0 0-.93-.276l-1.05.244A2.25 2.25 0 0 1 1.5 12.1a2.25 2.25 0 0 1 .984-4.11l.2-.11a1 1 0 0 0 0-1.73l-1.1-.612A2.25 2.25 0 0 1 1.5 3.25Z"/></svg>
+                Tasks
+                <span class="ml-auto text-[10px] text-faint">137</span>
+              </a>
+              <a class="flex items-center gap-2 text-xs px-2 py-1.5 rounded-md text-muted hover:bg-subtle">
+                <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M0 2.75C0 1.784.784 1 1.75 1h3.5C6.216 1 7 .784 7 1.75v4.5C7 6.216 6.216 7 5.25 7h-3.5C.784 7 0 6.216 0 5.25Zm7.5 0C7.5 1.784 8.284 1 9.25 1h5A1.75 1.75 0 0 1 16 2.75v4.5A1.75 1.75 0 0 1 14.25 9h-5A1.75 1.75 0 0 1 7.5 7.25Zm0 6.5c0-.966.784-1.75 1.75-1.75h5a1.75 1.75 0 0 1 1.75 1.75v4.5A1.75 1.75 0 0 1 14.25 15h-5A1.75 1.75 0 0 1 7.5 13.25ZM0 9.25C0 8.284.784 7.5 1.75 7.5h3.5c.966 0 1.75.784 1.75 1.75v4.5A1.75 1.75 0 0 1 5.25 15h-3.5A1.75 1.75 0 0 1 0 13.25Z"/></svg>
+                Board
+              </a>
+              <a class="flex items-center gap-2 text-xs px-2 py-1.5 rounded-md text-muted hover:bg-subtle">
+                <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M0 3.75C0 2.784.784 2 1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25Zm1.75-.25a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25ZM4 5.25A.75.75 0 0 1 4.75 4.5h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 4 5.25Zm0 3A.75.75 0 0 1 4.75 7.5h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 4 8.25Zm0 3a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5A.75.75 0 0 1 4 11.25Z"/></svg>
+                Roadmap
+              </a>
+
+              <div class="text-[10px] font-semibold text-faint uppercase tracking-wide mt-4 mb-1.5">Projects</div>
+              <a class="flex items-center gap-2 text-xs px-2 py-1.5 rounded-md text-muted hover:bg-subtle">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                <span class="truncate">Portfolio Website</span>
+                <span class="ml-auto text-[10px] text-faint">12</span>
+              </a>
+              <a class="flex items-center gap-2 text-xs px-2 py-1.5 rounded-md text-muted hover:bg-subtle">
+                <span class="w-1.5 h-1.5 rounded-full bg-line"></span>
+                <span class="truncate">Task Stream</span>
+                <span class="ml-auto text-[10px] text-faint">0</span>
+              </a>
+
+              <div class="mt-4 border border-line rounded-md p-2 bg-subtle">
+                <div class="flex items-center gap-1.5 text-[11px] font-semibold text-fg">
+                  <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-ok" fill="currentColor"><path fill-rule="evenodd" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"/></svg>
+                  GitHub connected
+                </div>
+                <div class="text-[10px] text-faint mt-0.5 ml-5">4,812 / 5,000 requests left</div>
+              </div>
+            </aside>
+
+            <div class="app-content flex-1">
+              <div class="text-[10px] text-faint font-mono mb-2">// page content renders here — see SC-06 … SC-19</div>
+              <div class="grid grid-cols-4 gap-3">
+                <div class="border border-line rounded-md p-3"><div class="h-3 w-10 rounded skeleton"></div><div class="h-6 w-12 rounded skeleton mt-2"></div></div>
+                <div class="border border-line rounded-md p-3"><div class="h-3 w-10 rounded skeleton"></div><div class="h-6 w-12 rounded skeleton mt-2"></div></div>
+                <div class="border border-line rounded-md p-3"><div class="h-3 w-10 rounded skeleton"></div><div class="h-6 w-12 rounded skeleton mt-2"></div></div>
+                <div class="border border-line rounded-md p-3"><div class="h-3 w-10 rounded skeleton"></div><div class="h-6 w-12 rounded skeleton mt-2"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- tablet + phone -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">sidebar collapses at 1024px, header nav collapses to a drawer below 768px</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834</span><span class="ml-auto">sidebar hidden</span></div>
+          <div class="device-screen bg-canvas">
+            <div class="app-topbar">
+              <span class="w-5 h-5 rounded-full border border-line bg-subtle"></span>
+              <span class="text-[11px] font-semibold text-fg">Task Stream</span>
+              <div class="ml-auto flex items-center gap-1.5">
+                <span class="border border-line rounded px-1.5 py-0.5 text-[9px] text-fg">Portfolio Website ▾</span>
+                <span class="w-5 h-5 rounded-full bg-inset text-[8px] font-semibold text-muted flex items-center justify-center">AL</span>
+              </div>
+            </div>
+            <div class="flex border-b border-line px-2 py-1.5 text-[10px] gap-1 overflow-hidden">
+              <span class="px-2 py-1 rounded font-semibold text-fg bg-inset">Dashboard</span>
+              <span class="px-2 py-1 rounded text-muted">Tasks</span>
+              <span class="px-2 py-1 rounded text-muted">Board</span>
+              <span class="px-2 py-1 rounded text-muted">Roadmap</span>
+            </div>
+            <div class="p-3">
+              <div class="grid grid-cols-2 gap-2">
+                <div class="border border-line rounded-md p-2.5"><div class="h-2.5 w-8 rounded skeleton"></div><div class="h-4 w-8 rounded skeleton mt-1.5"></div></div>
+                <div class="border border-line rounded-md p-2.5"><div class="h-2.5 w-8 rounded skeleton"></div><div class="h-4 w-8 rounded skeleton mt-1.5"></div></div>
+                <div class="border border-line rounded-md p-2.5"><div class="h-2.5 w-8 rounded skeleton"></div><div class="h-4 w-8 rounded skeleton mt-1.5"></div></div>
+                <div class="border border-line rounded-md p-2.5"><div class="h-2.5 w-8 rounded skeleton"></div><div class="h-4 w-8 rounded skeleton mt-1.5"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas">
+            <!-- top bar with hamburger -->
+            <div class="app-topbar">
+              <span class="text-muted">
+                <svg viewBox="0 0 16 16" class="w-4 h-4" fill="currentColor"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"/></svg>
+              </span>
+              <span class="text-[12px] font-semibold text-fg">Task Stream</span>
+              <span class="ml-auto w-6 h-6 rounded-full bg-inset text-[9px] font-semibold text-muted flex items-center justify-center">AL</span>
+            </div>
+            <!-- drawer open -->
+            <div class="border-b border-line bg-subtle px-3 py-2.5">
+              <div class="border border-line rounded bg-canvas px-2 py-1 flex items-center gap-1.5">
+                <svg viewBox="0 0 16 16" class="w-3 h-3 text-faint" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Z"/></svg>
+                <span class="text-[10px] text-fg">Portfolio Website</span>
+                <svg viewBox="0 0 16 16" class="w-2.5 h-2.5 text-faint ml-auto" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+              </div>
+              <div class="mt-2 grid grid-cols-2 gap-1 text-[11px]">
+                <span class="px-2 py-1.5 rounded bg-inset text-fg font-semibold">Dashboard</span>
+                <span class="px-2 py-1.5 rounded text-muted">Tasks</span>
+                <span class="px-2 py-1.5 rounded text-muted">Board</span>
+                <span class="px-2 py-1.5 rounded text-muted">Roadmap</span>
+                <span class="px-2 py-1.5 rounded text-muted">Projects</span>
+                <span class="px-2 py-1.5 rounded text-bad font-medium">Sign out</span>
+              </div>
+            </div>
+            <div class="p-3">
+              <div class="text-[10px] text-faint font-mono mb-2">// page content</div>
+              <div class="grid grid-cols-2 gap-2">
+                <div class="border border-line rounded-md p-2.5"><div class="h-2.5 w-8 rounded skeleton"></div><div class="h-4 w-8 rounded skeleton mt-1.5"></div></div>
+                <div class="border border-line rounded-md p-2.5"><div class="h-2.5 w-8 rounded skeleton"></div><div class="h-4 w-8 rounded skeleton mt-1.5"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- splash / session check -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Splash — session check in flight</span><span class="text-xs text-faint">full-page splash prevents a login-screen flash on every hard refresh</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/tasks</span><span class="ml-auto">Desktop</span></div>
+        <div class="device-viewport grid place-items-center" style="height:22rem">
+          <div class="text-center">
+            <svg class="w-8 h-8 mx-auto animate-spin" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#d0d7de" stroke-width="2"/><path d="M14 8a6 6 0 0 0-6-6" stroke="#0969da" stroke-width="2" stroke-linecap="round"/></svg>
+            <p class="mt-3 text-xs text-muted font-mono">GET /api/auth/me</p>
+            <p class="text-[11px] text-faint mt-1">Neither protected content nor the login form renders until this resolves.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-05 404 / SESSION EXPIRY                              -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-05" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-05</span>
+      <h2 class="text-lg font-semibold text-fg">404 &amp; session expiry</h2>
+      <span class="state-label" data-kind="info">phase-05 §6, §7.3 · FR-03, FR-05</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-05</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Not found · session expired</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">* (catch-all) · any 401 from any endpoint</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">any route → 404 page · any API 401 → clear session → /login</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone</span></span>
+      </span>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="empty">404 Not found</span><span class="text-xs text-faint">catch-all route</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/taks</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport grid place-items-center" style="min-height:20rem">
+            <div class="text-center px-6">
+              <p class="font-mono text-5xl font-semibold text-inset select-none">404</p>
+              <h3 class="mt-3 text-base font-semibold text-fg">This page doesn't exist</h3>
+              <p class="text-xs text-muted mt-1 max-w-xs">The page may have been moved, or the link may be mistyped. Nothing you own was deleted.</p>
+              <div class="mt-4 flex items-center justify-center gap-2">
+                <button class="border border-line rounded px-3 py-1.5 text-xs font-medium text-fg bg-canvas hover:bg-subtle">Go back</button>
+                <button class="bg-ok text-white rounded px-3 py-1.5 text-xs font-semibold">Go to dashboard</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="error">401 — session expired</span><span class="text-xs text-faint">global interceptor: no component checks individually</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/board → PATCH 401</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport grid place-items-center" style="min-height:20rem">
+            <div class="w-full max-w-sm px-6">
+              <div class="border border-warn rounded-md bg-warnbg px-4 py-3 flex items-start gap-2.5">
+                <svg viewBox="0 0 16 16" class="w-4.5 h-4.5 text-warn mt-0.5 flex-none" style="width:18px;height:18px" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Zm0 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.75 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 6.75 4Zm0 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>
+                <div class="text-xs text-warn">
+                  <div class="font-semibold">Your session has expired</div>
+                  <div class="mt-0.5 text-warn/90">You were moved off <span class="font-mono">/board</span>. Sign in again to pick up where you left off.</div>
+                </div>
+              </div>
+              <div class="mt-3 text-center">
+                <div class="text-[10px] text-faint font-mono mb-2">redirecting to /login?redirect=/board</div>
+                <svg class="w-5 h-5 mx-auto animate-spin" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#d0d7de" stroke-width="2"/><path d="M14 8a6 6 0 0 0-6-6" stroke="#0969da" stroke-width="2" stroke-linecap="round"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">404 on Phone; expiry notice on Tablet</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas grid place-items-center py-16 px-5">
+            <div class="text-center">
+              <p class="font-mono text-4xl font-semibold text-inset">404</p>
+              <div class="mt-2 text-sm font-semibold text-fg">This page doesn't exist</div>
+              <div class="text-[11px] text-muted mt-1">The link may be mistyped.</div>
+              <div class="mt-3 border border-line rounded px-3 py-1.5 text-[11px] text-fg bg-canvas inline-block">Go to dashboard</div>
+            </div>
+          </div>
+        </div>
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834</span></div>
+          <div class="device-screen bg-canvas grid place-items-center py-14 px-8">
+            <div class="w-full max-w-xs">
+              <div class="border border-warn rounded-md bg-warnbg px-3 py-2.5 flex items-start gap-2">
+                <svg viewBox="0 0 16 16" class="w-4 h-4 text-warn mt-0.5 flex-none" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Zm0 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.75 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 6.75 4Zm0 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>
+                <div class="text-[11px] text-warn"><span class="font-semibold">Your session has expired</span><div class="mt-0.5">Sign in again to continue at <span class="font-mono">/board</span>.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-line bg-subtle mt-10 no-print">
+  <div class="mx-auto max-w-7xl px-5 py-4 text-xs text-faint">
+    Auth &amp; Shell · SC-01 – SC-05 · static mockup, not the implementation.
+  </div>
+</footer>
+
+</body>
+</html>

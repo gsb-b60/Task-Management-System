@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Task Stream — UI Mockup Index</title>
+<link rel="stylesheet" href="assets/mockup.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          canvas: '#ffffff',
+          subtle: '#f6f8fa',
+          inset: '#eff2f5',
+          fg: '#24292f',
+          muted: '#57606a',
+          faint: '#6e7781',
+          line: '#d0d7de',
+          linesoft: '#d8dee4',
+          accent: '#0969da',
+          ok: '#1a7f37',
+          okbg: '#dafbe1',
+          bad: '#cf222e',
+          badbg: '#ffebe9',
+          warn: '#9a6700',
+          warnbg: '#fff8c5',
+          info: '#8250df',
+          infobg: '#fbefff',
+        },
+        fontFamily: {
+          sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Noto Sans', 'Helvetica', 'Arial', 'sans-serif'],
+          mono: ['ui-monospace', 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'monospace'],
+        },
+      },
+    },
+  };
+</script>
+</head>
+<body class="min-h-screen">
+
+<!-- ══════════════ HEADER ══════════════ -->
+<header class="border-b border-line bg-canvas no-print">
+  <div class="mx-auto max-w-7xl px-5 py-3 flex items-center gap-3">
+    <span class="w-6 h-6 rounded-full border border-line bg-subtle flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></span>
+    <div class="leading-tight">
+      <h1 class="text-[15px] font-semibold text-fg">Task Stream — UI Mockups</h1>
+      <p class="text-xs text-faint">Production preview · static HTML + Tailwind · white theme</p>
+    </div>
+  </div>
+
+  <!-- feature nav -->
+  <nav class="gallery-nav border-t border-line bg-subtle">
+    <div class="mx-auto max-w-7xl px-5 py-1.5 flex flex-wrap gap-1">
+      <a href="index.html" aria-current="page">Index</a>
+      <a href="screens/auth.html">Auth &amp; Shell</a>
+      <a href="screens/dashboard.html">Dashboard</a>
+      <a href="screens/tasks.html">Tasks &amp; Detail</a>
+      <a href="screens/board.html">Board</a>
+      <a href="screens/roadmap.html">Roadmap</a>
+      <a href="screens/projects.html">Projects</a>
+      <a href="screens/github.html">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main class="mx-auto max-w-7xl px-5 py-8 space-y-10">
+
+  <!-- ══════════════ SUMMARY ══════════════ -->
+  <section>
+    <h2 class="text-lg font-semibold text-fg">Summary</h2>
+    <p class="text-sm text-muted mt-1 max-w-3xl">
+      Twenty-four screens across seven features, derived from <span class="font-mono text-xs">srs.md §13 Main Screens</span>
+      and the frontend phase documents 05 – 09 and 11. Every screen is shown on Desktop, Tablet and Phone,
+      and every list-bearing screen renders all five list states: loading, empty, filtered-empty, error, success.
+    </p>
+    <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl">
+      <div class="border border-line rounded-lg p-3">
+        <div class="text-2xl font-semibold text-fg">24</div>
+        <div class="text-xs text-faint">screens</div>
+      </div>
+      <div class="border border-line rounded-lg p-3">
+        <div class="text-2xl font-semibold text-fg">7</div>
+        <div class="text-xs text-faint">feature files</div>
+      </div>
+      <div class="border border-line rounded-lg p-3">
+        <div class="text-2xl font-semibold text-fg">3</div>
+        <div class="text-xs text-faint">device frames each</div>
+      </div>
+      <div class="border border-line rounded-lg p-3">
+        <div class="text-2xl font-semibold text-fg">46</div>
+        <div class="text-xs text-faint">screen states</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ LEGEND ══════════════ -->
+  <section>
+    <h2 class="text-lg font-semibold text-fg">Colour language</h2>
+    <p class="text-sm text-muted mt-1 max-w-3xl">
+      There is no brand primary colour. Blue appears only for links, focus rings, the active nav item and
+      checkbox selection — nothing more. Every status signal is a soft tint plus an icon or a text label,
+      so meaning never depends on colour alone (SRS §8, Phase 07 §8).
+    </p>
+    <div class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-5xl">
+      <div class="border border-line rounded-lg p-3 flex items-start gap-2">
+        <span class="legend-dot bg-ok"></span>
+        <div><div class="text-xs font-semibold text-fg">Green — done / open / success</div><div class="text-xs text-faint">DONE status, open GitHub issue, save confirmed, delete toast</div></div>
+      </div>
+      <div class="border border-line rounded-lg p-3 flex items-start gap-2">
+        <span class="legend-dot bg-info"></span>
+        <div><div class="text-xs font-semibold text-fg">Purple — in progress</div><div class="text-xs text-faint">IN_PROGRESS status, roadmap active bar</div></div>
+      </div>
+      <div class="border border-line rounded-lg p-3 flex items-start gap-2">
+        <span class="legend-dot bg-warn"></span>
+        <div><div class="text-xs font-semibold text-fg">Amber — warning / due soon</div><div class="text-xs text-faint">MEDIUM priority, due within 3 days, GitHub rate limit</div></div>
+      </div>
+      <div class="border border-line rounded-lg p-3 flex items-start gap-2">
+        <span class="legend-dot bg-bad"></span>
+        <div><div class="text-xs font-semibold text-fg">Red — error / overdue / closed</div><div class="text-xs text-faint">isOverdue, HIGH priority, closed issue, validation errors</div></div>
+      </div>
+      <div class="border border-line rounded-lg p-3 flex items-start gap-2">
+        <span class="legend-dot bg-faint"></span>
+        <div><div class="text-xs font-semibold text-fg">Grey — TODO / low priority</div><div class="text-xs text-faint">TODO status, LOW priority, disabled controls</div></div>
+      </div>
+      <div class="border border-line rounded-lg p-3 flex items-start gap-2">
+        <span class="legend-dot bg-accent"></span>
+        <div><div class="text-xs font-semibold text-fg">Blue — affordance only</div><div class="text-xs text-faint">Links, focus ring, active nav, checked checkbox</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ SCREEN REGISTER ══════════════ -->
+  <section>
+    <h2 class="text-lg font-semibold text-fg">Screen register</h2>
+    <div class="mt-3 flex flex-wrap items-center gap-2 no-print">
+      <input id="q" type="search" placeholder="Filter by ID, name, flow or state…"
+        class="border border-line rounded-md px-2.5 py-1.5 text-sm text-fg placeholder:text-faint bg-canvas focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent w-full sm:w-80" />
+      <span id="count" class="text-xs text-faint"></span>
+    </div>
+
+    <div class="mt-4 overflow-x-auto border border-line rounded-lg">
+      <table class="w-full text-sm min-w-[56rem]">
+        <thead class="bg-subtle text-xs text-muted">
+          <tr class="text-left">
+            <th class="px-3 py-2 font-semibold w-20">ID</th>
+            <th class="px-3 py-2 font-semibold">Screen</th>
+            <th class="px-3 py-2 font-semibold">Feature</th>
+            <th class="px-3 py-2 font-semibold">Flow</th>
+            <th class="px-3 py-2 font-semibold">States shown</th>
+            <th class="px-3 py-2 font-semibold w-40">Devices</th>
+          </tr>
+        </thead>
+        <tbody id="rows" class="divide-y divide-linesoft"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══════════════ FLOWS ══════════════ -->
+  <section>
+    <h2 class="text-lg font-semibold text-fg">Flows</h2>
+    <p class="text-sm text-muted mt-1">Each feature file walks one flow end to end. Hover a node to open that screen.</p>
+
+    <div class="mt-4 grid lg:grid-cols-2 gap-4">
+
+      <!-- Auth -->
+      <div class="border border-line rounded-lg p-4">
+        <div class="text-xs font-semibold text-fg mb-3">Auth &amp; Shell</div>
+        <ol class="flex flex-wrap items-center gap-1.5 text-xs">
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/auth.html#sc-01">SC-01 Register</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/auth.html#sc-02">SC-02 Login</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/auth.html#sc-03">SC-03 OAuth callback</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-accent rounded px-2 py-1 bg-blue-50 font-semibold" href="screens/auth.html#sc-04">SC-04 App shell</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/auth.html#sc-05">SC-05 404 / expiry</a></li>
+        </ol>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="border border-line rounded-lg p-4">
+        <div class="text-xs font-semibold text-fg mb-3">Dashboard</div>
+        <ol class="flex flex-wrap items-center gap-1.5 text-xs">
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/auth.html#sc-04">SC-04 App shell</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-accent rounded px-2 py-1 bg-blue-50 font-semibold" href="screens/dashboard.html#sc-06">SC-06 Dashboard</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/dashboard.html#sc-08">SC-08 Project scoped</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/tasks.html#sc-09">SC-09 Task list</a></li>
+        </ol>
+      </div>
+
+      <!-- Tasks -->
+      <div class="border border-line rounded-lg p-4">
+        <div class="text-xs font-semibold text-fg mb-3">Tasks &amp; Detail</div>
+        <ol class="flex flex-wrap items-center gap-1.5 text-xs">
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/dashboard.html#sc-06">SC-06 Dashboard</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-accent rounded px-2 py-1 bg-blue-50 font-semibold" href="screens/tasks.html#sc-09">SC-09 Task list</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/tasks.html#sc-10">SC-10 List states</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/tasks.html#sc-11">SC-11 Pagination edges</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/tasks.html#sc-12">SC-12 Task detail</a></li>
+        </ol>
+      </div>
+
+      <!-- Board -->
+      <div class="border border-line rounded-lg p-4">
+        <div class="text-xs font-semibold text-fg mb-3">Board</div>
+        <ol class="flex flex-wrap items-center gap-1.5 text-xs">
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/tasks.html#sc-09">SC-09 Task list</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-accent rounded px-2 py-1 bg-blue-50 font-semibold" href="screens/board.html#sc-13">SC-13 Board</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/board.html#sc-14">SC-14 Move &amp; rollback</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/board.html#sc-15">SC-15 Keyboard path</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/tasks.html#sc-12">SC-12 Task detail</a></li>
+        </ol>
+      </div>
+
+      <!-- Roadmap -->
+      <div class="border border-line rounded-lg p-4">
+        <div class="text-xs font-semibold text-fg mb-3">Roadmap</div>
+        <ol class="flex flex-wrap items-center gap-1.5 text-xs">
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/board.html#sc-13">SC-13 Board</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-accent rounded px-2 py-1 bg-blue-50 font-semibold" href="screens/roadmap.html#sc-16">SC-16 Roadmap</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/roadmap.html#sc-17">SC-17 Roadmap states</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/roadmap.html#sc-18">SC-18 Bar variants</a></li>
+        </ol>
+      </div>
+
+      <!-- Projects -->
+      <div class="border border-line rounded-lg p-4">
+        <div class="text-xs font-semibold text-fg mb-3">Projects</div>
+        <ol class="flex flex-wrap items-center gap-1.5 text-xs">
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/auth.html#sc-04">SC-04 App shell</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-accent rounded px-2 py-1 bg-blue-50 font-semibold" href="screens/projects.html#sc-19">SC-19 Project list</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/projects.html#sc-20">SC-20 Create project</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/projects.html#sc-21">SC-21 Delete confirm</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/board.html#sc-13">SC-13 Board</a></li>
+        </ol>
+      </div>
+
+      <!-- GitHub -->
+      <div class="border border-line rounded-lg p-4 lg:col-span-2">
+        <div class="text-xs font-semibold text-fg mb-3">GitHub integration</div>
+        <ol class="flex flex-wrap items-center gap-1.5 text-xs">
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/projects.html#sc-19">SC-19 Project list</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-accent rounded px-2 py-1 bg-blue-50 font-semibold" href="screens/github.html#sc-22">SC-22 Repo picker</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/github.html#sc-23">SC-23 Repo states</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/github.html#sc-24">SC-24 Issue import</a></li>
+          <li class="text-faint">→</li>
+          <li><a class="border border-line rounded px-2 py-1 hover:bg-subtle" href="screens/board.html#sc-13">SC-13 Board card w/ GitHub #n</a></li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════ NOTES ══════════════ -->
+  <section>
+    <h2 class="text-lg font-semibold text-fg">Mockup conventions</h2>
+    <div class="mt-3 grid md:grid-cols-2 gap-4 max-w-5xl text-sm">
+      <div class="border border-line rounded-lg p-4">
+        <div class="text-xs font-semibold text-fg mb-2">Per-screen anatomy</div>
+        <ul class="text-muted space-y-1 list-disc pl-4 text-xs leading-relaxed">
+          <li><span class="text-fg font-medium">Meta bar</span> — ID, name, flow breadcrumb, device list.</li>
+          <li><span class="text-fg font-medium">State blocks</span> — one labelled block per state, data-grounded.</li>
+          <li><span class="text-fg font-medium">Device frames</span> — Desktop 1440, Tablet 834, Phone 390.</li>
+        </ul>
+      </div>
+      <div class="border border-line rounded-lg p-4">
+        <div class="text-xs font-semibold text-fg mb-2">Data discipline</div>
+        <ul class="text-muted space-y-1 list-disc pl-4 text-xs leading-relaxed">
+          <li><code class="font-mono text-[11px]">isOverdue</code> and <code class="font-mono text-[11px]">daysUntilDue</code> render verbatim from the server; never recomputed from a client clock (Phase 06 §4.1).</li>
+          <li>Absent status keys render <code class="font-mono text-[11px]">0</code>, never blank.</li>
+          <li>Due labels: <code class="font-mono text-[11px]">0</code> → "due today", negative → "overdue by N days", positive → "in N days".</li>
+          <li>401 is a normal state, not a surfaced error.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-line bg-subtle mt-10 no-print">
+  <div class="mx-auto max-w-7xl px-5 py-4 text-xs text-faint">
+    Derived from <span class="font-mono">docs/phase-05…11</span> and <span class="font-mono">srs.md §13</span> · static mockup, not the implementation.
+  </div>
+</footer>
+
+<script>
+  const DATA = [
+    ['SC-01','Register','Auth & Shell','guest → session','default · field validation · 409 conflict · submitting · success','auth.html#sc-01'],
+    ['SC-02','Login','Auth & Shell','guest → session','default · 401 generic · 429 rate-limited · submitting','auth.html#sc-02'],
+    ['SC-03','GitHub OAuth callback','Auth & Shell','login → GitHub → session','waiting · backend error','auth.html#sc-03'],
+    ['SC-04','App shell','Auth & Shell','session → all protected routes','desktop header + sidebar · tablet · mobile drawer · user menu','auth.html#sc-04'],
+    ['SC-05','404 & session expiry','Auth & Shell','any → not found / 401','not found · session expired redirect','auth.html#sc-05'],
+    ['SC-06','Dashboard','Dashboard','login → dashboard → tasks','populated · zero data · project scoped','dashboard.html#sc-06'],
+    ['SC-07','Dashboard states','Dashboard','dashboard loading / failing','loading skeleton · error + retry · empty','dashboard.html#sc-07'],
+    ['SC-08','Dashboard project scope','Dashboard','?projectId= in URL','project filter · stat tile reflow','dashboard.html#sc-08'],
+    ['SC-09','Task list','Tasks & Detail','dashboard → list','default · search · filters · pagination · long title','tasks.html#sc-09'],
+    ['SC-10','Task list states','Tasks & Detail','list loading / empty / failing','loading · no tasks yet · no match · error + retry','tasks.html#sc-10'],
+    ['SC-11','Pagination edges','Tasks & Detail','page 1 → page N','first page · last page · page size selector','tasks.html#sc-11'],
+    ['SC-12','Task detail','Tasks & Detail','list → detail → back','create · edit · date validation · server details[] · delete confirm · success toast','tasks.html#sc-12'],
+    ['SC-13','Kanban board','Board','list → board','three columns · counts · card states · column scroll','board.html#sc-13'],
+    ['SC-14','Board move & rollback','Board','drag → PATCH → refetch','dragging · in flight · rollback + toast · truncated · empty column','board.html#sc-14'],
+    ['SC-15','Board keyboard path','Board','focus card → status control','status select open · focus ring','board.html#sc-15'],
+    ['SC-16','Roadmap','Roadmap','board → roadmap','month axis · bars · Today line · overdue · tooltip','roadmap.html#sc-16'],
+    ['SC-17','Roadmap states','Roadmap','roadmap loading / empty','loading · no tasks in range · error · week + quarter scales','roadmap.html#sc-17'],
+    ['SC-18','Roadmap bar variants','Roadmap','undated · milestone · open-ended','Undated lane · milestone diamond · open-ended bar · group toggle','roadmap.html#sc-18'],
+    ['SC-19','Project selection','Projects','app shell → projects','project rows · switcher · repo badge','projects.html#sc-19'],
+    ['SC-20','Create / edit project','Projects','projects → modal','loading · empty · error · form · date validation','projects.html#sc-20'],
+    ['SC-21','Delete project','Projects','confirm → delete → toast','confirmation naming task count · deleted toast','projects.html#sc-21'],
+    ['SC-22','Repository picker','GitHub','projects → repo picker','repo rows · visibility · link to project','github.html#sc-22'],
+    ['SC-23','Repository states','GitHub','repo fetch failing','loading · not connected · rate limited · API error degraded','github.html#sc-23'],
+    ['SC-24','Issue import list','GitHub','issues → import → board','issue rows · labels · bulk select · already imported · GitHub #n card','github.html#sc-24'],
+  ];
+
+  const tbody = document.getElementById('rows');
+  const q = document.getElementById('q');
+  const count = document.getElementById('count');
+
+  function render(filter) {
+    const f = (filter || '').toLowerCase();
+    const rows = DATA.filter(r => !f || r.join(' ').toLowerCase().includes(f));
+    tbody.innerHTML = rows.map(r => `
+      <tr class="hover:bg-subtle">
+        <td class="px-3 py-2 align-top"><a class="screen-id hover:border-accent hover:text-accent" href="screens/${r[5]}">${r[0]}</a></td>
+        <td class="px-3 py-2 align-top">
+          <a class="text-accent hover:underline font-medium" href="screens/${r[5]}">${r[1]}</a>
+        </td>
+        <td class="px-3 py-2 align-top text-muted">${r[2]}</td>
+        <td class="px-3 py-2 align-top text-muted font-mono text-xs">${r[3]}</td>
+        <td class="px-3 py-2 align-top text-faint text-xs">${r[4]}</td>
+        <td class="px-3 py-2 align-top">
+          <div class="flex gap-1 text-[10px] text-muted">
+            <span class="border border-line rounded px-1.5 py-0.5 bg-subtle">Desktop</span>
+            <span class="border border-line rounded px-1.5 py-0.5 bg-subtle">Tablet</span>
+            <span class="border border-line rounded px-1.5 py-0.5 bg-subtle">Phone</span>
+          </div>
+        </td>
+      </tr>`).join('');
+    count.textContent = rows.length + ' of ' + DATA.length + ' screens';
+  }
+
+  q.addEventListener('input', e => render(e.target.value));
+  render('');
+</script>
+
+</body>
+</html>

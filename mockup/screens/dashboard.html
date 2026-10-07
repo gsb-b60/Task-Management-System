@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dashboard — UI Mockups</title>
+<link rel="stylesheet" href="../assets/mockup.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: {
+    colors: {
+      canvas:'#ffffff', subtle:'#f6f8fa', inset:'#eff2f5', fg:'#24292f', muted:'#57606a',
+      faint:'#6e7781', line:'#d0d7de', linesoft:'#d8dee4', accent:'#0969da',
+      ok:'#1a7f37', okbg:'#dafbe1', bad:'#cf222e', badbg:'#ffebe9', warn:'#9a6700',
+      warnbg:'#fff8c5', info:'#8250df', infobg:'#fbefff',
+    },
+    fontFamily: { sans:['-apple-system','BlinkMacSystemFont','Segoe UI','Noto Sans','Helvetica','Arial','sans-serif'],
+                   mono:['ui-monospace','SFMono-Regular','SF Mono','Menlo','Consolas','monospace'] },
+  } } };
+</script>
+</head>
+<body class="min-h-screen">
+
+<header class="border-b border-line bg-canvas no-print">
+  <div class="mx-auto max-w-7xl px-5 py-3 flex items-center gap-3">
+    <a href="../index.html" class="w-6 h-6 rounded-full border border-line bg-subtle flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></a>
+    <div class="leading-tight">
+      <h1 class="text-[15px] font-semibold text-fg">Dashboard</h1>
+      <p class="text-xs text-faint">SC-06 – SC-08 · statistics and upcoming due tasks</p>
+    </div>
+  </div>
+  <nav class="gallery-nav border-t border-line bg-subtle">
+    <div class="mx-auto max-w-7xl px-5 py-1.5 flex flex-wrap gap-1">
+      <a href="../index.html">Index</a>
+      <a href="auth.html">Auth &amp; Shell</a>
+      <a href="dashboard.html" aria-current="page">Dashboard</a>
+      <a href="tasks.html">Tasks &amp; Detail</a>
+      <a href="board.html">Board</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="projects.html">Projects</a>
+      <a href="github.html">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main class="mx-auto max-w-7xl px-5 py-8 space-y-12">
+
+  <div class="border border-line rounded-lg p-3 flex flex-wrap items-center gap-1.5 text-xs">
+    <span class="meta-key mr-1">Flow</span>
+    <span class="border border-line rounded px-2 py-1">/dashboard</span>
+    <span class="text-faint">stats from</span><span class="border border-line rounded px-2 py-1 font-mono">GET /api/dashboard/summary</span>
+    <span class="text-faint">upcoming from</span><span class="border border-line rounded px-2 py-1 font-mono">GET /api/dashboard/upcoming</span>
+    <span class="text-faint">→</span>
+    <a class="border border-accent rounded px-2 py-1 bg-blue-50 text-accent font-semibold" href="tasks.html#sc-09">SC-09 Task list</a>
+    <span class="text-faint ml-1">· counts refresh automatically after any task mutation (prefix invalidation)</span>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-06 DASHBOARD POPULATED                               -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-06" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-06</span>
+      <h2 class="text-lg font-semibold text-fg">Dashboard</h2>
+      <span class="state-label" data-kind="info">srs.md §13.3 · phase-06 §4.1 · FR-16 – FR-20</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-06</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Dashboard — populated</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/dashboard (protected)</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">login → /dashboard → /tasks → /board</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop 1440</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet 834</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone 390</span></span>
+      </span>
+    </div>
+
+    <!-- state: populated desktop -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Default — success</span><span class="text-xs text-faint">fixture: total 137, done 48, doing 52, todo 37, overdue 6, due today 3</span></div>
+      <div class="device-frame">
+        <div class="device-bar">
+          <span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span>
+          <span class="font-mono">todogit.app/dashboard</span>
+          <span class="ml-auto">Desktop · 1440</span>
+        </div>
+        <div class="device-viewport">
+
+          <!-- topbar -->
+          <div class="app-topbar">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full border border-line bg-subtle flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><g stroke="#fff" stroke-width="1.35" stroke-linecap="round"><path d="M6.3 15.2q1.3-1.5 2.6 0"/><path d="M8.9 15.6q1.3-1.5 2.6 0"/><path d="M8.2 17.3q1.5 1.6 3 0"/></g><circle cx="6.4" cy="18.1" r="0.7" fill="#fff" opacity=".5"/><path d="M19.5 2.2l1.1 2.2 2.2 1.1-2.2 1.1-1.1 2.2-1.1-2.2-2.2-1.1 2.2-1.1z" fill="currentColor" opacity=".55"/><path d="M21.6 10.9l.7 1.4 1.4.7-1.4.7-.7 1.4-.7-1.4-1.4-.7 1.4-.7z" fill="currentColor" opacity=".4"/></svg></span>
+              <span class="text-[13px] font-semibold text-fg">Task Stream</span>
+            </div>
+            <div class="ml-3 flex items-center gap-1.5 border border-line rounded-md pl-2 pr-1.5 py-1 bg-canvas">
+              <span class="text-xs text-fg font-medium">All projects</span>
+              <svg viewBox="0 0 16 16" class="w-3 h-3 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+            </div>
+            <nav class="ml-6 flex items-center gap-1 text-xs">
+              <a class="px-2.5 py-1.5 rounded-md font-semibold text-fg bg-inset">Dashboard</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted hover:bg-subtle" href="tasks.html">Tasks</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted hover:bg-subtle" href="board.html">Board</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted hover:bg-subtle" href="roadmap.html">Roadmap</a>
+            </nav>
+            <div class="ml-auto flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded-full border border-line">
+              <span class="w-5 h-5 rounded-full bg-inset text-[9px] font-semibold text-muted flex items-center justify-center">AL</span>
+              <span class="text-xs text-fg font-medium">Ada</span>
+            </div>
+          </div>
+
+          <!-- content -->
+          <div class="app-content">
+            <div class="flex items-center gap-3 mb-4">
+              <div>
+                <h2 class="text-lg font-semibold text-fg">Dashboard</h2>
+                <p class="text-xs text-muted mt-0.5">All projects · 137 tasks</p>
+              </div>
+              <div class="ml-auto flex items-center gap-2">
+                <button class="border border-line rounded-md px-3 py-1.5 text-xs font-medium text-fg bg-canvas hover:bg-subtle">Go to Roadmap</button>
+                <button class="bg-ok text-white rounded-md px-3 py-1.5 text-xs font-semibold">Go to Board</button>
+              </div>
+            </div>
+
+            <!-- stat tiles -->
+            <div class="grid grid-cols-4 gap-3">
+              <!-- total -->
+              <div class="border border-line rounded-md p-3">
+                <div class="flex items-center gap-1.5 text-[10px] font-semibold text-faint uppercase tracking-wide">
+                  <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M2 3.75C2 2.784.784 2 1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25Zm1.75-.25a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                  Total
+                </div>
+                <div class="text-2xl font-semibold text-fg mt-1.5">137</div>
+                <div class="text-[10px] text-faint mt-0.5">all statuses</div>
+              </div>
+              <!-- todo -->
+              <div class="border border-line rounded-md p-3">
+                <div class="flex items-center gap-1.5 text-[10px] font-semibold text-faint uppercase tracking-wide">
+                  <span class="legend-dot bg-faint" style="width:8px;height:8px"></span>Todo
+                </div>
+                <div class="text-2xl font-semibold text-fg mt-1.5">37</div>
+                <div class="text-[10px] text-faint mt-0.5">byStatus.TODO</div>
+              </div>
+              <!-- in progress -->
+              <div class="border border-line rounded-md p-3">
+                <div class="flex items-center gap-1.5 text-[10px] font-semibold text-faint uppercase tracking-wide">
+                  <span class="legend-dot bg-info" style="width:8px;height:8px"></span>Doing
+                </div>
+                <div class="text-2xl font-semibold text-fg mt-1.5">52</div>
+                <div class="text-[10px] text-faint mt-0.5">byStatus.IN_PROGRESS</div>
+              </div>
+              <!-- done -->
+              <div class="border border-line rounded-md p-3">
+                <div class="flex items-center gap-1.5 text-[10px] font-semibold text-faint uppercase tracking-wide">
+                  <span class="legend-dot bg-ok" style="width:8px;height:8px"></span>Done
+                </div>
+                <div class="text-2xl font-semibold text-fg mt-1.5">48</div>
+                <div class="text-[10px] text-faint mt-0.5">byStatus.DONE</div>
+              </div>
+            </div>
+
+            <!-- alert strip -->
+            <div class="mt-3 grid grid-cols-2 gap-3">
+              <div class="border border-bad rounded-md bg-badbg px-3 py-2.5 flex items-center gap-2.5">
+                <svg viewBox="0 0 16 16" class="w-4 h-4 text-bad flex-none" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                <div class="min-w-0">
+                  <div class="text-[10px] font-semibold text-bad uppercase tracking-wide">Overdue</div>
+                  <div class="text-lg font-semibold text-bad leading-tight">6</div>
+                </div>
+                <span class="ml-auto text-[11px] text-bad hover:underline">Review</span>
+              </div>
+              <div class="border border-warn rounded-md bg-warnbg px-3 py-2.5 flex items-center gap-2.5">
+                <svg viewBox="0 0 16 16" class="w-4 h-4 text-warn flex-none" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Zm0 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm.75 3h-1.5v4.5h1.5V4.5Zm0 5.75a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Z"/></svg>
+                <div class="min-w-0">
+                  <div class="text-[10px] font-semibold text-warn uppercase tracking-wide">Due today</div>
+                  <div class="text-lg font-semibold text-warn leading-tight">3</div>
+                </div>
+                <span class="ml-auto text-[11px] text-warn hover:underline">Review</span>
+              </div>
+            </div>
+
+            <!-- upcoming -->
+            <div class="mt-4 border border-line rounded-md">
+              <div class="px-4 py-2.5 border-b border-line flex items-center gap-2 bg-subtle">
+                <h3 class="text-xs font-semibold text-fg">Upcoming</h3>
+                <span class="text-[10px] text-faint font-mono">sortBy=dueDate · nearest first</span>
+                <span class="ml-auto text-[11px] text-accent hover:underline" href="tasks.html#sc-09">View all 137</span>
+              </div>
+
+              <table class="w-full text-xs">
+                <thead class="text-[10px] uppercase tracking-wide text-faint">
+                  <tr class="text-left border-b border-line">
+                    <th class="px-4 py-2 font-semibold">#</th>
+                    <th class="px-2 py-2 font-semibold">Task</th>
+                    <th class="px-2 py-2 font-semibold">Priority</th>
+                    <th class="px-2 py-2 font-semibold">Status</th>
+                    <th class="px-4 py-2 font-semibold text-right">Due</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-linesoft">
+                  <!-- overdue -->
+                  <tr class="hover:bg-subtle">
+                    <td class="px-4 py-2 font-mono text-faint">#12</td>
+                    <td class="px-2 py-2">
+                      <div class="flex items-center gap-1.5">
+                        <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-bad flex-none" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                        <span class="text-fg font-medium">Fix login redirect</span>
+                      </div>
+                    </td>
+                    <td class="px-2 py-2"><span class="inline-flex items-center gap-1 border border-bad rounded-full bg-badbg text-bad text-[10px] font-semibold px-1.5 py-0.5">High</span></td>
+                    <td class="px-2 py-2"><span class="inline-flex items-center gap-1 border border-info rounded-full bg-infobg text-info text-[10px] font-semibold px-1.5 py-0.5"><span class="legend-dot bg-info" style="width:6px;height:6px"></span>In progress</span></td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="text-bad font-semibold">overdue by 2 days</div>
+                      <div class="text-[10px] text-faint font-mono">daysUntilDue: -2 · isOverdue: true</div>
+                    </td>
+                  </tr>
+                  <!-- due today -->
+                  <tr class="hover:bg-subtle">
+                    <td class="px-4 py-2 font-mono text-faint">#18</td>
+                    <td class="px-2 py-2"><span class="text-fg font-medium">Deploy staging</span></td>
+                    <td class="px-2 py-2"><span class="inline-flex items-center gap-1 border border-warn rounded-full bg-warnbg text-warn text-[10px] font-semibold px-1.5 py-0.5">Medium</span></td>
+                    <td class="px-2 py-2"><span class="inline-flex items-center gap-1 border border-line rounded-full bg-subtle text-muted text-[10px] font-semibold px-1.5 py-0.5"><span class="legend-dot bg-faint" style="width:6px;height:6px"></span>Todo</span></td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="text-warn font-semibold">due today</div>
+                      <div class="text-[10px] text-faint font-mono">daysUntilDue: 0</div>
+                    </td>
+                  </tr>
+                  <!-- in 5 days -->
+                  <tr class="hover:bg-subtle">
+                    <td class="px-4 py-2 font-mono text-faint">#21</td>
+                    <td class="px-2 py-2"><span class="text-fg font-medium">Write API docs</span></td>
+                    <td class="px-2 py-2"><span class="inline-flex items-center gap-1 border border-line rounded-full bg-subtle text-muted text-[10px] font-semibold px-1.5 py-0.5">Low</span></td>
+                    <td class="px-2 py-2"><span class="inline-flex items-center gap-1 border border-info rounded-full bg-infobg text-info text-[10px] font-semibold px-1.5 py-0.5"><span class="legend-dot bg-info" style="width:6px;height:6px"></span>In progress</span></td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="text-fg font-medium">in 5 days</div>
+                      <div class="text-[10px] text-faint font-mono">daysUntilDue: 5</div>
+                    </td>
+                  </tr>
+                  <!-- in 9 days -->
+                  <tr class="hover:bg-subtle">
+                    <td class="px-4 py-2 font-mono text-faint">#24</td>
+                    <td class="px-2 py-2"><span class="text-fg font-medium">Refactor auth</span></td>
+                    <td class="px-2 py-2"><span class="inline-flex items-center gap-1 border border-line rounded-full bg-subtle text-muted text-[10px] font-semibold px-1.5 py-0.5">Low</span></td>
+                    <td class="px-2 py-2"><span class="inline-flex items-center gap-1 border border-ok rounded-full bg-okbg text-ok text-[10px] font-semibold px-1.5 py-0.5"><span class="legend-dot bg-ok" style="width:6px;height:6px"></span>Done</span></td>
+                    <td class="px-4 py-2 text-right">
+                      <div class="text-fg font-medium">in 9 days</div>
+                      <div class="text-[10px] text-faint font-mono">daysUntilDue: 9</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- upcoming pagination -->
+              <div class="px-4 py-2.5 border-t border-line flex items-center gap-3 text-xs">
+                <span class="text-[11px] text-faint">Showing 1–4 of 24 upcoming</span>
+                <div class="ml-auto flex items-center gap-1">
+                  <button class="border border-line rounded px-1.5 py-1 text-[11px] text-fg bg-canvas">Prev</button>
+                  <span class="px-2 py-1 text-[11px] font-semibold text-fg bg-inset rounded">1</span>
+                  <span class="px-2 py-1 text-[11px] text-muted">2</span>
+                  <span class="px-2 py-1 text-[11px] text-muted">3</span>
+                  <button class="border border-line rounded px-1.5 py-1 text-[11px] text-fg bg-canvas">Next</button>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-[10px] text-faint font-mono mt-3">
+              // labels derive from the server's daysUntilDue — 0 → "due today", negative → "overdue by N days", positive → "in N days". Never recomputed from the browser clock.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- responsive: tablet + phone -->
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">tiles 4-up → 2-up → 2-up; the upcoming table becomes stacked rows on Phone</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+
+        <!-- tablet -->
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834</span></div>
+          <div class="device-screen bg-canvas">
+            <div class="app-topbar">
+              <span class="w-5 h-5 rounded-full border border-line bg-subtle"></span>
+              <span class="text-[11px] font-semibold text-fg">Task Stream</span>
+              <span class="ml-auto border border-line rounded px-1.5 py-0.5 text-[9px] text-fg">All projects ▾</span>
+              <span class="w-5 h-5 rounded-full bg-inset text-[8px] font-semibold text-muted flex items-center justify-center">AL</span>
+            </div>
+            <div class="flex border-b border-line px-2 py-1 text-[10px] gap-1">
+              <span class="px-2 py-1 rounded font-semibold text-fg bg-inset">Dashboard</span>
+              <span class="px-2 py-1 rounded text-muted">Tasks</span>
+              <span class="px-2 py-1 rounded text-muted">Board</span>
+              <span class="px-2 py-1 rounded text-muted">Roadmap</span>
+            </div>
+            <div class="p-3">
+              <div class="flex items-center mb-3">
+                <div class="text-sm font-semibold text-fg">Dashboard</div>
+                <div class="ml-auto text-[9px] bg-ok text-white rounded px-2 py-1 font-semibold">Board</div>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div class="border border-line rounded-md p-2.5">
+                  <div class="text-[9px] font-semibold text-faint uppercase">Total</div>
+                  <div class="text-xl font-semibold text-fg">137</div>
+                </div>
+                <div class="border border-line rounded-md p-2.5">
+                  <div class="text-[9px] font-semibold text-faint uppercase">Todo</div>
+                  <div class="text-xl font-semibold text-fg">37</div>
+                </div>
+                <div class="border border-line rounded-md p-2.5">
+                  <div class="text-[9px] font-semibold text-faint uppercase">Doing</div>
+                  <div class="text-xl font-semibold text-fg">52</div>
+                </div>
+                <div class="border border-line rounded-md p-2.5">
+                  <div class="text-[9px] font-semibold text-faint uppercase">Done</div>
+                  <div class="text-xl font-semibold text-fg">48</div>
+                </div>
+              </div>
+              <div class="mt-2 grid grid-cols-2 gap-2">
+                <div class="border border-bad rounded bg-badbg px-2 py-1.5 flex items-center gap-1.5">
+                  <span class="text-[9px] font-semibold text-bad uppercase">Overdue</span>
+                  <span class="ml-auto text-sm font-semibold text-bad">6</span>
+                </div>
+                <div class="border border-warn rounded bg-warnbg px-2 py-1.5 flex items-center gap-1.5">
+                  <span class="text-[9px] font-semibold text-warn uppercase">Due today</span>
+                  <span class="ml-auto text-sm font-semibold text-warn">3</span>
+                </div>
+              </div>
+              <div class="mt-3 border border-line rounded-md overflow-hidden">
+                <div class="px-2.5 py-1.5 border-b border-line bg-subtle text-[10px] font-semibold text-fg">Upcoming</div>
+                <div class="divide-y divide-linesoft text-[10px]">
+                  <div class="px-2.5 py-1.5 flex items-center gap-1.5">
+                    <span class="font-mono text-faint">#12</span>
+                    <span class="text-fg font-medium flex-1 truncate">Fix login redirect</span>
+                    <span class="text-bad font-semibold whitespace-nowrap">-2d</span>
+                  </div>
+                  <div class="px-2.5 py-1.5 flex items-center gap-1.5">
+                    <span class="font-mono text-faint">#18</span>
+                    <span class="text-fg font-medium flex-1 truncate">Deploy staging</span>
+                    <span class="text-warn font-semibold whitespace-nowrap">today</span>
+                  </div>
+                  <div class="px-2.5 py-1.5 flex items-center gap-1.5">
+                    <span class="font-mono text-faint">#21</span>
+                    <span class="text-fg font-medium flex-1 truncate">Write API docs</span>
+                    <span class="text-fg whitespace-nowrap">in 5d</span>
+                  </div>
+                  <div class="px-2.5 py-1.5 flex items-center gap-1.5">
+                    <span class="font-mono text-faint">#24</span>
+                    <span class="text-fg font-medium flex-1 truncate">Refactor auth</span>
+                    <span class="text-fg whitespace-nowrap">in 9d</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- phone -->
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas">
+            <div class="app-topbar">
+              <svg viewBox="0 0 16 16" class="w-4 h-4 text-muted" fill="currentColor"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"/></svg>
+              <span class="text-[11px] font-semibold text-fg">Task Stream</span>
+              <span class="ml-auto w-5 h-5 rounded-full bg-inset text-[8px] font-semibold text-muted flex items-center justify-center">AL</span>
+            </div>
+            <div class="p-3">
+              <div class="flex items-center mb-2">
+                <div class="text-sm font-semibold text-fg">Dashboard</div>
+                <span class="ml-auto text-[9px] border border-line rounded px-1.5 py-0.5 text-muted">All ▾</span>
+              </div>
+              <div class="grid grid-cols-2 gap-1.5">
+                <div class="border border-line rounded-md p-2">
+                  <div class="text-[9px] font-semibold text-faint uppercase">Total</div>
+                  <div class="text-lg font-semibold text-fg leading-tight">137</div>
+                </div>
+                <div class="border border-line rounded-md p-2">
+                  <div class="text-[9px] font-semibold text-faint uppercase">Todo</div>
+                  <div class="text-lg font-semibold text-fg leading-tight">37</div>
+                </div>
+                <div class="border border-line rounded-md p-2">
+                  <div class="text-[9px] font-semibold text-faint uppercase">Doing</div>
+                  <div class="text-lg font-semibold text-fg leading-tight">52</div>
+                </div>
+                <div class="border border-line rounded-md p-2">
+                  <div class="text-[9px] font-semibold text-faint uppercase">Done</div>
+                  <div class="text-lg font-semibold text-fg leading-tight">48</div>
+                </div>
+              </div>
+              <div class="mt-1.5 grid grid-cols-2 gap-1.5">
+                <div class="border border-bad rounded bg-badbg px-2 py-1.5">
+                  <div class="text-[9px] font-semibold text-bad uppercase">Overdue</div>
+                  <div class="text-base font-semibold text-bad leading-tight">6</div>
+                </div>
+                <div class="border border-warn rounded bg-warnbg px-2 py-1.5">
+                  <div class="text-[9px] font-semibold text-warn uppercase">Due today</div>
+                  <div class="text-base font-semibold text-warn leading-tight">3</div>
+                </div>
+              </div>
+              <div class="mt-2.5 border border-line rounded-md overflow-hidden">
+                <div class="px-2.5 py-1.5 border-b border-line bg-subtle text-[10px] font-semibold text-fg flex items-center">
+                  Upcoming <span class="ml-auto text-[9px] font-normal text-accent">All 137</span>
+                </div>
+                <div class="divide-y divide-linesoft">
+                  <div class="px-2.5 py-2">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[9px] text-faint">#12</span>
+                      <span class="text-[11px] text-fg font-medium flex-1 truncate">Fix login redirect</span>
+                      <span class="text-[9px] border border-bad rounded-full bg-badbg text-bad font-semibold px-1">High</span>
+                    </div>
+                    <div class="flex items-center gap-1 mt-1">
+                      <span class="text-[9px] border border-info rounded-full bg-infobg text-info font-semibold px-1">In progress</span>
+                      <span class="ml-auto text-[10px] text-bad font-semibold">overdue by 2 days</span>
+                    </div>
+                  </div>
+                  <div class="px-2.5 py-2">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[9px] text-faint">#18</span>
+                      <span class="text-[11px] text-fg font-medium flex-1 truncate">Deploy staging</span>
+                      <span class="text-[9px] border border-warn rounded-full bg-warnbg text-warn font-semibold px-1">Medium</span>
+                    </div>
+                    <div class="flex items-center gap-1 mt-1">
+                      <span class="text-[9px] border border-line rounded-full bg-subtle text-muted font-semibold px-1">Todo</span>
+                      <span class="ml-auto text-[10px] text-warn font-semibold">due today</span>
+                    </div>
+                  </div>
+                  <div class="px-2.5 py-2">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-mono text-[9px] text-faint">#21</span>
+                      <span class="text-[11px] text-fg font-medium flex-1 truncate">Write API docs</span>
+                      <span class="text-[9px] border border-line rounded-full bg-subtle text-muted font-semibold px-1">Low</span>
+                    </div>
+                    <div class="flex items-center gap-1 mt-1">
+                      <span class="text-[9px] border border-info rounded-full bg-infobg text-info font-semibold px-1">In progress</span>
+                      <span class="ml-auto text-[10px] text-fg font-semibold">in 5 days</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-2 grid grid-cols-2 gap-1.5">
+                <div class="border border-line rounded text-[11px] text-fg text-center py-1.5 bg-canvas">Roadmap</div>
+                <div class="bg-ok text-white rounded text-[11px] text-center py-1.5 font-semibold">Board</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-07 DASHBOARD STATES                                 -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-07" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-07</span>
+      <h2 class="text-lg font-semibold text-fg">Dashboard states</h2>
+      <span class="state-label" data-kind="info">phase-06 §7</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-07</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Dashboard — loading, error, empty</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/dashboard</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">mount → loading → success | error | empty</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone</span></span>
+      </span>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-4">
+
+      <!-- loading -->
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="info">Loading</span><span class="text-xs text-faint">skeleton rows, never a spinner</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">/dashboard</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4">
+              <div class="h-4 w-24 rounded skeleton mb-1"></div>
+              <div class="h-2.5 w-32 rounded skeleton mb-4"></div>
+              <div class="grid grid-cols-4 gap-2.5">
+                <div class="border border-line rounded p-2.5"><div class="h-2 w-8 rounded skeleton"></div><div class="h-5 w-8 rounded skeleton mt-2"></div></div>
+                <div class="border border-line rounded p-2.5"><div class="h-2 w-8 rounded skeleton"></div><div class="h-5 w-8 rounded skeleton mt-2"></div></div>
+                <div class="border border-line rounded p-2.5"><div class="h-2 w-8 rounded skeleton"></div><div class="h-5 w-8 rounded skeleton mt-2"></div></div>
+                <div class="border border-line rounded p-2.5"><div class="h-2 w-8 rounded skeleton"></div><div class="h-5 w-8 rounded skeleton mt-2"></div></div>
+              </div>
+              <div class="mt-2.5 grid grid-cols-2 gap-2.5">
+                <div class="border border-line rounded h-12"></div>
+                <div class="border border-line rounded h-12"></div>
+              </div>
+              <div class="mt-3 border border-line rounded">
+                <div class="px-3 py-2 border-b border-line bg-subtle"><div class="h-2.5 w-16 rounded skeleton"></div></div>
+                <div class="divide-y divide-linesoft">
+                  <div class="px-3 py-2.5 flex items-center gap-2"><div class="h-2.5 w-6 rounded skeleton"></div><div class="h-2.5 flex-1 rounded skeleton"></div><div class="h-2.5 w-10 rounded skeleton"></div><div class="h-2.5 w-14 rounded skeleton"></div></div>
+                  <div class="px-3 py-2.5 flex items-center gap-2"><div class="h-2.5 w-6 rounded skeleton"></div><div class="h-2.5 flex-1 rounded skeleton"></div><div class="h-2.5 w-10 rounded skeleton"></div><div class="h-2.5 w-14 rounded skeleton"></div></div>
+                  <div class="px-3 py-2.5 flex items-center gap-2"><div class="h-2.5 w-6 rounded skeleton"></div><div class="h-2.5 flex-1 rounded skeleton"></div><div class="h-2.5 w-10 rounded skeleton"></div><div class="h-2.5 w-14 rounded skeleton"></div></div>
+                  <div class="px-3 py-2.5 flex items-center gap-2"><div class="h-2.5 w-6 rounded skeleton"></div><div class="h-2.5 flex-1 rounded skeleton"></div><div class="h-2.5 w-10 rounded skeleton"></div><div class="h-2.5 w-14 rounded skeleton"></div></div>
+                </div>
+              </div>
+              <p class="text-[10px] text-faint font-mono mt-2">// skeleton mirrors the real layout, not a spinner over blank space</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- error -->
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="error">Error + retry</span><span class="text-xs text-faint">message from <span class="font-mono">ApiError.message</span></span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">/dashboard → 500</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4 flex flex-col" style="min-height:22rem">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="h-4 w-24 rounded skeleton opacity-40"></div>
+              </div>
+              <div class="flex-1 grid place-items-center">
+                <div class="text-center max-w-[16rem]">
+                  <div class="inline-flex w-10 h-10 rounded-full border border-bad bg-badbg items-center justify-center">
+                    <svg viewBox="0 0 16 16" class="w-5 h-5 text-bad" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                  </div>
+                  <h3 class="mt-2.5 text-sm font-semibold text-fg">Could not load the dashboard</h3>
+                  <p class="text-xs text-muted mt-1">Something went wrong on our end. The connection is restored automatically on the next refresh.</p>
+                  <p class="text-[10px] text-faint font-mono mt-2 px-2 py-1 bg-subtle border border-line rounded">ApiError 500 INTERNAL_ERROR</p>
+                  <button class="mt-3 border border-line rounded px-3 py-1.5 text-xs font-medium text-fg bg-canvas hover:bg-subtle inline-flex items-center gap-1.5">
+                    <svg viewBox="0 0 16 16" class="w-3.5 h-3.5" fill="currentColor"><path d="M8 2.5a5.5 5.5 0 1 0 5.24 3.83.75.75 0 1 1 1.427-.55 7 7 0 1 1-6.667-4.83v1.62l3.03-2.24a.75.75 0 0 1 .94 1.163l-4.25 3.5a.75.75 0 0 1-1.06 0l-4.25-3.5A.75.75 0 0 1 6.5 1.98Z"/></svg>
+                    Retry
+                  </button>
+                </div>
+              </div>
+              <p class="text-[10px] text-faint text-center">// never a raw stack trace</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- empty -->
+      <div class="space-y-2">
+        <div class="flex items-center gap-2"><span class="state-label" data-kind="empty">Empty — zero data</span><span class="text-xs text-faint">brand-new account, no projects yet</span></div>
+        <div class="device-frame">
+          <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">/dashboard → all counts 0</span><span class="ml-auto">Desktop</span></div>
+          <div class="device-viewport">
+            <div class="p-4">
+              <div class="flex items-center mb-4">
+                <div class="text-base font-semibold text-fg">Dashboard</div>
+                <span class="ml-auto text-[10px] text-faint border border-line rounded px-1.5 py-0.5">All projects ▾</span>
+              </div>
+              <div class="grid grid-cols-4 gap-2.5">
+                <div class="border border-line rounded p-2.5"><div class="text-[9px] font-semibold text-faint uppercase">Total</div><div class="text-xl font-semibold text-fg">0</div></div>
+                <div class="border border-line rounded p-2.5"><div class="text-[9px] font-semibold text-faint uppercase">Todo</div><div class="text-xl font-semibold text-fg">0</div></div>
+                <div class="border border-line rounded p-2.5"><div class="text-[9px] font-semibold text-faint uppercase">Doing</div><div class="text-xl font-semibold text-fg">0</div></div>
+                <div class="border border-line rounded p-2.5"><div class="text-[9px] font-semibold text-faint uppercase">Done</div><div class="text-xl font-semibold text-fg">0</div></div>
+              </div>
+              <div class="mt-2.5 grid grid-cols-2 gap-2.5">
+                <div class="border border-line rounded px-2.5 py-2 flex items-center gap-2">
+                  <span class="text-[9px] font-semibold text-faint uppercase">Overdue</span><span class="ml-auto text-base font-semibold text-fg">0</span>
+                </div>
+                <div class="border border-line rounded px-2.5 py-2 flex items-center gap-2">
+                  <span class="text-[9px] font-semibold text-faint uppercase">Due today</span><span class="ml-auto text-base font-semibold text-fg">0</span>
+                </div>
+              </div>
+              <div class="mt-3 border border-line rounded px-4 py-8 text-center">
+                <div class="inline-flex w-9 h-9 rounded-full border border-line bg-subtle items-center justify-center">
+                  <svg viewBox="0 0 16 16" class="w-4.5 h-4.5 text-faint" style="width:18px;height:18px" fill="currentColor"><path d="M1.75 1h4.5A1.75 1.75 0 0 1 8 2.75v10.5a.75.75 0 0 1-1.28.53L3.61 10.53 1.28 13.78A.75.75 0 0 1 0 13.25Zm1.75-.25a.25.25 0 0 0-.25.25v8.81l1.42-1.93a.75.75 0 0 1 1.16 0l1.42 1.93V1.75a.25.25 0 0 0-.25-.25Z"/></svg>
+                </div>
+                <h3 class="mt-2.5 text-sm font-semibold text-fg">No tasks yet</h3>
+                <p class="text-xs text-muted mt-1">Create your first project, then add tasks to see your statistics here.</p>
+                <div class="mt-3 flex items-center justify-center gap-2">
+                  <button class="border border-line rounded px-3 py-1.5 text-xs font-medium text-fg bg-canvas" href="projects.html#sc-20">Create project</button>
+                  <button class="bg-ok text-white rounded px-3 py-1.5 text-xs font-semibold" href="tasks.html#sc-12">Add a task</button>
+                </div>
+              </div>
+              <p class="text-[10px] text-faint font-mono mt-2">// "no tasks yet" is distinct from "no tasks match your filters" — the first invites creation, the second invites clearing</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">loading skeleton on Tablet and Phone</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834 — loading</span></div>
+          <div class="device-screen bg-canvas p-4">
+            <div class="h-4 w-24 rounded skeleton mb-1"></div>
+            <div class="h-2.5 w-28 rounded skeleton mb-3"></div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="border border-line rounded p-2.5"><div class="h-2 w-8 rounded skeleton"></div><div class="h-4 w-8 rounded skeleton mt-1.5"></div></div>
+              <div class="border border-line rounded p-2.5"><div class="h-2 w-8 rounded skeleton"></div><div class="h-4 w-8 rounded skeleton mt-1.5"></div></div>
+              <div class="border border-line rounded p-2.5"><div class="h-2 w-8 rounded skeleton"></div><div class="h-4 w-8 rounded skeleton mt-1.5"></div></div>
+              <div class="border border-line rounded p-2.5"><div class="h-2 w-8 rounded skeleton"></div><div class="h-4 w-8 rounded skeleton mt-1.5"></div></div>
+            </div>
+            <div class="mt-2 border border-line rounded divide-y divide-linesoft">
+              <div class="px-2.5 py-2.5 flex gap-2"><div class="h-2.5 w-6 rounded skeleton"></div><div class="h-2.5 flex-1 rounded skeleton"></div><div class="h-2.5 w-12 rounded skeleton"></div></div>
+              <div class="px-2.5 py-2.5 flex gap-2"><div class="h-2.5 w-6 rounded skeleton"></div><div class="h-2.5 flex-1 rounded skeleton"></div><div class="h-2.5 w-12 rounded skeleton"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas p-3">
+            <div class="text-center py-10">
+              <svg class="w-6 h-6 mx-auto animate-spin" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#d0d7de" stroke-width="2"/><path d="M14 8a6 6 0 0 0-6-6" stroke="#0969da" stroke-width="2" stroke-linecap="round"/></svg>
+              <div class="mt-2 text-xs font-semibold text-fg">Loading dashboard</div>
+              <div class="text-[10px] text-faint font-mono mt-0.5">useDashboardSummary()</div>
+              <div class="mt-4 grid grid-cols-2 gap-1.5">
+                <div class="border border-line rounded p-2"><div class="h-2 w-7 rounded skeleton"></div><div class="h-4 w-7 rounded skeleton mt-1"></div></div>
+                <div class="border border-line rounded p-2"><div class="h-2 w-7 rounded skeleton"></div><div class="h-4 w-7 rounded skeleton mt-1"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SC-08 PROJECT-SCOPED DASHBOARD                          -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="sc-08" class="screen-anchor space-y-4">
+    <div class="flex items-baseline gap-3">
+      <span class="screen-id">SC-08</span>
+      <h2 class="text-lg font-semibold text-fg">Project-scoped dashboard</h2>
+      <span class="state-label" data-kind="info">phase-08 §4.3 · ?projectId= in the URL</span>
+    </div>
+
+    <div class="meta-bar">
+      <span class="flex items-center gap-2"><span class="meta-key">ID</span><span class="meta-val font-mono text-xs">SC-08</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Name</span><span class="meta-val">Dashboard — scoped to one project</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Route</span><span class="meta-val font-mono text-xs">/dashboard?projectId=a13b…</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Flow</span><span class="meta-val font-mono text-xs">shell switcher → /dashboard?projectId= → survives refresh &amp; shared link</span></span>
+      <span class="flex items-center gap-2"><span class="meta-key">Devices</span>
+        <span class="flex gap-1 text-[10px]"><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Desktop</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Tablet</span><span class="border border-line rounded px-1.5 py-0.5 bg-canvas">Phone</span></span>
+      </span>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Default — scoped</span><span class="text-xs text-faint">counts now describe one project only</span></div>
+      <div class="device-frame">
+        <div class="device-bar"><span class="device-dots"><i class="device-dot"></i><i class="device-dot"></i><i class="device-dot"></i></span><span class="font-mono">todogit.app/dashboard?projectId=a13b</span><span class="ml-auto">Desktop</span></div>
+        <div class="device-viewport">
+          <div class="app-topbar">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full border border-line bg-subtle"></span>
+              <span class="text-[13px] font-semibold text-fg">Task Stream</span>
+            </div>
+            <div class="ml-3 flex items-center gap-1.5 border border-line rounded-md pl-2 pr-1.5 py-1 bg-canvas">
+              <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+              <span class="text-xs text-fg font-medium">Portfolio Website</span>
+              <svg viewBox="0 0 16 16" class="w-3 h-3 text-faint" fill="currentColor"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+            </div>
+            <nav class="ml-6 flex items-center gap-1 text-xs">
+              <a class="px-2.5 py-1.5 rounded-md font-semibold text-fg bg-inset">Dashboard</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted">Tasks</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted">Board</a>
+              <a class="px-2.5 py-1.5 rounded-md text-muted">Roadmap</a>
+            </nav>
+            <div class="ml-auto flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded-full border border-line">
+              <span class="w-5 h-5 rounded-full bg-inset text-[9px] font-semibold text-muted flex items-center justify-center">AL</span>
+            </div>
+          </div>
+
+          <div class="app-content">
+            <!-- breadcrumb + scope chip -->
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-[11px] text-faint font-mono">/projects</span>
+              <span class="text-[11px] text-faint">›</span>
+              <span class="text-[11px] text-muted font-medium">Portfolio Website</span>
+              <span class="text-[11px] text-faint">›</span>
+              <span class="text-[11px] text-fg font-medium">Dashboard</span>
+            </div>
+            <div class="flex items-center gap-3 mb-4">
+              <div>
+                <h2 class="text-lg font-semibold text-fg">Portfolio Website</h2>
+                <p class="text-xs text-muted mt-0.5">Personal site · 12 tasks · 5 done · Oct 1 – Nov 15</p>
+              </div>
+              <div class="ml-auto flex items-center gap-2">
+                <span class="border border-line rounded bg-subtle text-[10px] text-muted px-2 py-1 font-mono">projectId=a13b…</span>
+                <button class="border border-line rounded-md px-3 py-1.5 text-xs font-medium text-fg bg-canvas">All projects</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-3">
+              <div class="border border-line rounded-md p-3">
+                <div class="text-[10px] font-semibold text-faint uppercase tracking-wide">Total</div>
+                <div class="text-2xl font-semibold text-fg mt-1.5">12</div>
+              </div>
+              <div class="border border-line rounded-md p-3">
+                <div class="flex items-center gap-1.5 text-[10px] font-semibold text-faint uppercase tracking-wide"><span class="legend-dot bg-faint" style="width:8px;height:8px"></span>Todo</div>
+                <div class="text-2xl font-semibold text-fg mt-1.5">4</div>
+              </div>
+              <div class="border border-line rounded-md p-3">
+                <div class="flex items-center gap-1.5 text-[10px] font-semibold text-faint uppercase tracking-wide"><span class="legend-dot bg-info" style="width:8px;height:8px"></span>Doing</div>
+                <div class="text-2xl font-semibold text-fg mt-1.5">3</div>
+              </div>
+              <div class="border border-line rounded-md p-3">
+                <div class="flex items-center gap-1.5 text-[10px] font-semibold text-faint uppercase tracking-wide"><span class="legend-dot bg-ok" style="width:8px;height:8px"></span>Done</div>
+                <div class="text-2xl font-semibold text-fg mt-1.5">5</div>
+              </div>
+            </div>
+
+            <div class="mt-3 grid grid-cols-2 gap-3">
+              <div class="border border-bad rounded-md bg-badbg px-3 py-2.5 flex items-center gap-2.5">
+                <svg viewBox="0 0 16 16" class="w-4 h-4 text-bad flex-none" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                <div><div class="text-[10px] font-semibold text-bad uppercase tracking-wide">Overdue</div><div class="text-lg font-semibold text-bad leading-tight">2</div></div>
+              </div>
+              <div class="border border-warn rounded-md bg-warnbg px-3 py-2.5 flex items-center gap-2.5">
+                <svg viewBox="0 0 16 16" class="w-4 h-4 text-warn flex-none" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Zm0 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm.75 3h-1.5v4.5h1.5V4.5Zm0 5.75a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Z"/></svg>
+                <div><div class="text-[10px] font-semibold text-warn uppercase tracking-wide">Due today</div><div class="text-lg font-semibold text-warn leading-tight">1</div></div>
+              </div>
+            </div>
+
+            <div class="mt-4 border border-line rounded-md">
+              <div class="px-4 py-2.5 border-b border-line flex items-center gap-2 bg-subtle">
+                <h3 class="text-xs font-semibold text-fg">Upcoming · Portfolio Website</h3>
+                <span class="ml-auto text-[11px] text-accent hover:underline">View all 12</span>
+              </div>
+              <table class="w-full text-xs">
+                <tbody class="divide-y divide-linesoft">
+                  <tr class="hover:bg-subtle">
+                    <td class="px-4 py-2 font-mono text-faint w-14">#12</td>
+                    <td class="px-2 py-2 text-fg font-medium">Fix login redirect</td>
+                    <td class="px-2 py-2 w-24"><span class="inline-flex items-center gap-1 border border-bad rounded-full bg-badbg text-bad text-[10px] font-semibold px-1.5 py-0.5">High</span></td>
+                    <td class="px-4 py-2 text-right text-bad font-semibold w-32">overdue by 2 days</td>
+                  </tr>
+                  <tr class="hover:bg-subtle">
+                    <td class="px-4 py-2 font-mono text-faint">#18</td>
+                    <td class="px-2 py-2 text-fg font-medium">Deploy staging</td>
+                    <td class="px-2 py-2"><span class="inline-flex items-center gap-1 border border-warn rounded-full bg-warnbg text-warn text-[10px] font-semibold px-1.5 py-0.5">Medium</span></td>
+                    <td class="px-4 py-2 text-right text-warn font-semibold">due today</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-2"><span class="state-label">Responsive</span><span class="text-xs text-faint">scope chip moves above the title; tiles reflow to 2×2</span></div>
+      <div class="grid sm:grid-cols-2 gap-4 max-w-3xl">
+        <div class="device-tablet">
+          <div class="flex items-center gap-2 px-2 py-1 text-[10px] text-muted border-b border-line"><span>Tablet · 834</span></div>
+          <div class="device-screen bg-canvas">
+            <div class="app-topbar">
+              <span class="text-[11px] font-semibold text-fg">Task Stream</span>
+              <span class="ml-auto border border-line rounded px-1.5 py-0.5 text-[9px] text-fg flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Portfolio Web ▾</span>
+            </div>
+            <div class="p-3">
+              <div class="text-[9px] text-faint font-mono mb-0.5">/projects › Portfolio Website › Dashboard</div>
+              <div class="text-sm font-semibold text-fg">Portfolio Website</div>
+              <div class="text-[10px] text-muted mt-0.5 mb-3">Personal site · 12 tasks · 5 done</div>
+              <div class="grid grid-cols-2 gap-2">
+                <div class="border border-line rounded-md p-2.5"><div class="text-[9px] font-semibold text-faint uppercase">Total</div><div class="text-xl font-semibold text-fg">12</div></div>
+                <div class="border border-line rounded-md p-2.5"><div class="text-[9px] font-semibold text-faint uppercase">Todo</div><div class="text-xl font-semibold text-fg">4</div></div>
+                <div class="border border-line rounded-md p-2.5"><div class="text-[9px] font-semibold text-faint uppercase">Doing</div><div class="text-xl font-semibold text-fg">3</div></div>
+                <div class="border border-line rounded-md p-2.5"><div class="text-[9px] font-semibold text-faint uppercase">Done</div><div class="text-xl font-semibold text-fg">5</div></div>
+              </div>
+              <div class="mt-2 grid grid-cols-2 gap-2">
+                <div class="border border-bad rounded bg-badbg px-2 py-1.5 flex items-center"><span class="text-[9px] font-semibold text-bad uppercase">Overdue</span><span class="ml-auto text-sm font-semibold text-bad">2</span></div>
+                <div class="border border-warn rounded bg-warnbg px-2 py-1.5 flex items-center"><span class="text-[9px] font-semibold text-warn uppercase">Due today</span><span class="ml-auto text-sm font-semibold text-warn">1</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="device-phone">
+          <div class="device-notch"></div>
+          <div class="device-screen bg-canvas">
+            <div class="app-topbar">
+              <svg viewBox="0 0 16 16" class="w-4 h-4 text-muted" fill="currentColor"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"/></svg>
+              <span class="text-[11px] font-semibold text-fg">Portfolio Website</span>
+              <span class="ml-auto w-5 h-5 rounded-full bg-inset text-[8px] font-semibold text-muted flex items-center justify-center">AL</span>
+            </div>
+            <div class="p-3">
+              <div class="text-[9px] text-faint font-mono mb-2">projectId=a13b…</div>
+              <div class="grid grid-cols-2 gap-1.5">
+                <div class="border border-line rounded-md p-2"><div class="text-[9px] font-semibold text-faint uppercase">Total</div><div class="text-lg font-semibold text-fg">12</div></div>
+                <div class="border border-line rounded-md p-2"><div class="text-[9px] font-semibold text-faint uppercase">Todo</div><div class="text-lg font-semibold text-fg">4</div></div>
+                <div class="border border-line rounded-md p-2"><div class="text-[9px] font-semibold text-faint uppercase">Doing</div><div class="text-lg font-semibold text-fg">3</div></div>
+                <div class="border border-line rounded-md p-2"><div class="text-[9px] font-semibold text-faint uppercase">Done</div><div class="text-lg font-semibold text-fg">5</div></div>
+              </div>
+              <div class="mt-1.5 grid grid-cols-2 gap-1.5">
+                <div class="border border-bad rounded bg-badbg px-2 py-1.5"><div class="text-[9px] font-semibold text-bad uppercase">Overdue</div><div class="text-base font-semibold text-bad">2</div></div>
+                <div class="border border-warn rounded bg-warnbg px-2 py-1.5"><div class="text-[9px] font-semibold text-warn uppercase">Due today</div><div class="text-base font-semibold text-warn">1</div></div>
+              </div>
+              <div class="mt-2.5 border border-line rounded-md">
+                <div class="px-2.5 py-1.5 border-b border-line bg-subtle text-[10px] font-semibold text-fg">Upcoming</div>
+                <div class="divide-y divide-linesoft text-[10px]">
+                  <div class="px-2.5 py-1.5 flex items-center gap-1.5"><span class="font-mono text-faint">#12</span><span class="text-fg font-medium flex-1 truncate">Fix login redirect</span><span class="text-bad font-semibold">-2d</span></div>
+                  <div class="px-2.5 py-1.5 flex items-center gap-1.5"><span class="font-mono text-faint">#18</span><span class="text-fg font-medium flex-1 truncate">Deploy staging</span><span class="text-warn font-semibold">today</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-line bg-subtle mt-10 no-print">
+  <div class="mx-auto max-w-7xl px-5 py-4 text-xs text-faint">
+    Dashboard · SC-06 – SC-08 · static mockup, not the implementation.
+  </div>
+</footer>
+
+</body>
+</html>
