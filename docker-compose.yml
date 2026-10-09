@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: todogit-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: todogit
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-extensions.sql:/docker-entrypoint-initdb.d/init-extensions.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d todogit"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: todogit-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 5004
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/todogit?schema=public
+      FRONTEND_ORIGIN: "http://localhost:5173"
+      JWT_SECRET: "dev-secret-change-in-prod"
+      JWT_EXPIRES_IN: "7d"
+      BCRYPT_SALT_ROUNDS: "12"
+      GITHUB_CLIENT_ID: ""
+      GITHUB_CLIENT_SECRET: ""
+      GITHUB_CALLBACK_URL: "http://localhost:5004/api/auth/github/callback"
+    ports:
+      - "5004:5004"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - /app/dist
+    command: >
+      sh -c "
+      echo 'Waiting for database...';
+      sleep 5;
+      echo 'Running migrations with retry...';
+      for i in 1 2 3 4 5 6 7 8 9 10; do
+        pnpm prisma migrate deploy && break || sleep 3;
+      done;
+      echo 'Generating Prisma client...';
+      pnpm prisma generate;
+      echo 'Starting dev server...';
+      exec pnpm dev
+      "
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: todogit-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@todogit.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    profiles:
+      - tools
+
+volumes:
+  postgres_data:

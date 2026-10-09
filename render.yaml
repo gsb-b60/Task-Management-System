@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: todogit-backend
+    env: node
+    rootDir: backend
+    buildCommand: pnpm install --frozen-lockfile && npx prisma generate && pnpm build
+    startCommand: node dist/server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: todogit-db
+          property: connectionString
+      - key: FRONTEND_ORIGIN
+        value: https://todogit-frontend.onrender.com
+      - key: JWT_SECRET
+        generateValue: true
+      - key: BCRYPT_SALT_ROUNDS
+        value: "12"
+
+  - type: static
+    name: todogit-frontend
+    rootDir: frontend
+    buildCommand: pnpm install && pnpm build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://todogit-backend.onrender.com/api
+
+databases:
+  - name: todogit-db
+    databaseName: todogit
+    user: todogit_user
