@@ -32,6 +32,8 @@ export interface TaskListFilters {
   pageSize: number;
   /** Phase 04 §5.2 — `dueDate IS NOT NULL AND status != 'DONE'`. */
   upcomingOnly?: boolean;
+  /** `true` → only dated tasks, `false` → only tasks without a due date. */
+  hasDueDate?: boolean;
 }
 
 export interface NewTaskData {
@@ -74,6 +76,9 @@ function buildWhere(userId: string, filters: TaskListFilters): Prisma.TaskWhereI
     // Kept in `AND` so it composes with a caller-supplied `status` filter
     // instead of overwriting it: `?status=DONE` on /upcoming is empty by design.
     where.AND = [{ dueDate: { not: null } }, { status: { not: "DONE" } }];
+  }
+  if (filters.hasDueDate !== undefined) {
+    where.dueDate = filters.hasDueDate ? { not: null } : null;
   }
 
   return where;

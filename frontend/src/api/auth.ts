@@ -1,5 +1,6 @@
 import { apiUrl, request } from './client'
-import type { DashboardResponse, Paginated, ProjectListItem, Task, User } from './types'
+import type { User } from './types'
+import type { DashboardResponse, Paginated, ProjectListItem, Task, TaskStatus, TaskPriority } from './types'
 
 /**
  * The auth contract. Both the fetch implementation and the mock layer
@@ -34,29 +35,55 @@ export interface TasksApi {
   list(params?: {
     projectId?: string
     q?: string
-    status?: string
-    priority?: string
+    status?: TaskStatus | TaskStatus[]
+    priority?: TaskPriority | TaskPriority[]
     page?: number
     pageSize?: number
+    sortBy?: string
+    sortOrder?: string
   }): Promise<Paginated<Task>>
+  get(id: string): Promise<Task>
+  create(input: {
+    title: string
+    description?: string | null
+    status?: TaskStatus
+    priority?: TaskPriority
+    startDate?: string | null
+    dueDate?: string | null
+    projectId?: string | null
+  }): Promise<Task>
+  update(id: string, input: {
+    title?: string
+    description?: string | null
+    status?: TaskStatus
+    priority?: TaskPriority
+    startDate?: string | null
+    dueDate?: string | null
+    projectId?: string | null
+  }): Promise<Task>
+  delete(id: string): Promise<void>
 }
 
 export interface ProjectsApi {
   list(): Promise<ProjectListItem[]>
-}
-
-export interface GitHubRateLimit {
-  remaining: number
-  limit: number
+  get(id: string): Promise<ProjectListItem>
+  create(input: {
+    name: string
+    description?: string | null
+    startDate?: string | null
+    targetDate?: string | null
+  }): Promise<ProjectListItem>
+  update(id: string, input: {
+    name?: string
+    description?: string | null
+    startDate?: string | null
+    targetDate?: string | null
+  }): Promise<ProjectListItem>
+  delete(id: string): Promise<void>
 }
 
 export interface GitHubApi {
-  /**
-   * `null` when the quota is not knowable. The API only surfaces
-   * `x-ratelimit-remaining` per response until Phase 11 exposes it, so the
-   * shell hides the counter rather than inventing a number.
-   */
-  rateLimit(): Promise<GitHubRateLimit | null>
+  rateLimit(): Promise<import('./types').GitHubRateLimit | null>
 }
 
 export interface DataApi {
@@ -86,52 +113,5 @@ export const fetchAuthApi: AuthApi = {
 
   githubAuthorizeUrl() {
     return apiUrl('/auth/github')
-  },
-}
-
-function queryString(params: Record<string, string | number | undefined>): string {
-  const search = new URLSearchParams()
-  for (const [key, value] of Object.entries(params)) {
-    if (value !== undefined && value !== '') {
-      search.set(key, String(value))
-    }
-  }
-  const serialised = search.toString()
-  return serialised ? `?${serialised}` : ''
-}
-
-export const fetchDataApi: DataApi = {
-  dashboard: {
-    async get(params) {
-      return request<DashboardResponse>(`/dashboard${queryString({ projectId: params?.projectId })}`)
-    },
-  },
-
-  tasks: {
-    async list(params) {
-      return request<Paginated<Task>>(
-        `/tasks${queryString({
-          projectId: params?.projectId,
-          q: params?.q,
-          status: params?.status,
-          priority: params?.priority,
-          page: params?.page,
-          pageSize: params?.pageSize,
-        })}`,
-      )
-    },
-  },
-
-  projects: {
-    async list() {
-      return request<ProjectListItem[]>('/projects')
-    },
-  },
-
-  github: {
-    async rateLimit() {
-      // Phase 11 exposes the quota; until then it is genuinely unknown.
-      return null
-    },
   },
 }

@@ -1,7 +1,11 @@
 import { NavLink, useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
 import { useDashboard } from '../../hooks/useDashboard'
-import { useGitHubRateLimit, useProjects } from '../../hooks/useProjects'
-import { IconCheck } from '../ui/Icons'
+import { useGitHubRateLimit } from '../../hooks/useGitHubRateLimit'
+import { useProjects } from '../../hooks/useProjects'
+import { useCreateProject } from '../../hooks/useProjectMutations'
+import { IconCheck, IconPlus } from '../ui/Icons'
+import { TextInput } from '../ui/Input'
 import { SIDEBAR_VIEWS } from './nav'
 
 const ITEM = 'flex items-center gap-2 text-xs px-2 py-1.5 rounded-md'
@@ -14,6 +18,47 @@ export function Sidebar() {
   const { data: projects = [] } = useProjects()
   const { data: dashboard } = useDashboard()
   const { data: rateLimit } = useGitHubRateLimit()
+  const createProject = useCreateProject()
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const activeId = searchParams.get('projectId')
+  const [isAddingProject, setIsAddingProject] = useState(false)
+  const [newProjectName, setNewProjectName] = useState('')
+
+  function handleSelect(projectId: string | null) {
+    const next = new URLSearchParams(searchParams)
+    if (projectId === null) {
+      next.delete('projectId')
+    } else {
+      next.set('projectId', projectId)
+    }
+    setSearchParams(next, { replace: true })
+  }
+
+  function handleClear() {
+    const next = new URLSearchParams(searchParams)
+    next.delete('projectId')
+    setSearchParams(next, { replace: true })
+  }
+
+  async function handleQuickAddProject(e: React.FormEvent) {
+    e.preventDefault()
+    const name = newProjectName.trim()
+    if (!name) return
+
+    try {
+      await createProject.mutateAsync({ name })
+      setNewProjectName('')
+      setIsAddingProject(false)
+    } catch {
+      // Error handled by toast in mutation
+    }
+  }
+
+  function handleCancelQuickAdd() {
+    setNewProjectName('')
+    setIsAddingProject(false)
+  }
 
   return (
     <aside className="hidden lg:block w-56 flex-none border-r border-line p-3 bg-canvas">
@@ -32,16 +77,84 @@ export function Sidebar() {
         </NavLink>
       ))}
 
-      <div className={`${SECTION} mt-4 mb-1.5`}>Projects</div>
-      <SidebarProjects projects={projects} />
+      <div className="flex items-center justify-between mt-4 mb-1.5">
+        <span className={`${SECTION}`}>Projects</span>
+        {!isAddingProject && (
+          <button
+            type="button"
+            onClick={() => setIsAddingProject(true)}
+            className="text-accent hover:text-accent-dark text-sm font-medium flex items-center gap-1"
+            aria-label="Add project"
+          >
+            <IconPlus className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </div>
+      <div className="space-y-1">
+        <button
+          type="button"
+          onClick={() => handleClear()}
+          className={`${ITEM} w-full text-left ${activeId === null ? ACTIVE : INACTIVE}`}
+        >
+          <span className="w-1.5 h-1.5 rounded-full flex-none bg-line" />
+          <span className="truncate">All projects</span>
+          <span className="ml-auto text-[10px] text-faint">{dashboard?.stats.total ?? 0}</span>
+        </button>
+        {isAddingProject ? (
+          <form onSubmit={handleQuickAddProject} className="flex gap-1 px-1">
+            <TextInput
+              id="quick-add-project"
+              value={newProjectName}
+              onChange={(e) => setNewProjectName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') handleCancelQuickAdd()
+              }}
+              placeholder="Project name"
+              className="flex-1 min-w-0"
+              autoFocus
+              required
+              maxLength={100}
+            />
+            <button
+              type="submit"
+              className="px-2 py-1 text-xs font-medium text-fg bg-canvas hover:bg-subtle border border-line rounded-md disabled:opacity-50"
+              disabled={createProject.isPending || !newProjectName.trim()}
+            >
+              {createProject.isPending ? '…' : 'Add'}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancelQuickAdd}
+              className="px-2 py-1 text-xs text-muted hover:text-fg"
+              aria-label="Cancel"
+            >
+              ✕
+            </button>
+          </form>
+        ) : (
+          projects.map((project) => (
+            <button
+              key={project.id}
+              type="button"
+              onClick={() => handleSelect(project.id)}
+              className={`${ITEM} w-full text-left ${project.id === activeId ? ACTIVE : INACTIVE}`}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full flex-none"
+                style={{ backgroundColor: project.color ?? 'var(--color-line)' }}
+              />
+              <span className="truncate">{project.name}</span>
+              <span className="ml-auto text-[10px] text-faint">{project.taskCount}</span>
+            </button>
+          )))
+        }
+      </div>
 
       <div className="mt-4 border border-line rounded-md p-2 bg-subtle">
         <div className="flex items-center gap-1.5 text-[11px] font-semibold text-fg">
           <IconCheck className="w-3.5 h-3.5 text-ok" />
           GitHub connected
         </div>
-        {/* The counter stays hidden until the API exposes the quota, rather
-            than showing a number nothing is enforcing. */}
         {rateLimit && (
           <div className="text-[10px] text-faint mt-0.5 ml-5">
             {rateLimit.remaining.toLocaleString('en-GB')} /{' '}
@@ -50,45 +163,5 @@ export function Sidebar() {
         )}
       </div>
     </aside>
-  )
-}
-
-function SidebarProjects({ projects }: { projects: ReturnType<typeof useProjects>['data'] }) {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const activeId = searchParams.get('projectId')
-
-  function select(projectId: string | null) {
-    const next = new URLSearchParams(searchParams)
-    if (projectId === null) {
-      next.delete('projectId')
-    } else {
-      next.set('projectId', projectId)
-    }
-    setSearchParams(next)
-  }
-
-  if (!projects || projects.length === 0) {
-    return <div className="text-[11px] text-faint px-2 py-1">No projects yet.</div>
-  }
-
-  return (
-    <>
-      {projects.map((project) => (
-        <button
-          key={project.id}
-          type="button"
-          onClick={() => select(project.id)}
-          aria-pressed={project.id === activeId}
-          className={`${ITEM} w-full text-left ${project.id === activeId ? ACTIVE : INACTIVE}`}
-        >
-          <span
-            className="w-1.5 h-1.5 rounded-full flex-none"
-            style={{ backgroundColor: project.color ?? 'var(--color-line)' }}
-          />
-          <span className="truncate">{project.name}</span>
-          <span className="ml-auto text-[10px] text-faint">{project.taskCount}</span>
-        </button>
-      ))}
-    </>
   )
 }

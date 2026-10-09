@@ -7,8 +7,12 @@ import { GitHubCallbackPage } from './pages/auth/GitHubCallbackPage'
 import { LoginPage } from './pages/auth/LoginPage'
 import { RegisterPage } from './pages/auth/RegisterPage'
 import { DashboardPage } from './pages/DashboardPage'
+import { TasksPage } from './pages/TasksPage'
+import { TaskDetailPage } from './pages/TaskDetailPage'
+import { BoardPage } from './pages/BoardPage'
+import { ProjectsPage } from './pages/ProjectsPage'
+import { RoadmapPage } from './pages/RoadmapPage'
 import { NotFoundPage } from './pages/NotFoundPage'
-import { PlaceholderPage } from './pages/PlaceholderPage'
 
 /**
  * Exported as data rather than baked into a browser router so tests can mount
@@ -40,11 +44,11 @@ export const routes: RouteObject[] = [
         element: <AppShell />,
         children: [
           { path: '/dashboard', element: <DashboardPage /> },
-          { path: '/tasks', element: <PlaceholderPage /> },
-          { path: '/tasks/:id', element: <PlaceholderPage /> },
-          { path: '/board', element: <PlaceholderPage /> },
-          { path: '/roadmap', element: <PlaceholderPage /> },
-          { path: '/projects', element: <PlaceholderPage /> },
+          { path: '/tasks', element: <TasksPage /> },
+          { path: '/tasks/:id', element: <TaskDetailPage /> },
+          { path: '/board', element: <BoardPage /> },
+          { path: '/roadmap', element: <RoadmapPage /> },
+          { path: '/projects', element: <ProjectsPage /> },
         ],
       },
     ],

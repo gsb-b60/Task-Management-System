@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query'
 import { dataApi } from '../api'
 
 /**
- * Keyed by project so the switcher invalidates exactly one slice rather than
- * the whole dashboard cache.
+ * Keyed by project and page so the switcher and the pager invalidate exactly
+ * one slice rather than the whole dashboard cache.
  */
-export function useDashboard(projectId?: string) {
+export function useDashboard(projectId?: string, page = 1, pageSize = 10) {
   return useQuery({
-    queryKey: ['dashboard', projectId ?? 'all'],
-    queryFn: () => dataApi.dashboard.get({ projectId }),
+    queryKey: ['dashboard', projectId ?? 'all', page, pageSize],
+    queryFn: () => dataApi.dashboard.get({ projectId, page, pageSize }),
   })
 }

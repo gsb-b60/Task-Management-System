@@ -89,6 +89,21 @@ export async function request<T>(
   path: string,
   options: RequestOptions = {},
 ): Promise<T> {
+  const payload = await requestJson(path, options)
+  // The envelope is unwrapped here; the caller's generic states the expected
+  // shape, which the server is responsible for honouring.
+  return unwrapData(payload) as T
+}
+
+/**
+ * Same transport and error handling as {@link request} but returns the full
+ * parsed payload. Needed for endpoints whose envelope carries more than
+ * `data` (e.g. paginated lists returning `{ data, meta }`).
+ */
+export async function requestJson(
+  path: string,
+  options: RequestOptions = {},
+): Promise<unknown> {
   const { method = 'GET', body, signal, expectUnauthenticated } = options
 
   let response: Response
@@ -131,13 +146,10 @@ export async function request<T>(
 
   // 204 carries no body; `logout` relies on that.
   if (response.status === 204) {
-    return undefined as T
+    return undefined
   }
 
-  const payload = await readJson(response)
-  // The envelope is unwrapped here; the caller's generic states the expected
-  // shape, which the server is responsible for honouring.
-  return unwrapData(payload) as T
+  return readJson(response)
 }
 
 function readJson(response: Response): Promise<unknown> {

@@ -62,3 +62,6 @@ export function TextInput({ id, invalid = false, disabled = false, className = '
     />
   )
 }
+
+/** Alias for TextInput for more familiar naming. */
+export const Input = TextInput

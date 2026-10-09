@@ -45,6 +45,7 @@ export interface ListTasksQuery {
   status?: TaskStatus[] | undefined;
   priority?: TaskPriority[] | undefined;
   projectId?: string | undefined;
+  hasDueDate?: boolean | undefined;
   page: number;
   pageSize: number;
   sortBy?: SortField | undefined;
@@ -112,6 +113,7 @@ export async function listTasks(userId: string, query: ListTasksQuery): Promise<
     ...(query.status === undefined ? {} : { status: query.status }),
     ...(query.priority === undefined ? {} : { priority: query.priority }),
     ...(query.projectId === undefined ? {} : { projectId: query.projectId }),
+    ...(query.hasDueDate === undefined ? {} : { hasDueDate: query.hasDueDate }),
     ...(query.sortBy === undefined ? {} : { sortBy: query.sortBy }),
     ...(query.sortOrder === undefined ? {} : { sortOrder: query.sortOrder }),
     page: query.page,

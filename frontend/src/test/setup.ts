@@ -2,18 +2,12 @@ import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterEach, beforeEach } from 'vitest'
 import { setUnauthorizedHandler } from '../api/client'
-import { resetDb, setMockLatency, setScenario } from '../api/mock'
 
 /**
- * Zero latency keeps suites fast; the delay itself is the mock layer's
- * behaviour, not something these tests need to wait through. `resetDb` per
- * test stops one spec's registrations or rate-limit attempts leaking into the
- * next.
+ * Tests run against the real API. The backend must be running at
+ * http://localhost:5004 for these tests to pass.
  */
 beforeEach(() => {
-  setMockLatency(0)
-  setScenario(null)
-  resetDb()
   window.localStorage.clear()
 })
 

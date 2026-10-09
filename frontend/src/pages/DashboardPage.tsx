@@ -1,9 +1,16 @@
-import { useSearchParams } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useDashboard } from '../hooks/useDashboard'
+import { useUndatedTasks } from '../hooks/useUndatedTasks'
 import { useProjects } from '../hooks/useProjects'
+import { useCreateTask } from '../hooks/useTaskMutations'
 import { dueLabel, errorMessage, formatDateOnly } from '../lib/format'
-import type { TaskPriority, TaskStatus, TaskSummary } from '../api/types'
-import { IconCalendar, IconRetry } from '../components/ui/Icons'
+import type { PaginationMeta, Task, TaskPriority, TaskStatus, TaskSummary } from '../api/types'
+import { IconCalendar, IconRetry, IconPlus } from '../components/ui/Icons'
+import { Button } from '../components/ui/Button'
+import { Dialog } from '../components/ui/Dialog'
+import { Pagination } from '../components/Pagination'
+import { TaskForm, type TaskFormValues } from '../components/task/TaskForm'
 
 const TILE = 'border border-line rounded-md p-3'
 const TILE_LABEL =
@@ -23,22 +30,61 @@ const PRIORITY_STYLE: Record<TaskPriority, string> = {
 }
 
 export function DashboardPage() {
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const projectId = searchParams.get('projectId') ?? undefined
-  const { data, isPending, isError, error, refetch } = useDashboard(projectId)
+  const page = Math.max(1, Number(searchParams.get('page') ?? '1') || 1)
+  const pageSize = Math.min(100, Math.max(1, Number(searchParams.get('pageSize') ?? '10') || 10))
+  const undatedPage = Math.max(1, Number(searchParams.get('undatedPage') ?? '1') || 1)
+  const undatedPageSize = Math.min(100, Math.max(1, Number(searchParams.get('undatedPageSize') ?? '10') || 10))
+  const { data, isPending, isError, error, refetch } = useDashboard(projectId, page, pageSize)
+  const { data: undated } = useUndatedTasks(projectId, undatedPage, undatedPageSize)
   const { data: projects = [] } = useProjects()
+  const createTask = useCreateTask()
+  const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false)
 
   const project = projects.find((item) => item.id === projectId)
 
-  return (
-    <div>
-      {project && (
-        <span className="border border-line rounded bg-subtle text-[10px] text-muted px-2 py-1 font-mono mb-2 inline-block">
-          ?projectId={project.id}
-        </span>
-      )}
+  // ?page= / ?undatedPage= belong to the previous scope — drop them when the
+  // project changes, otherwise the new scope can land on an empty page.
+  const prevProjectId = useRef(projectId)
+  useEffect(() => {
+    if (prevProjectId.current !== projectId) {
+      prevProjectId.current = projectId
+      const next = new URLSearchParams(searchParams)
+      let changed = false
+      for (const key of ['page', 'undatedPage']) {
+        if (next.has(key)) {
+          next.delete(key)
+          changed = true
+        }
+      }
+      if (changed) setSearchParams(next, { replace: true })
+    }
+  }, [projectId, searchParams, setSearchParams])
 
+  const handleCreateTaskSubmit = async (values: TaskFormValues) => {
+    await createTask.mutateAsync({
+      title: values.title,
+      description: values.description,
+      status: values.status,
+      priority: values.priority,
+      startDate: values.startDate,
+      dueDate: values.dueDate,
+      projectId: projectId ?? (values.projectId ? values.projectId : null),
+    })
+    setIsCreateTaskOpen(false)
+  }
+
+  return (
+    <>
+      <div>
+      <div className="flex items-center justify-between">
       <h1 className="text-lg font-semibold text-fg">{project ? project.name : 'Dashboard'}</h1>
+      <Button onClick={() => setIsCreateTaskOpen(true)}>
+        <IconPlus className="w-4 h-4 mr-1.5" />
+        New task
+      </Button>
+    </div>
       <p className="text-xs text-muted mt-1">
         {project
           ? `Counts for ${project.name} only.`
@@ -72,6 +118,10 @@ export function DashboardPage() {
                   ? `${project.name} has no tasks yet.`
                   : 'Create your first task and it will appear here.'}
               </p>
+              <Button className="mt-4" onClick={() => setIsCreateTaskOpen(true)}>
+                <IconPlus className="w-4 h-4 mr-1.5" />
+                New task
+              </Button>
             </div>
           ) : (
             <>
@@ -107,12 +157,49 @@ export function DashboardPage() {
                 />
               </div>
 
-              <UpcomingPanel tasks={data.upcoming} />
+              <UpcomingPanel
+                tasks={data.upcoming}
+                meta={data.meta}
+                hiddenCount={
+                  undated?.meta
+                    ? Math.max(
+                        0,
+                        data.stats.total - data.meta.totalItems - undated.meta.totalItems,
+                      )
+                    : 0
+                }
+                tasksHref={projectId ? `/tasks?projectId=${projectId}` : '/tasks'}
+              />
+
+              {undated && undated.meta.totalItems > 0 && (
+                <UndatedPanel
+                  tasks={undated.data}
+                  meta={undated.meta}
+                  tasksHref={projectId ? `/tasks?projectId=${projectId}` : '/tasks'}
+                />
+              )}
             </>
           )}
         </>
       )}
     </div>
+
+    <Dialog
+      open={isCreateTaskOpen}
+      onClose={() => setIsCreateTaskOpen(false)}
+      title="New task"
+    >
+      <TaskForm
+        key={projectId ?? 'all'}
+        initialValues={{ projectId: projectId ?? null }}
+        onSubmit={handleCreateTaskSubmit}
+        onClose={() => setIsCreateTaskOpen(false)}
+        submitLabel="Create task"
+        isSubmitting={createTask.isPending}
+        projects={projects}
+      />
+    </Dialog>
+    </>
   )
 }
 
@@ -172,16 +259,34 @@ function AlertTile({
   )
 }
 
-function UpcomingPanel({ tasks }: { tasks: TaskSummary[] }) {
+function UpcomingPanel({
+  tasks,
+  meta,
+  hiddenCount,
+  tasksHref,
+}: {
+  tasks: TaskSummary[]
+  meta: PaginationMeta
+  /** Done tasks: counted in the tiles, never listed on this page. */
+  hiddenCount: number
+  tasksHref: string
+}) {
   return (
     <div className="mt-4 border border-line rounded-md">
-      <div className="px-4 py-2.5 border-b border-line bg-subtle">
+      <div className="px-4 py-2.5 border-b border-line bg-subtle flex items-center justify-between">
         <h2 className="text-xs font-semibold text-fg">Upcoming</h2>
+        <Link to={tasksHref} className="text-[11px] font-medium text-accent hover:underline">
+          View all tasks
+        </Link>
       </div>
 
       {tasks.length === 0 ? (
         <div className="px-4 py-8 text-center">
-          <p className="text-xs text-muted">Nothing due. Enjoy the quiet.</p>
+          <p className="text-xs text-muted">
+            {meta.totalItems > 0
+              ? 'No tasks on this page.'
+              : 'Nothing due. Enjoy the quiet.'}
+          </p>
         </div>
       ) : (
         <table className="w-full text-xs">
@@ -230,6 +335,115 @@ function UpcomingPanel({ tasks }: { tasks: TaskSummary[] }) {
             ))}
           </tbody>
         </table>
+      )}
+      {meta.totalItems > 0 && (
+        <div className="px-4 pb-3">
+          <Pagination
+            page={meta.page}
+            pageSize={meta.pageSize}
+            totalItems={meta.totalItems}
+            totalPages={meta.totalPages}
+            hasNextPage={meta.hasNextPage}
+            hasPreviousPage={meta.hasPreviousPage}
+            // Page state lives in the URL (?page=/?pageSize=) which the
+            // Pagination control writes itself; the query reads it back.
+            onPageChange={() => {}}
+            onPageSizeChange={() => {}}
+          />
+        </div>
+      )}
+      {hiddenCount > 0 && (
+        <p className="px-4 pb-3 text-[11px] text-faint">
+          {hiddenCount} completed {hiddenCount === 1 ? 'task is' : 'tasks are'} not
+          listed here.{' '}
+          <Link to={tasksHref} className="text-accent hover:underline">
+            View all tasks
+          </Link>
+        </p>
+      )}
+    </div>
+  )
+}
+
+function UndatedPanel({
+  tasks,
+  meta,
+  tasksHref,
+}: {
+  tasks: Task[]
+  meta: PaginationMeta
+  tasksHref: string
+}) {
+  return (
+    <div className="mt-4 border border-line rounded-md">
+      <div className="px-4 py-2.5 border-b border-line bg-subtle flex items-center justify-between">
+        <h2 className="text-xs font-semibold text-fg">No due date</h2>
+        <Link to={tasksHref} className="text-[11px] font-medium text-accent hover:underline">
+          View all tasks
+        </Link>
+      </div>
+
+      {tasks.length === 0 ? (
+        <div className="px-4 py-8 text-center">
+          <p className="text-xs text-muted">No tasks on this page.</p>
+        </div>
+      ) : (
+        <table className="w-full text-xs">
+          <thead className="text-[10px] uppercase tracking-wide text-faint">
+            <tr className="text-left">
+              <th className="px-4 py-2 font-semibold">#</th>
+              <th className="px-2 py-2 font-semibold">Task</th>
+              <th className="px-2 py-2 font-semibold">Priority</th>
+              <th className="px-2 py-2 font-semibold">Status</th>
+              <th className="px-4 py-2 font-semibold text-right">Created</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y">
+            {tasks.map((task) => (
+              <tr key={task.id} className="hover:bg-subtle">
+                <td className="px-4 py-2 font-mono text-[10px] text-faint">
+                  {task.id.slice(-4)}
+                </td>
+                <td className="px-2 py-2 text-fg font-medium">{task.title}</td>
+                <td className="px-2 py-2">
+                  <span className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold ${PRIORITY_STYLE[task.priority]}`}>
+                    {task.priority}
+                  </span>
+                </td>
+                <td className="px-2 py-2">
+                  <span
+                    className={`inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-semibold ${STATUS_STYLE[task.status].pill}`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${STATUS_STYLE[task.status].dot}`} />
+                    {task.status === 'IN_PROGRESS' ? 'In progress' : task.status === 'TODO' ? 'Todo' : 'Done'}
+                  </span>
+                </td>
+                <td className="px-4 py-2 text-right text-muted">
+                  <span className="inline-flex items-center gap-1">
+                    <IconCalendar className="w-3 h-3" />
+                    {formatDateOnly(task.createdAt.slice(0, 10))}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {meta.totalItems > 0 && (
+        <div className="px-4 pb-3">
+          <Pagination
+            page={meta.page}
+            pageSize={meta.pageSize}
+            totalItems={meta.totalItems}
+            totalPages={meta.totalPages}
+            hasNextPage={meta.hasNextPage}
+            hasPreviousPage={meta.hasPreviousPage}
+            pageParam="undatedPage"
+            pageSizeParam="undatedPageSize"
+            onPageChange={() => {}}
+            onPageSizeChange={() => {}}
+          />
+        </div>
       )}
     </div>
   )

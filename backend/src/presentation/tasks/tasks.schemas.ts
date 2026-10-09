@@ -79,6 +79,12 @@ export const taskListQuery = z.object({
   status: enumList(TASK_STATUSES),
   priority: enumList(TASK_PRIORITIES),
   projectId: z.uuid({ message: "Must be a valid UUID." }).optional(),
+  // Query strings carry no booleans: `?hasDueDate=false` lists tasks with no
+  // due date. A bare z.coerce.boolean() would read "false" as true.
+  hasDueDate: z
+    .enum(["true", "false"], { message: "hasDueDate must be true or false." })
+    .transform((value) => value === "true")
+    .optional(),
   page: z.coerce.number().int().min(1, "page must be at least 1.").default(1),
   pageSize: z.coerce
     .number()

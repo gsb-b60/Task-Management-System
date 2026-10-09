@@ -109,7 +109,9 @@ export function LoginPage() {
             id="email"
             type="email"
             autoComplete="email"
-            placeholder="ada@example.com"
+            spellCheck={false}
+            required
+            placeholder="you@example.com"
             invalid={Boolean(errors.email)}
             {...register('email')}
           />
@@ -131,7 +133,7 @@ export function LoginPage() {
           />
         </Field>
 
-        <Button type="submit" loading={isSubmitting} loadingLabel="Signing in…" className="mt-2">
+        <Button type="submit" loading={isSubmitting} loadingLabel="Signing in…" className="mt-2 w-full">
           Sign in
         </Button>
       </form>

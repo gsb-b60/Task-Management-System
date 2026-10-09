@@ -41,6 +41,7 @@ export const TASKS_OPERATIONS: Record<string, OperationSpec> = {
       { name: "status", in: "query", description: "Comma-separated: TODO, IN_PROGRESS, DONE", schema: { type: "string" } },
       { name: "priority", in: "query", description: "Comma-separated: LOW, MEDIUM, HIGH", schema: { type: "string" } },
       { name: "projectId", in: "query", description: "Scope to one project", schema: { type: "string", format: "uuid" } },
+      { name: "hasDueDate", in: "query", description: "true → only dated tasks, false → only tasks without a due date", schema: { type: "string", enum: ["true", "false"] } },
       { name: "page", in: "query", schema: { type: "integer", minimum: 1, default: 1 } },
       { name: "pageSize", in: "query", description: "Clamped to 100", schema: { type: "integer", minimum: 1, maximum: 100, default: 20 } },
       { name: "sortBy", in: "query", schema: { type: "string", enum: ["dueDate", "createdAt", "updatedAt", "priority", "status", "title"], default: "dueDate" } },

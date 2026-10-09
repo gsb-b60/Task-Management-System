@@ -1,8 +1,20 @@
 import { screen, waitFor } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
-import { mockDashboardApi, setScenario } from '../api/mock'
+import { describe, expect, it, vi } from 'vitest'
+import { mockDashboardApi, setScenario, mockDataApi } from '../api/mock'
 import { renderPage } from '../test/renderApp'
 import { DashboardPage } from './DashboardPage'
+
+vi.mock('../api', () => ({
+  dataApi: mockDataApi,
+  authApi: {
+    async me() {
+      return { id: 'user-1', email: 'test@example.com', displayName: 'Test User', createdAt: '2024-01-01T00:00:00Z' }
+    },
+    githubAuthorizeUrl() {
+      return 'https://github.com/login/oauth/authorize?client_id=test'
+    },
+  },
+}))
 
 const PORTFOLIO = 'aaaaaaaa-1111-4111-8111-aaaaaaaaaaaa'
 const STREAM = 'bbbbbbbb-2222-4222-8222-bbbbbbbbbbbb'
@@ -77,7 +89,7 @@ describe('DashboardPage', () => {
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'Portfolio Website' })).toBeInTheDocument()
     })
-    expect(screen.getByText(`?projectId=${PORTFOLIO}`)).toBeInTheDocument()
+    expect(screen.queryByText(`?projectId=${PORTFOLIO}`)).not.toBeInTheDocument()
   })
 
   it('scopes the counts to one project only', async () => {

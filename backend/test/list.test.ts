@@ -67,6 +67,36 @@ describe("GET /api/tasks — search, filter, sort, pagination", () => {
     }
   });
 
+  it("filters to tasks without a due date", async () => {
+    const res = await user.agent.get("/api/tasks?hasDueDate=false");
+
+    expect(res.status).toBe(200);
+    expect(res.body.meta.totalItems).toBe(1);
+    expect(res.body.data.map((task: { title: string }) => task.title)).toEqual([
+      "no deadline",
+    ]);
+    for (const task of res.body.data) {
+      expect(task.dueDate).toBeNull();
+    }
+  });
+
+  it("filters to tasks with a due date", async () => {
+    const res = await user.agent.get("/api/tasks?hasDueDate=true");
+
+    expect(res.status).toBe(200);
+    expect(res.body.meta.totalItems).toBe(3);
+    for (const task of res.body.data) {
+      expect(task.dueDate).not.toBeNull();
+    }
+  });
+
+  it("rejects a non-boolean hasDueDate with a 400 naming the field", async () => {
+    const res = await user.agent.get("/api/tasks?hasDueDate=maybe");
+
+    expect(res.status).toBe(400);
+    expect(res.body.error.details?.[0]?.field).toBe("hasDueDate");
+  });
+
   it("paginates with correct meta", async () => {
     const res = await user.agent.get("/api/tasks?page=2&pageSize=2");
 

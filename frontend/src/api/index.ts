@@ -1,24 +1,23 @@
-import { fetchAuthApi, fetchDataApi } from './auth'
-import type { DataApi } from './auth'
-import { mockAuthApi, mockDataApi } from './mock'
+import { fetchAuthApi } from './auth'
+import { fetchTasksApi } from './tasks'
+import { fetchProjectsApi } from './projects'
+import { fetchDashboardApi } from './dashboard'
+import { fetchGitHubApi } from './github'
 
-/**
- * The backend is still an empty scaffold (Phase 00 has not landed), so mocks
- * are the default and the app runs end to end. Set `VITE_USE_MOCK_API=false`
- * once the API is up and every call goes through `fetch` instead.
- */
-const useMocks = import.meta.env.VITE_USE_MOCK_API !== 'false'
+export const authApi = fetchAuthApi
 
-export const authApi = useMocks ? mockAuthApi : fetchAuthApi
-export const dataApi: DataApi = useMocks ? mockDataApi : fetchDataApi
+export const dataApi = {
+  tasks: fetchTasksApi,
+  projects: fetchProjectsApi,
+  dashboard: fetchDashboardApi,
+  github: fetchGitHubApi,
+}
 
 export { isApiError, ApiError, setUnauthorizedHandler, apiUrl } from './client'
 export type {
   AuthApi,
   DashboardApi,
-  DataApi,
   GitHubApi,
-  GitHubRateLimit,
   LoginInput,
   ProjectsApi,
   RegisterInput,
@@ -37,4 +36,5 @@ export type {
   TaskPriority,
   TaskStatus,
   User,
+  GitHubRateLimit,
 } from './types'

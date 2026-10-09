@@ -1,0 +1,37 @@
+import type { TaskStatus, TaskPriority } from '../api/types'
+
+export const queryKeys = {
+  tasks: (params: {
+    q?: string
+    status?: TaskStatus | TaskStatus[]
+    priority?: TaskPriority | TaskPriority[]
+    projectId?: string
+    hasDueDate?: boolean
+    page?: number
+    pageSize?: number
+    sortBy?: string
+    sortOrder?: string
+  }) => ['tasks', params] as const,
+
+  task: (id: string) => ['task', { id }] as const,
+
+  board: (projectId?: string) => ['board', { projectId }] as const,
+
+  roadmap: (params: {
+    projectId?: string
+    scale?: 'week' | 'month' | 'quarter'
+    range?: string
+    groupBy?: 'status' | 'priority' | 'project'
+  }) => ['roadmap', params] as const,
+
+  projects: () => ['projects'] as const,
+
+  project: (id: string) => ['project', { id }] as const,
+
+  dashboard: (projectId?: string) => ['dashboard', projectId ?? 'all'] as const,
+
+  dashboardUpcoming: (params?: { projectId?: string; page?: number; pageSize?: number }) =>
+    ['dashboard', 'upcoming', params] as const,
+
+  githubRateLimit: () => ['github', 'rate-limit'] as const,
+} as const

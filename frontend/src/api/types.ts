@@ -103,6 +103,8 @@ export interface DashboardStats {
 export interface DashboardResponse {
   stats: DashboardStats
   upcoming: TaskSummary[]
+  /** Page of the upcoming list — the server caps it, so this is required. */
+  meta: PaginationMeta
 }
 
 export interface PaginationMeta {
@@ -117,4 +119,9 @@ export interface PaginationMeta {
 export interface Paginated<T> {
   data: T[]
   meta: PaginationMeta
+}
+
+export interface GitHubRateLimit {
+  remaining: number
+  limit: number
 }
