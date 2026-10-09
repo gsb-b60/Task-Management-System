@@ -14,6 +14,7 @@ import { Router } from "express";
 import { authRouter } from "./auth/auth.routes.js";
 import { dashboardRouter } from "./dashboard/dashboard.routes.js";
 import { healthRouter } from "./health/health.routes.js";
+import { projectsRouter } from "./projects/projects.routes.js";
 import { tasksRouter } from "./tasks/tasks.routes.js";
 
 export const apiRouter: Router = Router();
@@ -21,4 +22,5 @@ export const apiRouter: Router = Router();
 apiRouter.use(healthRouter);
 apiRouter.use(authRouter);
 apiRouter.use(tasksRouter);
+apiRouter.use(projectsRouter);
 apiRouter.use(dashboardRouter);

@@ -57,6 +57,36 @@ export interface TaskSummaryDto {
   daysUntilDue: number;
 }
 
+/** A `Project` row as the repository returns it. Carries `userId`; DTOs must not. */
+export interface ProjectRow {
+  id: string;
+  name: string;
+  description: string | null;
+  startDate: Date | null;
+  targetDate: Date | null;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/** Task totals for one project, from a single `groupBy` (Phase 08 §5.1). */
+export interface ProjectCounts {
+  taskCount: number;
+  completedTaskCount: number;
+}
+
+/** The wire `Project` (Phase 08 §5.1). `userId` is absent by construction. */
+export interface ProjectDto {
+  id: string;
+  name: string;
+  description: string | null;
+  startDate: Date | null;
+  targetDate: Date | null;
+  taskCount: number;
+  completedTaskCount: number;
+  createdAt: Date;
+}
+
 export interface UserRow {
   id: string;
   email: string;

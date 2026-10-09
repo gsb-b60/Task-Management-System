@@ -11,6 +11,7 @@ export * from "./dueDate.js";
 export * from "./github.service.js";
 export * from "./health.service.js";
 export * from "./password.js";
+export * from "./projects.service.js";
 export * from "./tasks.mapper.js";
 export * from "./tasks.service.js";
 export * from "./token.js";
