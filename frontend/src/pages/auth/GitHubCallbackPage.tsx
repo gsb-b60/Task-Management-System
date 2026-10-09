@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { authApi } from '../../api'
 import { CenteredPanel } from '../../components/layout/CenteredPanel'
 import { IconAlert } from '../../components/ui/Icons'
 import { Spinner } from '../../components/ui/Spinner'
 import { useAuth } from '../../contexts/auth-context'
+import { queryKeys } from '../../lib/queryKeys'
 import { redirectFromSearch } from '../../lib/redirect'
 
 /**
@@ -14,6 +16,7 @@ import { redirectFromSearch } from '../../lib/redirect'
 export function GitHubCallbackPage() {
   const { refreshUser } = useAuth()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [searchParams] = useSearchParams()
   const [exchangeFailed, setExchangeFailed] = useState(false)
 
@@ -28,6 +31,9 @@ export function GitHubCallbackPage() {
     void refreshUser()
       .then((user) => {
         if (cancelled) return
+        // The session may now carry a GitHub token, so drop the cached
+        // "not connected" state and let the sidebar refetch immediately.
+        void queryClient.invalidateQueries({ queryKey: queryKeys.githubRateLimit() })
         navigate(user ? redirectFromSearch(searchParams.toString()) : '/login', { replace: true })
       })
       .catch(() => {
@@ -37,7 +43,7 @@ export function GitHubCallbackPage() {
     return () => {
       cancelled = true
     }
-  }, [denied, refreshUser, navigate, searchParams])
+  }, [denied, refreshUser, navigate, queryClient, searchParams])
 
   if (failed) {
     return (

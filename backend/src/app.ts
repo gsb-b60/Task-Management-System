@@ -11,7 +11,13 @@ export function createApp(): Express {
 
   app.disable("x-powered-by");
   app.use(express.json());
-  app.use(cors({ origin: frontendOrigins, credentials: true }));
+  app.use(
+    cors({
+      origin: frontendOrigins,
+      credentials: true,
+      exposedHeaders: ["x-ratelimit-remaining", "x-ratelimit-limit"],
+    }),
+  );
 
   app.use(apiRouter);
 

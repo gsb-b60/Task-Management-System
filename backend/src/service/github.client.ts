@@ -18,6 +18,7 @@ const RATE_LIMIT_WARN_THRESHOLD = 100;
 
 export interface RateLimitInfo {
   remaining: string | null;
+  limit: string | null;
   reset: string | null;
 }
 
@@ -81,6 +82,7 @@ export async function githubFetch<T>(
 
     const rateLimit: RateLimitInfo = {
       remaining: response.headers.get("x-ratelimit-remaining"),
+      limit: response.headers.get("x-ratelimit-limit"),
       reset: response.headers.get("x-ratelimit-reset"),
     };
 

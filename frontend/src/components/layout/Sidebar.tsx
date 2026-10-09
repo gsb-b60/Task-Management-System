@@ -1,10 +1,11 @@
 import { NavLink, useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
+import { authApi } from '../../api'
 import { useDashboard } from '../../hooks/useDashboard'
 import { useGitHubRateLimit } from '../../hooks/useGitHubRateLimit'
 import { useProjects } from '../../hooks/useProjects'
 import { useCreateProject } from '../../hooks/useProjectMutations'
-import { IconCheck, IconPlus } from '../ui/Icons'
+import { IconCheck, IconGithub, IconPlus } from '../ui/Icons'
 import { TextInput } from '../ui/Input'
 import { SIDEBAR_VIEWS } from './nav'
 
@@ -17,7 +18,7 @@ const SECTION = 'text-[10px] font-semibold text-faint uppercase tracking-wide'
 export function Sidebar() {
   const { data: projects = [] } = useProjects()
   const { data: dashboard } = useDashboard()
-  const { data: rateLimit } = useGitHubRateLimit()
+  const { data: rateLimit, isLoading: isGitHubLoading } = useGitHubRateLimit()
   const createProject = useCreateProject()
 
   const [searchParams, setSearchParams] = useSearchParams()
@@ -151,15 +152,44 @@ export function Sidebar() {
       </div>
 
       <div className="mt-4 border border-line rounded-md p-2 bg-subtle">
-        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-fg">
-          <IconCheck className="w-3.5 h-3.5 text-ok" />
-          GitHub connected
-        </div>
-        {rateLimit && (
-          <div className="text-[10px] text-faint mt-0.5 ml-5">
-            {rateLimit.remaining.toLocaleString('en-GB')} /{' '}
-            {rateLimit.limit.toLocaleString('en-GB')} requests left
+        {isGitHubLoading ? (
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-faint">
+            <IconGithub className="w-3.5 h-3.5" />
+            Checking GitHub…
           </div>
+        ) : rateLimit ? (
+          <>
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-fg">
+              <IconCheck className="w-3.5 h-3.5 text-ok" />
+              GitHub connected
+            </div>
+            <div className="text-[10px] text-faint mt-0.5 ml-5">
+              {rateLimit.limit !== null ? (
+                <>
+                  {rateLimit.remaining.toLocaleString('en-GB')} /{' '}
+                  {rateLimit.limit.toLocaleString('en-GB')} requests left
+                </>
+              ) : (
+                <>{rateLimit.remaining.toLocaleString('en-GB')} requests left</>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-fg">
+              <IconGithub className="w-3.5 h-3.5 text-faint" />
+              GitHub not connected
+            </div>
+            <p className="text-[10px] text-faint mt-0.5 ml-5">
+              Connect to import issues.
+            </p>
+            <a
+              href={authApi.githubAuthorizeUrl()}
+              className="ml-5 mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-accent hover:text-accent-dark"
+            >
+              Connect GitHub
+            </a>
+          </>
         )}
       </div>
     </aside>

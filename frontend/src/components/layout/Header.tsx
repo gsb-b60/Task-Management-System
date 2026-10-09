@@ -7,11 +7,6 @@ import { ProjectSwitcher } from './ProjectSwitcher'
 import { UserMenu } from './UserMenu'
 import { useMenu } from './useMenu'
 
-const TOPBAR_ACTIVE = 'px-2.5 py-1.5 rounded-md font-semibold text-fg bg-inset'
-const TOPBAR_INACTIVE = 'px-2.5 py-1.5 rounded-md text-muted hover:bg-subtle'
-const ROW_ACTIVE = 'px-2 py-1 rounded font-semibold text-fg bg-inset'
-const ROW_INACTIVE = 'px-2 py-1 rounded text-muted'
-
 export function Header() {
   const { open: drawerOpen, setOpen: setDrawerOpen } = useMenu()
 
@@ -41,30 +36,8 @@ export function Header() {
           <ProjectSwitcher compact />
         </div>
 
-        <nav className="ml-6 hidden md:flex items-center gap-1 text-xs">
-          {NAV_ITEMS.map((item) => (
-            <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? TOPBAR_ACTIVE : TOPBAR_INACTIVE)}>
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
-
         <UserMenu />
       </div>
-
-      {/* Tablet keeps the nav on its own row rather than squeezing five items
-          into the top bar. */}
-      <nav className="hidden md:flex lg:hidden border-t border-line px-2 py-1.5 text-[10px] gap-1 overflow-hidden">
-        {NAV_ITEMS.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) => (isActive ? ROW_ACTIVE : ROW_INACTIVE)}
-          >
-            {item.label}
-          </NavLink>
-        ))}
-      </nav>
 
       {drawerOpen && <MobileDrawer onNavigate={() => setDrawerOpen(false)} />}
     </header>

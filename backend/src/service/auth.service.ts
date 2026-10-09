@@ -139,8 +139,15 @@ export async function linkGitHubUser(profile: GitHubProfile): Promise<IssuedSess
 
   const existing = await findUserByGitHubId(profile.githubId);
   if (existing !== null) {
-    const token = await issueSession(existing.id);
-    return { user: toAuthUser(existing), token };
+    // Refresh the stored token: it may have expired, been revoked, or never
+    // been persisted (re-connect must heal, not just log in).
+    const refreshed = await linkUserGitHub(existing.id, {
+      githubId: profile.githubId,
+      githubLogin: profile.githubLogin,
+      githubAccessToken: profile.accessToken,
+    });
+    const token = await issueSession(refreshed.id);
+    return { user: toAuthUser(refreshed), token };
   }
 
   if (profile.email !== null && profile.email !== "") {

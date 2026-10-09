@@ -174,6 +174,37 @@ describe("auth edge paths (Phase 10)", () => {
     expect(second.body.data.id).toBe(existing.id);
   });
 
+  it("re-linking an already-linked account refreshes the stored token", async () => {
+    const login = `retoken-${runStamp}`;
+    const githubId = runStamp + 101;
+    let token = "gho_first";
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: unknown) => {
+        const url = String(input);
+        if (url.includes("/login/oauth/access_token")) return ghResponse({ access_token: token });
+        if (url.endsWith("/user"))
+          return ghResponse({ id: githubId, login, email: null, name: null });
+        throw new Error(`unexpected call: ${url}`);
+      }),
+    );
+
+    const first = await agent().get("/api/auth/github/callback?code=abc");
+    expect(first.status).toBe(200);
+    const userId = first.body.data.id as string;
+    const storedFirst = await prisma.user.findUnique({ where: { id: userId } });
+    expect(storedFirst?.githubAccessToken).toBe("gho_first");
+
+    // The stored token is stale (e.g. revoked or never persisted): a fresh
+    // OAuth run must heal it, not just issue a new session.
+    token = "gho_second";
+    const second = await agent().get("/api/auth/github/callback?code=abc");
+    expect(second.status).toBe(200);
+    expect(second.body.data.id).toBe(userId);
+    const storedSecond = await prisma.user.findUnique({ where: { id: userId } });
+    expect(storedSecond?.githubAccessToken).toBe("gho_second");
+  });
+
   it("callback creates a new OAuth user with noreply email and login as display name", async () => {
     const login = `newbie-${runStamp}`;
     stubOAuthFlow({ id: runStamp + 2, login, email: null, name: null });

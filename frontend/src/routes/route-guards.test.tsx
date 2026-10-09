@@ -90,15 +90,17 @@ describe('PublicRoute', () => {
 })
 
 describe('app shell', () => {
-  it('offers every primary route', async () => {
+  it('offers every primary view in the sidebar', async () => {
     renderApp(['/dashboard'], signedIn())
 
     await screen.findByRole('heading', { name: 'Dashboard' })
 
-    const nav = screen.getAllByRole('navigation')[0]
-    for (const label of ['Dashboard', 'Tasks', 'Board', 'Roadmap', 'Projects']) {
-      expect(nav).toHaveTextContent(label)
-    }
+    // The header no longer carries nav links; the sidebar owns the views.
+    // Tasks renders its total beside the label, so match loosely.
+    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('href', '/dashboard')
+    expect(screen.getByRole('link', { name: /Tasks/ })).toHaveAttribute('href', '/tasks')
+    expect(screen.getByRole('link', { name: 'Board' })).toHaveAttribute('href', '/board')
+    expect(screen.getByRole('link', { name: 'Roadmap' })).toHaveAttribute('href', '/roadmap')
   })
 
   it('returns to /login after signing out', async () => {

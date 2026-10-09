@@ -33,6 +33,9 @@ function setRateHeaders(res: Response, rateLimit: RateLimitInfo): void {
   if (rateLimit.remaining !== null) {
     res.setHeader("x-ratelimit-remaining", rateLimit.remaining);
   }
+  if (rateLimit.limit !== null) {
+    res.setHeader("x-ratelimit-limit", rateLimit.limit);
+  }
 }
 
 export async function listRepositories(req: Request, res: Response): Promise<void> {

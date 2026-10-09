@@ -123,5 +123,6 @@ export interface Paginated<T> {
 
 export interface GitHubRateLimit {
   remaining: number
-  limit: number
+  /** Null when the server did not expose the quota ceiling (see CORS). */
+  limit: number | null
 }
