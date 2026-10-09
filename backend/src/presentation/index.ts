@@ -13,6 +13,7 @@
 import { Router } from "express";
 import { authRouter } from "./auth/auth.routes.js";
 import { dashboardRouter } from "./dashboard/dashboard.routes.js";
+import { githubRouter } from "./github/github.routes.js";
 import { healthRouter } from "./health/health.routes.js";
 import { projectsRouter } from "./projects/projects.routes.js";
 import { tasksRouter } from "./tasks/tasks.routes.js";
@@ -23,4 +24,5 @@ apiRouter.use(healthRouter);
 apiRouter.use(authRouter);
 apiRouter.use(tasksRouter);
 apiRouter.use(projectsRouter);
+apiRouter.use(githubRouter);
 apiRouter.use(dashboardRouter);

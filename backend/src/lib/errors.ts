@@ -4,8 +4,11 @@ export const ERROR_CODES = {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   CONFLICT: 409,
+  UNPROCESSABLE: 422,
+  PRECONDITION_FAILED: 428,
   RATE_LIMITED: 429,
   INTERNAL_ERROR: 500,
+  BAD_GATEWAY: 502,
 } as const;
 
 export type ErrorCode = keyof typeof ERROR_CODES;

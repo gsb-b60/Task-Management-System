@@ -87,6 +87,46 @@ export interface ProjectDto {
   createdAt: Date;
 }
 
+/** A `GitHubRepository` row as the repository returns it. */
+export interface GitHubRepositoryRow {
+  id: string;
+  githubId: bigint;
+  name: string;
+  fullName: string;
+  owner: string;
+  description: string | null;
+  visibility: "public" | "private";
+  defaultBranch: string | null;
+  url: string | null;
+  projectId: string;
+}
+
+/** The wire `GitHubRepository` (Phase 11 §6.1). `githubId` serialises as a
+ * string (§7.1) — GitHub IDs exceed 2^53 and must not round-trip as numbers. */
+export interface GitHubRepositoryDto {
+  githubId: string;
+  name: string;
+  fullName: string;
+  owner: string;
+  description: string | null;
+  visibility: "public" | "private";
+  defaultBranch: string | null;
+  url: string | null;
+}
+
+/** The wire issue (Phase 11 §6.4, SRS §10.3 fields). */
+export interface GitHubIssueDto {
+  number: number;
+  title: string;
+  body: string | null;
+  state: IssueState;
+  labels: string[];
+  author: { login: string; avatarUrl: string | null };
+  createdAt: string;
+  updatedAt: string;
+  url: string;
+}
+
 export interface UserRow {
   id: string;
   email: string;
