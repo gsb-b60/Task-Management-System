@@ -22,6 +22,28 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
     return;
   }
 
+  // body-parser JSON syntax failures arrive as SyntaxError with type set.
+  const bodyError = error as { type?: unknown; statusCode?: unknown };
+  if (bodyError.type === "entity.parse.failed") {
+    res.status(400).json({
+      error: {
+        code: "VALIDATION_ERROR",
+        message: "Request body is not valid JSON.",
+        details: [{ field: "(body)", message: "Malformed JSON." }],
+      },
+    });
+    return;
+  }
+  if (bodyError.type === "entity.too.large") {
+    res.status(413).json({
+      error: {
+        code: "VALIDATION_ERROR",
+        message: "Request body is too large.",
+      },
+    });
+    return;
+  }
+
   console.error(error);
   res.status(500).json({
     error: {

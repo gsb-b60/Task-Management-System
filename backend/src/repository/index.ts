@@ -6,9 +6,8 @@
 // - Every query is scoped by `userId`; ownership checks live in the service,
 //   but the `userId` predicate belongs here.
 // - Returns Prisma rows; mapping to a response DTO is the caller's job.
-//
-// Repositories added by later phases:
-// - Phase 00 — user, session (auth module)
-// - Phase 02 — task, project
-// - Phase 04 — task (dashboard aggregates)
-export {};
+export * from "./health.repository.js";
+export * from "./project.repository.js";
+export * from "./session.repository.js";
+export * from "./task.repository.js";
+export * from "./user.repository.js";

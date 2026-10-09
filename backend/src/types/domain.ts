@@ -1,0 +1,98 @@
+// Domain types shared by all three layers.
+//
+// They deliberately do NOT come from `@prisma/client`: the architecture rule
+// (architecture-backend.md §3) keeps Prisma out of `service/`, and a plain
+// structural type is all the layers need to agree on. The repository rows are
+// structurally assignable to these — no conversion at the boundary.
+
+export const TASK_STATUSES = ["TODO", "IN_PROGRESS", "DONE"] as const;
+export type TaskStatus = (typeof TASK_STATUSES)[number];
+
+export const TASK_PRIORITIES = ["LOW", "MEDIUM", "HIGH"] as const;
+export type TaskPriority = (typeof TASK_PRIORITIES)[number];
+
+export type IssueState = "open" | "closed";
+
+/** A `Task` row as the repository returns it. Carries `userId`; DTOs must not. */
+export interface TaskRow {
+  id: string;
+  title: string;
+  description: string | null;
+  status: TaskStatus;
+  priority: TaskPriority;
+  startDate: Date | null;
+  dueDate: Date | null;
+  userId: string;
+  projectId: string | null;
+  githubIssueNumber: number | null;
+  githubState: IssueState | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/** The wire `Task` (api-data-format §5.2). `userId` is absent by construction. */
+export interface TaskDto {
+  id: string;
+  title: string;
+  description: string | null;
+  status: TaskStatus;
+  priority: TaskPriority;
+  startDate: Date | null;
+  dueDate: Date | null;
+  projectId: string | null;
+  githubIssueNumber: number | null;
+  githubState: IssueState | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/** The reduced Dashboard row (api-data-format §5.3). */
+export interface TaskSummaryDto {
+  id: string;
+  title: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  dueDate: Date;
+  isOverdue: boolean;
+  daysUntilDue: number;
+}
+
+export interface UserRow {
+  id: string;
+  email: string;
+  passwordHash: string | null;
+  displayName: string | null;
+  githubId: string | null;
+  githubLogin: string | null;
+  githubAccessToken: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/** The signed-in user attached to a request by `requireAuth`. */
+export interface SessionUser {
+  id: string;
+  email: string;
+  displayName: string | null;
+}
+
+/** The `User` resource (api-data-format §5.1) — never carries hash or token. */
+export interface AuthUser extends SessionUser {
+  createdAt: Date;
+}
+
+export interface DashboardSummary {
+  total: number;
+  byStatus: Record<TaskStatus, number>;
+  overdue: number;
+  dueToday: number;
+}
+
+export interface PaginationMeta {
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
