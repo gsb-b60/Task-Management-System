@@ -366,7 +366,7 @@ colour alone.
 ## 10. Environment
 
 ```dotenv
-VITE_API_URL="http://localhost:3000/api"
+VITE_API_URL="http://localhost:5004/api"
 VITE_USE_MOCK_API=true
 VITE_MOCK_LATENCY=250
 ```

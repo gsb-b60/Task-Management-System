@@ -4,6 +4,7 @@
 > **Priority:** Mandatory · FR-01 – FR-30 · DL-05
 > **Feeds:** Phase 10 §7 — OpenAPI generation and the route/spec parity test · Phase 14 §8 — the DL-05 endpoint summary
 > **Status:** Contract of record. This document defines the wire format; the phase documents define the behaviour behind it.
+> **Implemented:** Phases 00–04 — health, auth, tasks, dashboard — are live on port `5004` and verified against this contract (2026-10-09). The remaining routes are contract-first: they return `404` until their phase lands.
 
 ---
 
@@ -52,7 +53,7 @@ Phase 10 §7.1 commits to generating OpenAPI from annotations in the route handl
 
 There is **no** `Authorization` header and **no** bearer token. The session is an opaque random string delivered only as a cookie (Phase 01 §4.1). A browser client needs `credentials: 'include'`; a CLI or server-side client needs a cookie jar.
 
-`GET /health` and `GET /api/health` are the only routes that do not require a session.
+Routes that work without a session: `GET /health`, `GET /api/health`, `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout` (idempotent by design — §6.2), `GET /api/auth/github`, and `GET /api/auth/github/callback`. Every other route answers `401 UNAUTHENTICATED` without a valid `gpm_session` cookie.
 
 ### 3.1 Base URL Varies by Environment
 
@@ -73,6 +74,30 @@ Paths, envelopes, and field names are identical across all three. Only the origi
 Kong routes and rate-limits, but authentication is enforced in the API, never at the gateway (Phase 12 §7.1). A gateway-only auth check would leave the backend unauthenticated for anyone reaching it directly on `:5004`. Every route works with Kong absent — it is not in the default Compose profile.
 
 A `429` from the gateway and a `429` from the API's own rate limiter are indistinguishable to a client; both carry `RATE_LIMITED`.
+
+### 3.3 Calling the API from the Frontend
+
+The frontend fetch wrapper (`frontend/src/api/client.ts`) is built on these rules:
+
+| Rule | Detail |
+| ---- | ------ |
+| Base URL | `VITE_API_URL` — `http://localhost:5004/api` in development. Code passes paths relative to it (`/tasks`, `/auth/me`) |
+| Credentials | `credentials: 'include'` on every request — the session is an HttpOnly cookie, so a bare `fetch` never sends it |
+| Unwrapping | Single resource: return `payload.data`. **Collections: keep both `payload.data` and `payload.meta`** — unwrapping `data` alone discards pagination |
+| `204` | No body; treat as success (`logout`, `DELETE /api/tasks/:id`) |
+| Errors | Throw on every non-2xx and branch on `error.code`, never on `error.message` |
+| `401` | Fires the global sign-out, except where the caller opts out — `/api/auth/me` answers `401` as the normal "not signed in" state |
+| Mock switch | `VITE_USE_MOCK_API=false` in `.env.local` switches the app from the mock layer to this API |
+
+Endpoints available **today** (Phases 00–04 implemented; everything else returns `404` until its phase lands):
+
+| Need | Endpoint |
+| ---- | -------- |
+| Session | `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me` |
+| GitHub sign-in | `GET /api/auth/github` → 302, `GET /api/auth/github/callback` (only when OAuth is configured) |
+| Tasks | `GET`/`POST /api/tasks`, `GET`/`PATCH`/`DELETE /api/tasks/:id` |
+| Dashboard | `GET /api/dashboard/summary` **and** `GET /api/dashboard/upcoming` — there is no single `GET /api/dashboard` |
+| Health probes | `GET /health`, `GET /api/health` — system checks, not application data |
 
 ---
 
