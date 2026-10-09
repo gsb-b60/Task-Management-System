@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom'
 import { useDashboard } from '../hooks/useDashboard'
 import { useProjects } from '../hooks/useProjects'
 import { dueLabel, errorMessage, formatDateOnly } from '../lib/format'
-import type { Task, TaskPriority, TaskStatus } from '../api/types'
+import type { TaskPriority, TaskStatus, TaskSummary } from '../api/types'
 import { IconCalendar, IconRetry } from '../components/ui/Icons'
 
 const TILE = 'border border-line rounded-md p-3'
@@ -172,7 +172,7 @@ function AlertTile({
   )
 }
 
-function UpcomingPanel({ tasks }: { tasks: Task[] }) {
+function UpcomingPanel({ tasks }: { tasks: TaskSummary[] }) {
   return (
     <div className="mt-4 border border-line rounded-md">
       <div className="px-4 py-2.5 border-b border-line bg-subtle">

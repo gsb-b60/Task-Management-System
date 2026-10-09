@@ -46,14 +46,28 @@ export interface Task {
   isOverdue: boolean
   daysUntilDue: number | null
   projectId: string | null
+  githubIssueNumber: number | null
+  githubState: string | null
   createdAt: string
   updatedAt: string
+}
+
+export interface TaskSummary {
+  id: string
+  title: string
+  status: TaskStatus
+  priority: TaskPriority
+  dueDate?: string | null
+  isOverdue: boolean
+  daysUntilDue: number | null
 }
 
 export interface Project {
   id: string
   name: string
   description?: string | null
+  startDate?: string | null
+  targetDate?: string | null
   color?: string | null
   createdAt: string
 }
@@ -61,13 +75,18 @@ export interface Project {
 export interface ProjectListItem {
   id: string
   name: string
+  description?: string | null
+  startDate?: string | null
+  targetDate?: string | null
   color?: string | null
   taskCount: number
+  completedTaskCount: number
   repository?: {
     githubId: string
     fullName: string
     isPrivate: boolean
   } | null
+  createdAt: string
 }
 
 export interface DashboardStats {
@@ -83,7 +102,7 @@ export interface DashboardStats {
  */
 export interface DashboardResponse {
   stats: DashboardStats
-  upcoming: Task[]
+  upcoming: TaskSummary[]
 }
 
 export interface PaginationMeta {
@@ -91,6 +110,8 @@ export interface PaginationMeta {
   pageSize: number
   totalItems: number
   totalPages: number
+  hasNextPage: boolean
+  hasPreviousPage: boolean
 }
 
 export interface Paginated<T> {
