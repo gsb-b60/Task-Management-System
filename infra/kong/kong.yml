@@ -1,0 +1,32 @@
+# Kong declarative config (Phase 12) — no database, loaded via
+# KONG_DECLARATIVE_CONFIG when the `gateway` profile is active.
+# The API remains the source of truth for auth: every route works without Kong.
+_format_version: "3.0"
+services:
+  - name: api-service
+    url: http://api:5004
+    routes:
+      - name: api-route
+        paths:
+          - /api
+        strip_path: false
+    plugins:
+      - name: rate-limiting
+        config:
+          minute: 120
+          policy: local
+          hide_client_headers: false
+
+  - name: web-service
+    url: http://web:8080
+    routes:
+      - name: web-route
+        paths:
+          - /
+    plugins:
+      - name: cors
+        config:
+          origins:
+            - http://localhost:8000
+          methods: [GET, POST, PATCH, DELETE, OPTIONS]
+          credentials: true

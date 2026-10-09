@@ -4,6 +4,7 @@ import { z } from "zod";
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   PORT: z.coerce.number().int().positive().default(5004),
+  // Comma-separated allow-list, e.g. "http://localhost:5173,http://localhost:8080".
   FRONTEND_ORIGIN: z.string().default("http://localhost:5173"),
   DATABASE_URL: z
     .string()
@@ -30,3 +31,14 @@ if (!parsed.success) {
 
 export const env = parsed.data;
 export type Env = typeof env;
+
+/** Split a comma-separated CORS allow-list into individual origins. */
+export function parseOrigins(raw: string): string[] {
+  return raw
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter((origin) => origin.length > 0);
+}
+
+/** FRONTEND_ORIGIN split into individual origins for the CORS allow-list. */
+export const frontendOrigins: string[] = parseOrigins(env.FRONTEND_ORIGIN);

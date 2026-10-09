@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -18,19 +16,20 @@ services:
       test: ["CMD-SHELL", "pg_isready -U postgres -d todogit"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
-  backend:
+  api:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: todogit-backend
     restart: unless-stopped
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       PORT: 5004
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/todogit?schema=public
-      FRONTEND_ORIGIN: "http://localhost:5173"
+      # Every origin that may call the API with credentials: compose web (:8080)
+      # and the Kong-served SPA (:8000). Host dev adds :5173 via backend/.env.
+      FRONTEND_ORIGIN: "http://localhost:8080,http://localhost:8000"
       JWT_SECRET: "dev-secret-change-in-prod"
       JWT_EXPIRES_IN: "7d"
       BCRYPT_SALT_ROUNDS: "12"
@@ -42,23 +41,45 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:5004/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      start_period: 15s
+      retries: 5
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Vite inlines this at build time. The default keeps the default profile
+        # working without Kong; for all traffic through the gateway rebuild with
+        # VITE_API_URL=http://localhost:8000/api (see README).
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:5004/api}
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  kong:
+    image: kong:3.9
+    profiles: ["gateway"]
+    restart: unless-stopped
     volumes:
-      - ./backend:/app
-      - /app/node_modules
-      - /app/dist
-    command: >
-      sh -c "
-      echo 'Waiting for database...';
-      sleep 5;
-      echo 'Running migrations with retry...';
-      for i in 1 2 3 4 5 6 7 8 9 10; do
-        pnpm prisma migrate deploy && break || sleep 3;
-      done;
-      echo 'Generating Prisma client...';
-      pnpm prisma generate;
-      echo 'Starting dev server...';
-      exec pnpm dev
-      "
+      - ./infra/kong/kong.yml:/etc/kong/kong.yml
+      - ./infra/kong/:/kong/declarative/
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /kong/declarative/kong.yml
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+    depends_on:
+      - api
+      - web
 
   pgadmin:
     image: dpage/pgadmin4:latest

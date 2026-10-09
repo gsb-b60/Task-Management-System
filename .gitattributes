@@ -1,0 +1,5 @@
+# Docker and shell files must stay LF: the Docker daemon and /bin/sh inside
+# Linux containers cannot parse CRLF line endings.
+*.sh text eol=lf
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf

@@ -1,16 +1,14 @@
 #!/bin/sh
-# Wait for database to be ready
-echo "Waiting for database..."
-until pg_isready -h postgres -p 5432 -U postgres -d todogit; do
-  echo "Database not ready, waiting..."
-  sleep 2
-done
+# Container entrypoint: migrate, seed once, then start the API.
+# Runs as the non-root `app` user. No pnpm shim in the runtime image —
+# node_modules/.bin is all we need.
+set -e
 
-echo "Database ready! Running migrations..."
-pnpm prisma migrate deploy
+echo "Applying database migrations..."
+node_modules/.bin/prisma migrate deploy
 
-echo "Generating Prisma client..."
-pnpm prisma generate
+echo "Seeding (skipped automatically when data already exists)..."
+node_modules/.bin/tsx prisma/seed.ts
 
-echo "Starting dev server..."
-exec pnpm dev
+echo "Starting API..."
+exec "$@"

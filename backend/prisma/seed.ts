@@ -21,6 +21,18 @@ function dayOffset(days: number): Date {
 }
 
 async function main() {
+  // Docker boots run the seed on every start; wipe-and-replace would destroy
+  // user data on restart. Skip once any user exists — a fresh (or `down -v`)
+  // database still seeds on first boot. FORCE_SEED=1 re-seeds explicitly.
+  const existingUsers = await prisma.user.count();
+  if (existingUsers > 0 && process.env.FORCE_SEED !== "1") {
+    console.log(
+      `Database already has ${existingUsers} user(s); skipping seed. ` +
+        "Set FORCE_SEED=1 to wipe and re-seed.",
+    );
+    return;
+  }
+
   console.log("Seeding database...");
 
   // Children cascade from User, but delete in dependency order anyway so the
