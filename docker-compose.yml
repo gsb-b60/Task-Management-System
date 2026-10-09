@@ -25,6 +25,10 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
+      # Plain-http local origins: a Secure cookie is never stored there, so
+      # every request looks unauthenticated and login loops. Render keeps the
+      # NODE_ENV default (Secure on).
+      COOKIE_SECURE: "false"
       PORT: 5004
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/todogit?schema=public
       # Every origin that may call the API with credentials: compose web (:8080)

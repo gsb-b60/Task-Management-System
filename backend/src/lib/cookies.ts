@@ -2,7 +2,7 @@
 // reading one header is cheaper than a dependency. Setting a cookie uses
 // Express's own `res.cookie`, which needs no parser either.
 import type { Request, Response } from "express";
-import { env } from "../config/env.js";
+import { cookieSecure } from "../config/env.js";
 
 export const SESSION_COOKIE = "gpm_session";
 
@@ -39,7 +39,7 @@ export function setSessionCookie(res: Response, token: string): void {
   res.cookie(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: env.NODE_ENV === "production",
+    secure: cookieSecure,
     path: "/",
     maxAge: SESSION_MAX_AGE_MS,
   });
@@ -49,7 +49,7 @@ export function clearSessionCookie(res: Response): void {
   res.clearCookie(SESSION_COOKIE, {
     httpOnly: true,
     sameSite: "lax",
-    secure: env.NODE_ENV === "production",
+    secure: cookieSecure,
     path: "/",
     maxAge: 0,
   });
