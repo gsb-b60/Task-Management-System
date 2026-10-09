@@ -75,6 +75,7 @@ export const AUTH_OPERATIONS: Record<string, OperationSpec> = {
     ],
     responses: [
       { status: 200, description: "Signed in; session cookie set", schema: envelope(authUserSchema) },
+      { status: 302, description: "Browser navigation: redirect to the SPA with the session cookie set" },
       ...errors(401),
     ],
   },

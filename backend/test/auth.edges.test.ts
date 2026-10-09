@@ -110,6 +110,51 @@ describe("auth edge paths (Phase 10)", () => {
     expect(res.body.error.code).toBe("UNAUTHENTICATED");
   });
 
+  it("callback redirects a browser back to the SPA with the session cookie", async () => {
+    const login = `htmlnav-${runStamp}`;
+    stubOAuthFlow({ id: runStamp + 71, login, email: null, name: null });
+
+    const res = await agent()
+      .get("/api/auth/github/callback?code=abc")
+      .set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+
+    expect(res.status).toBe(302);
+    expect(res.headers["location"]).toBe("http://localhost:5173/auth/github/callback");
+    expect(res.headers["set-cookie"]?.[0] ?? "").toContain("gpm_session=");
+  });
+
+  it("callback forwards a GitHub denial to the SPA error screen, 401 for JSON", async () => {
+    const browser = await agent()
+      .get("/api/auth/github/callback?error=access_denied")
+      .set("Accept", "text/html");
+    expect(browser.status).toBe(302);
+    expect(browser.headers["location"]).toBe(
+      "http://localhost:5173/auth/github/callback?error=access_denied",
+    );
+
+    const json = await agent().get("/api/auth/github/callback?error=access_denied");
+    expect(json.status).toBe(401);
+    expect(json.body.error.code).toBe("UNAUTHENTICATED");
+  });
+
+  it("callback sends a browser to the SPA error screen when the exchange fails", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        ({ ok: false, status: 502, headers: new Headers(), json: async () => ({}) }) as unknown as Response,
+      ),
+    );
+
+    const res = await agent()
+      .get("/api/auth/github/callback?code=abc")
+      .set("Accept", "text/html");
+
+    expect(res.status).toBe(302);
+    expect(res.headers["location"]).toBe(
+      "http://localhost:5173/auth/github/callback?error=exchange_failed",
+    );
+  });
+
   it("callback links an email match, then logs the same user back in", async () => {
     const existing = await registerUser("oauth-email-match");
     const githubId = runStamp + 1;
