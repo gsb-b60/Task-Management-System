@@ -3,9 +3,10 @@ import { z } from "zod";
 // Numeric ids arrive as JSON numbers, but GitHub repository ids exceed 2^53
 // over time — accept a decimal string too so precision-sensitive clients can
 // round-trip safely (§7.1 documents `githubId` as a string on the wire).
+// JSON cannot carry a raw bigint, so the wire types are number | string.
 const githubIdInput = z
-  .union([z.bigint(), z.number().int(), z.string().regex(/^\d+$/)])
-  .transform((value) => (typeof value === "bigint" ? value : BigInt(value)))
+  .union([z.number().int(), z.string().regex(/^\d+$/)])
+  .transform((value) => BigInt(value))
   .refine((value) => value > 0n, "githubId must be a positive integer.");
 
 export const linkRepositoryBody = z.strictObject({

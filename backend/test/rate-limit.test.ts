@@ -32,4 +32,24 @@ describe("Auth rate limiting (Phase 01 §6.3)", () => {
 
     expect(res.status).toBe(201);
   });
+
+  it("buckets requests without a usable email under the fallback key", async () => {
+    const a = agent();
+
+    const noBody = await a.post("/api/auth/register");
+    expect(noBody.status).toBe(400);
+
+    const noEmail = await a.post("/api/auth/register").send({ password: "Sup3rSecret!pw" });
+    expect(noEmail.status).toBe(400);
+
+    const numericEmail = await a
+      .post("/api/auth/register")
+      .send({ email: 123, password: "Sup3rSecret!pw" });
+    expect(numericEmail.status).toBe(400);
+
+    const emptyEmail = await a
+      .post("/api/auth/register")
+      .send({ email: "", password: "Sup3rSecret!pw" });
+    expect(emptyEmail.status).toBe(400);
+  });
 });

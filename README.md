@@ -199,4 +199,68 @@ cd backend
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/todogit_test?schema=public" pnpm exec prisma migrate deploy
 ```
 
+## 7. Testing
+
+### 7.1 One command
+
+From the repository root:
+
+```bash
+pnpm test            # backend + frontend suites
+pnpm test:coverage   # the same suites with coverage gates enforced
+```
+
+Each package also runs standalone:
+
+```bash
+pnpm -C backend test             # unit + integration
+pnpm -C backend test:unit        # unit only — no database needed
+pnpm -C backend test:integration # integration only
+pnpm -C backend test:coverage    # + coverage thresholds (see 7.3)
+pnpm -C backend test:watch       # watch mode
+```
+
+Integration tests need the `todogit_test` database (§6.5 shows the one-time
+setup; `docker compose up -d postgres` provides the server).
+
+### 7.2 Running a single test
+
+Vitest filters by file path or by test name:
+
+```bash
+pnpm -C backend test tasks                                    # every path matching "tasks"
+pnpm -C backend exec vitest run test/tasks.test.ts            # one file
+pnpm -C backend exec vitest run -t "empty body"               # one test name
+```
+
+### 7.3 How coverage is enforced
+
+`pnpm -C backend test:coverage` fails the run (and CI) when the backend drops
+below the Phase 10 thresholds: **lines 80%, branches 75%, functions 85%**.
+The terminal prints a per-file table with the uncovered line numbers; open
+`backend/coverage/index.html` (git-ignored) to browse the same data. Coverage
+proves code *ran*, not that it is correct — the assertions are the real gate.
+
+### 7.4 What is real, what is stubbed
+
+- **Real**: Prisma against the `todogit_test` database, the Express app,
+  Zod schemas, auth and rate-limit middleware, the error envelope.
+- **Stubbed**: outbound HTTP only — GitHub's API is replaced per test with
+  `vi.stubGlobal("fetch", …)`, so the suite is offline and deterministic
+  (rate-limit, retry, and outage paths included).
+- Prisma is never mocked: a mocked client would test the mock, not the code.
+
+### 7.5 Adding a test
+
+1. One test file per feature in `backend/test/` (`<feature>.test.ts`); pure
+   logic goes in `backend/test/unit/`.
+2. Use `test/helpers.ts`: `registerUser()` returns an authenticated agent
+   with a unique email (rate-limiter safe), `dateOnly()` formats the API's
+   date-only strings.
+3. Assert the status code plus the response envelope (`data` / `error.code`).
+4. For GitHub endpoints, stub `fetch` following `test/github.test.ts`, and
+   restore globals in `afterEach`.
+5. Before committing: `pnpm -C backend lint && pnpm -C backend typecheck && pnpm -C backend test:coverage`.
+   CI (`.github/workflows/ci.yml`) runs exactly these commands.
+
 Further documentation: [docs/api-data-format.md](docs/api-data-format.md) (API contract and frontend integration guide), [RENDER.md](RENDER.md) (cloud deployment), [CONTRIBUTING.md](CONTRIBUTING.md) (commit conventions).

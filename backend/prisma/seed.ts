@@ -9,8 +9,6 @@ import { hashPassword } from "../src/service/password.js";
 
 const prisma = new PrismaClient();
 
-const DAY_MS = 24 * 60 * 60 * 1000;
-
 /** Local calendar day at UTC midnight — the API's date-only representation. */
 function dayOffset(days: number): Date {
   const now = new Date();

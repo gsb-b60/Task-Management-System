@@ -1,0 +1,19 @@
+{
+  "name": "todogit",
+  "private": true,
+  "description": "Git Project Manager — root scripts; each package keeps its own pnpm lockfile",
+  "scripts": {
+    "test": "pnpm -C backend test && pnpm -C frontend test",
+    "test:coverage": "pnpm -C backend test:coverage && pnpm -C frontend test:coverage",
+    "lint": "pnpm -C backend lint && pnpm -C frontend lint",
+    "typecheck": "pnpm -C backend typecheck && pnpm -C frontend typecheck"
+  },
+  "packageManager": "pnpm@11.25.0",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.25.0",
+      "onFail": "download"
+    }
+  }
+}

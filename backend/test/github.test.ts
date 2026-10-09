@@ -257,6 +257,106 @@ describe("GitHub integration — Phase 11", () => {
     expect(issueCalls[2]).toContain("state=open");
   });
 
+  it("drops pull requests, filters malformed rows, and normalises missing fields", async () => {
+    const user = await registerGitHubUser("gh-malformed");
+    const projectId = await createProject(user);
+    const urls: string[] = [];
+    stubGitHub((url) => {
+      urls.push(url);
+      if (url.includes("/repositories/1296269")) return ghResponse(200, repoFixture);
+      if (url.includes("/issues?")) {
+        return ghResponse(200, [
+          issueFixture(24),
+          { number: 30, title: "Looks like a PR", pull_request: { url: "https://api.example/pr" } },
+          { number: 31, title: "Bare" },
+          { number: "32", title: "Wrong number type" },
+          { title: "Missing number" },
+          {
+            number: 33,
+            title: "Everything odd",
+            body: 123,
+            labels: ["plain", { name: "object-name" }, { unmatched: true }],
+            user: { login: 42 },
+            created_at: 1_600_000_000,
+          },
+        ]);
+      }
+      throw new Error(`unexpected GitHub call: ${url}`);
+    });
+    await linkProject(user, projectId);
+
+    const res = await user.agent.get("/api/github/repositories/1296269/issues?state=all&labels=bug");
+
+    expect(res.status).toBe(200);
+    const issueCall = urls.find((url) => url.includes("/issues?"));
+    expect(issueCall).toContain("state=all");
+    expect(issueCall).toContain("labels=bug");
+
+    type IssueRow = {
+      number: number;
+      body: string | null;
+      state: string;
+      labels: string[];
+      author: { login: string; avatarUrl: string | null };
+      createdAt: string;
+      updatedAt: string;
+      url: string;
+    };
+    const data = res.body.data as IssueRow[];
+
+    // The PR and the two structurally broken rows are dropped entirely.
+    expect(data.map((issue) => issue.number)).toEqual([24, 31, 33]);
+
+    expect(data[1]).toEqual({
+      number: 31,
+      title: "Bare",
+      body: null,
+      state: "open",
+      labels: [],
+      author: { login: "unknown", avatarUrl: null },
+      createdAt: "",
+      updatedAt: "",
+      url: "",
+    });
+
+    const odd = data[2];
+    expect(odd?.body).toBeNull();
+    expect(odd?.state).toBe("open");
+    expect(odd?.labels).toEqual(["plain", "object-name"]);
+    expect(odd?.author).toEqual({ login: "unknown", avatarUrl: null });
+    expect(odd?.createdAt).toBe("");
+    expect(odd?.updatedAt).toBe("");
+    expect(odd?.url).toBe("");
+  });
+
+  it("maps issue-endpoint 404 to NOT_FOUND and 401 to FORBIDDEN", async () => {
+    const user = await registerGitHubUser("gh-issues-errors");
+    const projectId = await createProject(user);
+    stubGitHub((url) => {
+      if (url.includes("/repositories/1296269")) return ghResponse(200, repoFixture);
+      throw new Error(`unexpected GitHub call: ${url}`);
+    });
+    await linkProject(user, projectId);
+
+    stubGitHub((url) => {
+      if (url.includes("/repositories/1296269")) return ghResponse(200, repoFixture);
+      if (url.includes("/issues?")) return ghResponse(404, { message: "Not Found" });
+      throw new Error(`unexpected GitHub call: ${url}`);
+    });
+    const missing = await user.agent.get("/api/github/repositories/1296269/issues");
+    expect(missing.status).toBe(404);
+    expect(missing.body.error.code).toBe("NOT_FOUND");
+
+    stubGitHub((url) => {
+      if (url.includes("/repositories/1296269")) return ghResponse(200, repoFixture);
+      if (url.includes("/issues?")) return ghResponse(401, { message: "Bad credentials" });
+      throw new Error(`unexpected GitHub call: ${url}`);
+    });
+    const rejected = await user.agent.get("/api/github/repositories/1296269/issues");
+    expect(rejected.status).toBe(403);
+    expect(rejected.body.error.code).toBe("FORBIDDEN");
+  });
+
   it("imports a closed issue with status TODO — status independence", async () => {
     const user = await registerGitHubUser("gh-status");
     const projectId = await createProject(user);
