@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { MultiSelect, Select } from '../ui/Select'
+import { formatProjectLabel } from '../../lib/format'
 import type { ProjectListItem, TaskStatus, TaskPriority } from '../../api/types'
 
 const STATUS_OPTIONS = [
@@ -92,7 +93,7 @@ export function TaskFilters({
           onChange={(e) => handleProjectChange(e.target.value || null)}
           options={[
             { value: '', label: 'Project: All' },
-            ...projects.map((p) => ({ value: p.id, label: p.name })),
+            ...projects.map((p) => ({ value: p.id, label: formatProjectLabel(p.projectNumber, p.name) })),
           ]}
         />
       </div>

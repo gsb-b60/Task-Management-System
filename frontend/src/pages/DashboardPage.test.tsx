@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { mockDashboardApi, setScenario, mockDataApi } from '../api/mock'
 import { renderPage } from '../test/renderApp'
@@ -27,10 +27,12 @@ describe('DashboardPage', () => {
   it('renders every stat tile with the server count', async () => {
     await renderDashboard()
 
-    expect((await screen.findByText('all statuses')).previousSibling).toHaveTextContent('137')
-    expect(screen.getByText('byStatus.TODO').previousSibling).toHaveTextContent('37')
-    expect(screen.getByText('byStatus.IN_PROGRESS').previousSibling).toHaveTextContent('52')
-    expect(screen.getByText('byStatus.DONE').previousSibling).toHaveTextContent('48')
+    const tiles = await screen.findByTestId('stat-tiles')
+    const valueOf = (label: string) => within(tiles).getByText(label).nextElementSibling
+    expect(valueOf('Total')).toHaveTextContent('137')
+    expect(valueOf('Todo')).toHaveTextContent('37')
+    expect(valueOf('In progress')).toHaveTextContent('52')
+    expect(valueOf('Done')).toHaveTextContent('48')
   })
 
   it('renders the overdue and due-today counts', async () => {
@@ -59,7 +61,7 @@ describe('DashboardPage', () => {
     await renderDashboard()
 
     expect(await screen.findByText('No tasks yet')).toBeInTheDocument()
-    expect(screen.queryByText('all statuses')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('stat-tiles')).not.toBeInTheDocument()
   })
 
   it('keeps every status key present at zero so a tile never renders blank', async () => {
@@ -87,7 +89,7 @@ describe('DashboardPage', () => {
     await renderDashboard(`/dashboard?projectId=${PORTFOLIO}`)
 
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: 'Portfolio Website' })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /Portfolio Website/ })).toBeInTheDocument()
     })
     expect(screen.queryByText(`?projectId=${PORTFOLIO}`)).not.toBeInTheDocument()
   })
@@ -96,7 +98,8 @@ describe('DashboardPage', () => {
     await renderDashboard(`/dashboard?projectId=${PORTFOLIO}`)
 
     await waitFor(() => {
-      expect(screen.getByText('all statuses').previousSibling).toHaveTextContent('12')
+      const tiles = screen.getByTestId('stat-tiles')
+      expect(within(tiles).getByText('Total').nextElementSibling).toHaveTextContent('12')
     })
   })
 

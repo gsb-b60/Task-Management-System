@@ -30,8 +30,8 @@ const COLUMNS: Record<TaskStatus, Task[]> = {
 }
 
 const PROJECTS: ProjectListItem[] = [
-  { id: 'portfolio', name: 'Portfolio', taskCount: 1, completedTaskCount: 0, createdAt: '2024-01-01T00:00:00Z' },
-  { id: 'stream', name: 'Stream', taskCount: 1, completedTaskCount: 1, createdAt: '2024-02-01T00:00:00Z' },
+  { id: 'portfolio', name: 'Portfolio', projectNumber: 1, taskCount: 1, completedTaskCount: 0, createdAt: '2024-01-01T00:00:00Z' },
+  { id: 'stream', name: 'Stream', projectNumber: 2, taskCount: 1, completedTaskCount: 1, createdAt: '2024-02-01T00:00:00Z' },
 ]
 
 const META = {
@@ -54,8 +54,8 @@ describe('Board', () => {
     expect(screen.getByText('DONE')).toBeInTheDocument()
     expect(screen.getByText('Design system')).toBeInTheDocument()
     expect(screen.getByText('Ship it')).toBeInTheDocument()
-    expect(screen.getAllByText('Portfolio')).toHaveLength(3)
-    expect(screen.getByText('Stream')).toBeInTheDocument()
+    expect(screen.getAllByText('#1 Portfolio')).toHaveLength(3)
+    expect(screen.getByText('#2 Stream')).toBeInTheDocument()
     expect(screen.getByText('No tasks')).toBeInTheDocument()
   })
 

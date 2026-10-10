@@ -11,7 +11,6 @@ import { TasksPage } from './pages/TasksPage'
 import { TaskDetailPage } from './pages/TaskDetailPage'
 import { BoardPage } from './pages/BoardPage'
 import { ProjectsPage } from './pages/ProjectsPage'
-import { RoadmapPage } from './pages/RoadmapPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 
 /**
@@ -47,7 +46,6 @@ export const routes: RouteObject[] = [
           { path: '/tasks', element: <TasksPage /> },
           { path: '/tasks/:id', element: <TaskDetailPage /> },
           { path: '/board', element: <BoardPage /> },
-          { path: '/roadmap', element: <RoadmapPage /> },
           { path: '/projects', element: <ProjectsPage /> },
         ],
       },

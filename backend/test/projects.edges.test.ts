@@ -55,4 +55,32 @@ describe("projects service edges (Phase 10)", () => {
     );
     expect(empty).toMatchObject({ taskCount: 0, completedTaskCount: 0 });
   });
+
+  it("numbers a user's projects 1, 2, 3 in creation order", async () => {
+    const user = await registerUser("proj-numbered");
+    const first = await user.agent.post("/api/projects").send({ name: "one" });
+    const second = await user.agent.post("/api/projects").send({ name: "two" });
+    const third = await user.agent.post("/api/projects").send({ name: "three" });
+
+    expect(first.body.data.projectNumber).toBe(1);
+    expect(second.body.data.projectNumber).toBe(2);
+    expect(third.body.data.projectNumber).toBe(3);
+  });
+
+  it("numbers each user's projects independently and never reuses a deleted number", async () => {
+    const alice = await registerUser("proj-num-alice");
+    const bob = await registerUser("proj-num-bob");
+
+    await createProject(alice, { name: "alice one" });
+    const bobFirst = await bob.agent.post("/api/projects").send({ name: "bob one" });
+    expect(bobFirst.body.data.projectNumber).toBe(1);
+
+    const doomed = await createProject(alice, { name: "alice doomed" });
+    const doomedRow = await alice.agent.get(`/api/projects/${doomed.id}`);
+    expect(doomedRow.body.data.projectNumber).toBe(2);
+    await alice.agent.delete(`/api/projects/${doomed.id}`).expect(204);
+
+    const next = await alice.agent.post("/api/projects").send({ name: "alice next" });
+    expect(next.body.data.projectNumber).toBe(3);
+  });
 });

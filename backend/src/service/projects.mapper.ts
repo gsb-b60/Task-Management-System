@@ -10,6 +10,7 @@ export function toProjectDto(row: ProjectRow, counts: ProjectCounts): ProjectDto
     description: row.description,
     startDate: row.startDate,
     targetDate: row.targetDate,
+    projectNumber: row.projectNumber,
     taskCount: counts.taskCount,
     completedTaskCount: counts.completedTaskCount,
     createdAt: row.createdAt,

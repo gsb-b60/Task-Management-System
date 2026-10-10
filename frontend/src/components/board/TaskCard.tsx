@@ -18,7 +18,6 @@ interface TaskCardProps {
 
 export function TaskCard({ task, projectName = null, onClick }: TaskCardProps) {
   const shortId = `#${task.id.slice(-4)}`
-  const hasGitHubIssue = task.githubIssueNumber !== null
   const {
     attributes,
     listeners,
@@ -38,11 +37,14 @@ export function TaskCard({ task, projectName = null, onClick }: TaskCardProps) {
       {...listeners}
       className={`
         border border-line rounded-md p-3 hover:border-muted cursor-grab active:cursor-grabbing bg-canvas
-        transition-shadow duration-150 touch-none select-none
-        ${isDragging ? 'opacity-50 shadow-lg' : ''}
+        touch-none select-none
+        ${isDragging ? 'opacity-40' : ''}
       `}
       style={{
-        transform: CSS.Transform.toString(transform),
+        // While dragging, the DragOverlay carries the visual — the source
+        // stays parked (dimmed) instead of chasing the pointer, which caused
+        // the double-image judder. Siblings still animate via transition.
+        transform: CSS.Transform.toString(isDragging ? null : transform),
         transition,
       }}
       onClick={onClick}
@@ -50,6 +52,18 @@ export function TaskCard({ task, projectName = null, onClick }: TaskCardProps) {
       role="button"
       aria-label={`Task ${shortId}: ${task.title}`}
     >
+      <TaskCardBody task={task} projectName={projectName} />
+    </div>
+  )
+}
+
+/** Pure card face — reused verbatim inside the DragOverlay so pickup and drop never resize. */
+export function TaskCardBody({ task, projectName = null }: { task: Task; projectName?: string | null }) {
+  const shortId = `#${task.id.slice(-4)}`
+  const hasGitHubIssue = task.githubIssueNumber !== null
+
+  return (
+    <>
       <div className="flex items-center gap-1.5">
         <span className="font-mono text-xs text-faint">{shortId}</span>
         {hasGitHubIssue && (
@@ -79,6 +93,6 @@ export function TaskCard({ task, projectName = null, onClick }: TaskCardProps) {
           </span>
         )}
       </div>
-    </div>
+    </>
   )
 }

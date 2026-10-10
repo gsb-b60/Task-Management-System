@@ -60,3 +60,18 @@ export function toDateInputValue(value: string | null | undefined): string | nul
   if (value === null || value === undefined || value === '') return null
   return /^\d{4}-\d{2}-\d{2}/.test(value) ? value.slice(0, 10) : value
 }
+
+/**
+ * Reduce a wire datetime to `YYYY-MM-DDTHH:mm` for native
+ * `<input type="datetime-local">` defaults, expressed in the browser's local
+ * timezone. Date-only values default to midnight. Anything else passes
+ * through unchanged.
+ */
+export function toDateTimeInputValue(value: string | null | undefined): string | null {
+  if (value === null || value === undefined || value === '') return null
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return `${value}T00:00`
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return value
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${parsed.getFullYear()}-${pad(parsed.getMonth() + 1)}-${pad(parsed.getDate())}T${pad(parsed.getHours())}:${pad(parsed.getMinutes())}`
+}

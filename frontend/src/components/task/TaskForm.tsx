@@ -6,7 +6,8 @@ import { TextInput, Field } from '../ui/Input'
 import { Select } from '../ui/Select'
 import { Button } from '../ui/Button'
 import { IconPlus } from '../ui/Icons'
-import { toDateInputValue } from '../../lib/dateOnly'
+import { toDateTimeInputValue } from '../../lib/dateOnly'
+import { formatProjectLabel } from '../../lib/format'
 import { useCreateProject } from '../../hooks/useProjectMutations'
 import type { ProjectListItem } from '../../api/types'
 
@@ -59,14 +60,14 @@ export function TaskForm({ initialValues, onSubmit, onClose, submitLabel, isSubm
       priority: 'MEDIUM',
       projectId: null,
       ...initialValues,
-      // Stored dates arrive as ISO datetimes; native date inputs need YYYY-MM-DD.
-      startDate: toDateInputValue(initialValues?.startDate),
-      dueDate: toDateInputValue(initialValues?.dueDate),
+      // Stored datetimes need YYYY-MM-DDTHH:mm for native datetime inputs.
+      startDate: toDateTimeInputValue(initialValues?.startDate),
+      dueDate: toDateTimeInputValue(initialValues?.dueDate),
     },
   })
   const [isCreatingProject, setIsCreatingProject] = useState(false)
   const [newProjectName, setNewProjectName] = useState('')
-  const [createdProjects, setCreatedProjects] = useState<{ id: string; name: string }[]>([])
+  const [createdProjects, setCreatedProjects] = useState<{ id: string; name: string; projectNumber: number }[]>([])
   const [pendingProjectId, setPendingProjectId] = useState<string | null>(null)
   const createProject = useCreateProject()
 
@@ -87,13 +88,13 @@ export function TaskForm({ initialValues, onSubmit, onClose, submitLabel, isSubm
   const dueDate = watch('dueDate')
   const startDate = watch('startDate')
 
-  const allProjects: { id: string; name: string }[] = [...projects]
+  const allProjects: { id: string; name: string; projectNumber: number }[] = [...projects]
   for (const p of createdProjects) {
     if (!allProjects.some((item) => item.id === p.id)) allProjects.push(p)
   }
   const projectOptions = [
     { value: '', label: 'No project' },
-    ...allProjects.map((p) => ({ value: p.id, label: p.name })),
+    ...allProjects.map((p) => ({ value: p.id, label: formatProjectLabel(p.projectNumber, p.name) })),
   ]
 
   // Select the quick-created project once its option is rendered —
@@ -230,7 +231,7 @@ export function TaskForm({ initialValues, onSubmit, onClose, submitLabel, isSubm
         >
           <TextInput
             id="startDate"
-            type="date"
+            type="datetime-local"
             {...register('startDate')}
             invalid={!!errors.startDate}
           />
@@ -243,7 +244,7 @@ export function TaskForm({ initialValues, onSubmit, onClose, submitLabel, isSubm
         >
           <TextInput
             id="dueDate"
-            type="date"
+            type="datetime-local"
             {...register('dueDate')}
             invalid={!!errors.dueDate}
           />

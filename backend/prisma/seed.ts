@@ -67,6 +67,7 @@ async function main() {
       description: "Personal portfolio website built with React and Tailwind CSS",
       startDate: dayOffset(-14),
       targetDate: dayOffset(30),
+      projectNumber: 1,
       userId: demoUser.id,
     },
   });
@@ -77,11 +78,19 @@ async function main() {
       description: "Personal project-management application with GitHub integration",
       startDate: dayOffset(-10),
       targetDate: dayOffset(60),
+      projectNumber: 2,
       userId: demoUser.id,
     },
   });
 
   console.log(`Created projects: ${portfolio.name}, ${manager.name}`);
+
+  // The demo projects take numbers 1 and 2 explicitly, so the allocator must
+  // continue at 3 — direct creates bypass the counter.
+  await prisma.user.update({
+    where: { id: demoUser.id },
+    data: { projectSeq: 3 },
+  });
 
   type SeedTask = {
     title: string;

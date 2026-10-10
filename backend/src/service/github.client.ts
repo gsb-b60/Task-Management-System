@@ -25,6 +25,8 @@ export interface RateLimitInfo {
 export interface GitHubCallResult<T> {
   data: T;
   rateLimit: RateLimitInfo;
+  /** Path for the next page (`rel="next"` Link), or `null` when complete. */
+  next: string | null;
 }
 
 /** A non-success GitHub HTTP status that survived the retry policy. */
@@ -85,7 +87,6 @@ export async function githubFetch<T>(
       limit: response.headers.get("x-ratelimit-limit"),
       reset: response.headers.get("x-ratelimit-reset"),
     };
-
     if (response.status === 429 || (response.status === 403 && rateLimit.remaining === "0")) {
       throw rateLimitError(rateLimit);
     }
@@ -101,8 +102,47 @@ export async function githubFetch<T>(
     }
 
     const data = (response.status === 204 ? undefined : await response.json()) as T;
-    return { data, rateLimit };
+    return { data, rateLimit, next: nextPagePath(response.headers.get("link")) };
   }
 
   throw new AppError("BAD_GATEWAY", "GitHub is unavailable. Please try again later.");
+}
+
+/**
+ * The path of the `rel="next"` Link header, relative to the API root so it
+ * feeds straight back into {@link githubFetch}. `null` when there is no
+ * next page (or no pagination at all).
+ */
+function nextPagePath(linkHeader: string | null): string | null {
+  if (linkHeader === null) return null;
+  for (const part of linkHeader.split(",")) {
+    const match = part.match(/<([^>]+)>\s*;\s*rel="next"/);
+    const url = match?.[1]?.trim();
+    if (url === undefined || url === "") continue;
+    return url.startsWith(GITHUB_API) ? url.slice(GITHUB_API.length) : url;
+  }
+  return null;
+}
+
+const MAX_PAGES = 10;
+
+/**
+ * Collects every page of a listing endpoint (up to {@link MAX_PAGES}).
+ * Returns the concatenated items and the last page's rate-limit info.
+ */
+export async function githubFetchAll<T>(
+  token: string,
+  path: string,
+  init: RequestInit = {},
+): Promise<GitHubCallResult<T[]>> {
+  const data: T[] = [];
+  let next: string | null = path;
+  let rateLimit: RateLimitInfo = { remaining: null, limit: null, reset: null };
+  for (let page = 0; page < MAX_PAGES && next !== null; page += 1) {
+    const result: GitHubCallResult<T[]> = await githubFetch(token, next, init);
+    data.push(...result.data);
+    rateLimit = result.rateLimit;
+    next = result.next;
+  }
+  return { data, rateLimit, next };
 }

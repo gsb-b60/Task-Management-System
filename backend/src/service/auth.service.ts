@@ -14,6 +14,8 @@ import {
   findUserByGitHubId,
   findUserByEmail,
   linkUserGitHub,
+  clearUserGitHub,
+  updateUserProfile,
 } from "../repository/user.repository.js";
 import type { AuthUser, SessionUser, UserRow } from "../types/domain.js";
 import { hashPassword, verifyPasswordOrDummy } from "./password.js";
@@ -111,6 +113,27 @@ export async function login(input: LoginInput): Promise<IssuedSession> {
 export async function logout(token: string | undefined): Promise<void> {
   if (token === undefined) return;
   await deleteSessionByTokenHash(hashSessionToken(token));
+}
+
+/** Partial profile update — omitted fields keep their values. */
+export async function updateProfile(
+  userId: string,
+  input: { displayName?: string | null | undefined },
+): Promise<SessionUser> {
+  const row = await updateUserProfile(userId, input);
+  if (row === null) {
+    throw new AppError("NOT_FOUND", "Account not found.");
+  }
+  return toSessionUser(row);
+}
+
+/** Removes the GitHub link; projects and imported tasks are untouched. */
+export async function disconnectGitHub(userId: string): Promise<SessionUser> {
+  const row = await clearUserGitHub(userId);
+  if (row === null) {
+    throw new AppError("NOT_FOUND", "Account not found.");
+  }
+  return toSessionUser(row);
 }
 
 /** Returns `null` for missing, expired, or revoked sessions. */

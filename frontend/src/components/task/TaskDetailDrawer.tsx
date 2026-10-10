@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom'
 import { useTask } from '../../hooks/useTask'
 import { useUpdateTask, useDeleteTask } from '../../hooks/useTaskMutations'
 import { useOpenDropdown } from '../../hooks/useOpenDropdown'
-import { formatDateOnly } from '../../lib/format'
-import { toDateInputValue } from '../../lib/dateOnly'
+import { formatDateTime, formatProjectLabel } from '../../lib/format'
+import { Markdown } from '../ui/Markdown'
+import { toDateTimeInputValue } from '../../lib/dateOnly'
 import type { ProjectListItem, TaskPriority, TaskStatus } from '../../api/types'
 import { IconClose } from '../ui/Icons'
 import { Button } from '../ui/Button'
@@ -74,13 +75,15 @@ export function TaskDetailDrawer({ taskId, projects, onClose, variant = 'inline'
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [draftTitle, setDraftTitle] = useState('')
   const [draftDescription, setDraftDescription] = useState('')
+  const [draftDateTime, setDraftDateTime] = useState('')
 
-  // A different task reuses the same panel — drop any in-progress editing.
-  useEffect(() => {
-    setEditing(null)
-    setIsDeleteOpen(false)
-  }, [taskId])
+  function openDateEditor(field: 'startDate' | 'dueDate', current: string | null | undefined) {
+    setDraftDateTime(toDateTimeInputValue(current) ?? '')
+    setEditing(field)
+  }
 
+  // The panel remounts per task (parents pass key={taskId}), so editing,
+  // delete-confirm and drafts always start fresh — no reset effect needed.
   useEffect(() => {
     if (!taskId) return
     const handleKey = (e: KeyboardEvent) => {
@@ -241,17 +244,27 @@ export function TaskDetailDrawer({ taskId, projects, onClose, variant = 'inline'
                   placeholder="Optional description"
                 />
               ) : task.description ? (
-                <button
-                  type="button"
+                <div
+                  role="button"
+                  tabIndex={0}
                   title="Edit description"
-                  onClick={() => {
+                  onClick={(e) => {
+                    // Links navigate instead of opening the editor.
+                    if ((e.target as HTMLElement).closest('a')) return
                     setDraftDescription(task.description ?? '')
                     setEditing('description')
                   }}
-                  className="block w-full text-left text-sm text-fg whitespace-pre-wrap hover:underline"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      setDraftDescription(task.description ?? '')
+                      setEditing('description')
+                    }
+                  }}
+                  className="block w-full text-left rounded hover:bg-subtle cursor-pointer"
                 >
-                  {task.description}
-                </button>
+                  <Markdown text={task.description} />
+                </div>
               ) : (
                 <button
                   type="button"
@@ -328,60 +341,92 @@ export function TaskDetailDrawer({ taskId, projects, onClose, variant = 'inline'
                   )}
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-faint">Start date</p>
+                  <p className="text-xs font-medium text-faint">Start time</p>
                   {editing === 'startDate' ? (
-                    <TextInput
-                      aria-label="Start date"
-                      type="date"
-                      value={toDateInputValue(task.startDate) ?? ''}
-                      disabled={updateTask.isPending}
-                      autoFocus
-                      onChange={(e) => void commit({ startDate: e.target.value || null })}
-                      onKeyDown={(e) => {
-                        e.stopPropagation()
-                        if (e.key === 'Escape') cancelEditing()
-                      }}
-                      onBlur={() => {
-                        if (!updateTask.isPending) cancelEditing()
-                      }}
-                    />
+                    <div className="flex items-center gap-1">
+                      <TextInput
+                        aria-label="Start time"
+                        type="datetime-local"
+                        value={draftDateTime}
+                        disabled={updateTask.isPending}
+                        autoFocus
+                        onChange={(e) => setDraftDateTime(e.target.value)}
+                        onKeyDown={(e) => {
+                          e.stopPropagation()
+                          if (e.key === 'Escape') cancelEditing()
+                          if (e.key === 'Enter') void commit({ startDate: draftDateTime || null })
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => void commit({ startDate: draftDateTime || null })}
+                        disabled={updateTask.isPending}
+                        className="px-2 py-1 text-[11px] font-semibold text-white bg-ok hover:bg-ok-dark rounded disabled:opacity-50 flex-none"
+                      >
+                        Apply
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Cancel"
+                        onClick={cancelEditing}
+                        className="px-1.5 py-1 text-xs text-muted hover:text-fg flex-none"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   ) : (
                     <button
                       type="button"
-                      title="Edit start date"
-                      onClick={() => setEditing('startDate')}
+                      title="Edit start time"
+                      onClick={() => openDateEditor('startDate', task.startDate)}
                       className="text-sm text-fg hover:underline"
                     >
-                      {task.startDate ? formatDateOnly(task.startDate) : '—'}
+                      {task.startDate ? formatDateTime(task.startDate) : '—'}
                     </button>
                   )}
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-faint">Due date</p>
+                  <p className="text-xs font-medium text-faint">Due time</p>
                   {editing === 'dueDate' ? (
-                    <TextInput
-                      aria-label="Due date"
-                      type="date"
-                      value={toDateInputValue(task.dueDate) ?? ''}
-                      disabled={updateTask.isPending}
-                      autoFocus
-                      onChange={(e) => void commit({ dueDate: e.target.value || null })}
-                      onKeyDown={(e) => {
-                        e.stopPropagation()
-                        if (e.key === 'Escape') cancelEditing()
-                      }}
-                      onBlur={() => {
-                        if (!updateTask.isPending) cancelEditing()
-                      }}
-                    />
+                    <div className="flex items-center gap-1">
+                      <TextInput
+                        aria-label="Due time"
+                        type="datetime-local"
+                        value={draftDateTime}
+                        disabled={updateTask.isPending}
+                        autoFocus
+                        onChange={(e) => setDraftDateTime(e.target.value)}
+                        onKeyDown={(e) => {
+                          e.stopPropagation()
+                          if (e.key === 'Escape') cancelEditing()
+                          if (e.key === 'Enter') void commit({ dueDate: draftDateTime || null })
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => void commit({ dueDate: draftDateTime || null })}
+                        disabled={updateTask.isPending}
+                        className="px-2 py-1 text-[11px] font-semibold text-white bg-ok hover:bg-ok-dark rounded disabled:opacity-50 flex-none"
+                      >
+                        Apply
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Cancel"
+                        onClick={cancelEditing}
+                        className="px-1.5 py-1 text-xs text-muted hover:text-fg flex-none"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   ) : (
                     <button
                       type="button"
-                      title="Edit due date"
-                      onClick={() => setEditing('dueDate')}
+                      title="Edit due time"
+                      onClick={() => openDateEditor('dueDate', task.dueDate)}
                       className="text-sm text-fg hover:underline"
                     >
-                      {task.dueDate ? formatDateOnly(task.dueDate) : '—'}
+                      {task.dueDate ? formatDateTime(task.dueDate) : '—'}
                     </button>
                   )}
                 </div>
@@ -395,7 +440,7 @@ export function TaskDetailDrawer({ taskId, projects, onClose, variant = 'inline'
                     aria-label={`Project for ${task.title}`}
                     options={[
                       { value: '', label: 'No project' },
-                      ...projects.map((p) => ({ value: p.id, label: p.name })),
+                      ...projects.map((p) => ({ value: p.id, label: formatProjectLabel(p.projectNumber, p.name) })),
                     ]}
                     value={task.projectId ?? ''}
                     disabled={updateTask.isPending}
@@ -416,7 +461,7 @@ export function TaskDetailDrawer({ taskId, projects, onClose, variant = 'inline'
                     onClick={() => setEditing('project')}
                     className="text-sm text-fg hover:underline"
                   >
-                    {project ? project.name : 'Unassigned'}
+                    {project ? formatProjectLabel(project.projectNumber, project.name) : 'Unassigned'}
                   </button>
                 )}
               </div>

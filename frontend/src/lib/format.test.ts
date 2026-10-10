@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { ApiError } from '../api/client'
-import { dueLabel, errorMessage, formatDateOnly, initialsOf } from './format'
+import { dueLabel, errorMessage, formatDateOnly, formatDateTime, formatProjectLabel, initialsOf } from './format'
 
 describe('dueLabel', () => {
   it('says due today for zero', () => {
@@ -64,5 +64,26 @@ describe('initialsOf', () => {
 
   it('handles a single-word name', () => {
     expect(initialsOf('Ada', 'ada@example.com')).toBe('AD')
+  })
+})
+
+describe('formatProjectLabel', () => {
+  it('prefixes the stable index', () => {
+    expect(formatProjectLabel(1, 'Portfolio')).toBe('#1 Portfolio')
+    expect(formatProjectLabel(12, 'Stream')).toBe('#12 Stream')
+  })
+})
+
+describe('formatDateTime', () => {
+  it('shows date and time for datetimes', () => {
+    expect(formatDateTime('2026-10-23T14:30:00.000Z')).toMatch(/^23 Oct, \d{2}:\d{2}$/)
+  })
+
+  it('falls back to the calendar date for date-only values', () => {
+    expect(formatDateTime('2026-10-23')).toBe('23 Oct')
+  })
+
+  it('renders an em dash for a missing value', () => {
+    expect(formatDateTime(null)).toBe('—')
   })
 })

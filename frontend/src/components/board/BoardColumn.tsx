@@ -34,7 +34,7 @@ export function BoardColumn({ status, tasks, totalCount, projectNames, onTaskCli
       `}
       data-status={status}
     >
-      <div className={`px-3 py-2 border-b border-line bg-subtle flex items-center gap-2 ${dragOver ? 'bg-blue-50' : ''}`}>
+      <div className={`px-3 py-2 border-b border-line bg-subtle flex items-center gap-2 ${dragOver ? 'bg-accentbg' : ''}`}>
         <span className={`w-2 h-2 rounded-full flex-none ${style.dot}`} />
         <span className="text-xs font-semibold text-fg">
           {status === 'IN_PROGRESS' ? 'In progress' : status}

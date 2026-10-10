@@ -14,8 +14,10 @@ import {
   login as loginService,
   logout as logoutService,
   register as registerService,
+  updateProfile as updateProfileService,
+  disconnectGitHub as disconnectGitHubService,
 } from "../../service/index.js";
-import { loginBody, registerBody } from "./auth.schemas.js";
+import { loginBody, registerBody, updateMeBody } from "./auth.schemas.js";
 
 export async function register(req: Request, res: Response): Promise<void> {
   const body = registerBody.parse(req.body);
@@ -39,6 +41,17 @@ export async function logout(req: Request, res: Response): Promise<void> {
 
 export async function me(req: Request, res: Response): Promise<void> {
   res.status(200).json({ data: currentUser(req) });
+}
+
+export async function updateMe(req: Request, res: Response): Promise<void> {
+  const body = updateMeBody.parse(req.body);
+  const user = await updateProfileService(currentUser(req).id, body);
+  res.status(200).json({ data: user });
+}
+
+export async function disconnectGitHub(req: Request, res: Response): Promise<void> {
+  const user = await disconnectGitHubService(currentUser(req).id);
+  res.status(200).json({ data: user });
 }
 
 export function githubAuthorize(_req: Request, res: Response): void {

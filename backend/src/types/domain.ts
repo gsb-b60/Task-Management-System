@@ -64,6 +64,8 @@ export interface ProjectRow {
   description: string | null;
   startDate: Date | null;
   targetDate: Date | null;
+  /** Stable per-user index, allocated max + 1 at creation, never reused. */
+  projectNumber: number;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -82,6 +84,7 @@ export interface ProjectDto {
   description: string | null;
   startDate: Date | null;
   targetDate: Date | null;
+  projectNumber: number;
   taskCount: number;
   completedTaskCount: number;
   createdAt: Date;
@@ -135,6 +138,8 @@ export interface UserRow {
   githubId: string | null;
   githubLogin: string | null;
   githubAccessToken: string | null;
+  /** Next project number to allocate; bumped on every project creation. */
+  projectSeq: number;
   createdAt: Date;
   updatedAt: Date;
 }

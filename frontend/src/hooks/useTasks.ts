@@ -13,7 +13,8 @@ export function useTasks() {
   const statusParam = searchParams.get('status')
   const priorityParam = searchParams.get('priority')
   const page = Number(searchParams.get('page') ?? '1')
-  const pageSize = Number(searchParams.get('pageSize') ?? '20')
+  // Fixed page size — no per-page selector in the UI.
+  const pageSize = 20
   const sortBy = searchParams.get('sortBy') ?? 'dueDate'
   const sortOrder = searchParams.get('sortOrder') ?? 'asc'
 

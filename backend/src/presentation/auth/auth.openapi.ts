@@ -1,5 +1,5 @@
 import { envelope, errors, type OperationSpec } from "../openapi/openapi.js";
-import { loginBody, registerBody } from "./auth.schemas.js";
+import { loginBody, registerBody, updateMeBody } from "./auth.schemas.js";
 
 const authUserSchema = {
   type: "object",
@@ -48,6 +48,17 @@ export const AUTH_OPERATIONS: Record<string, OperationSpec> = {
     auth: true,
     responses: [{ status: 200, description: "The signed-in user", schema: envelope(authUserSchema) }, ...errors(401)],
   },
+  "PATCH /api/auth/me": {
+    tag: "Auth",
+    summary: "Update the profile",
+    description: "Partial update — omitted fields keep their values, explicit null clears the display name.",
+    auth: true,
+    requestBody: { schema: updateMeBody },
+    responses: [
+      { status: 200, description: "The updated user", schema: envelope(authUserSchema) },
+      ...errors(400, 401, 404),
+    ],
+  },
   "GET /api/auth/github": {
     tag: "Auth",
     summary: "Start GitHub OAuth",
@@ -56,6 +67,17 @@ export const AUTH_OPERATIONS: Record<string, OperationSpec> = {
     responses: [
       { status: 302, description: "Redirect to GitHub" },
       ...errors(400),
+    ],
+  },
+  "DELETE /api/auth/github": {
+    tag: "Auth",
+    summary: "Disconnect GitHub",
+    description:
+      "Clears the account link only — projects, their repository rows, and imported tasks are untouched.",
+    auth: true,
+    responses: [
+      { status: 200, description: "The user without its GitHub link", schema: envelope(authUserSchema) },
+      ...errors(401, 404),
     ],
   },
   "GET /api/auth/github/callback": {

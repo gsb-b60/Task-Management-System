@@ -9,7 +9,7 @@ interface EmptyStateProps {
 }
 
 /**
- * Consistent empty state used by Task List, Dashboard, Board, Roadmap, Projects.
+ * Consistent empty state used by Task List, Dashboard, Board, Projects.
  */
 export function EmptyState({
   title,

@@ -45,3 +45,30 @@ export function initialsOf(name: string | null | undefined, email: string): stri
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
   return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
 }
+
+/**
+ * Stable project index for display, e.g. `#3 Portfolio`. The number comes
+ * from the server (`projectNumber`, per-user, never reused) — never derive
+ * it from list position, which shifts on delete.
+ */
+export function formatProjectLabel(projectNumber: number, name: string): string {
+  return `#${projectNumber} ${name}`
+}
+
+/**
+ * `2026-10-23T14:30:00.000Z` → `23 Oct, 14:30`, read in the browser's local
+ * timezone. Date-only values fall back to the calendar date.
+ */
+export function formatDateTime(value: string | null | undefined): string {
+  if (!value) return '—'
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return value
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return formatDateOnly(value)
+  return parsed.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+  }) + ', ' + parsed.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}

@@ -1,5 +1,5 @@
-import { apiUrl } from './client'
-import type { GitHubRateLimit } from './types'
+import { apiUrl, request } from './client'
+import type { GitHubRateLimit, GitHubRepository } from './types'
 
 function parseCount(value: string | null): number | null {
   if (value === null) return null
@@ -28,5 +28,11 @@ export const fetchGitHubApi = {
       remaining: parseCount(response.headers.get('x-ratelimit-remaining')) ?? 0,
       limit: parseCount(response.headers.get('x-ratelimit-limit')),
     }
+  },
+
+  async listRepositories(): Promise<GitHubRepository[]> {
+    // The body is the repo array itself — no headers to read, so the shared
+    // envelope-unwrapping client is the right tool here.
+    return request<GitHubRepository[]>('/github/repositories')
   },
 }

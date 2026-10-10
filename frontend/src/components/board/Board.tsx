@@ -13,8 +13,10 @@ import {
   type UniqueIdentifier,
 } from '@dnd-kit/core'
 import { BoardColumn } from './BoardColumn'
+import { TaskCardBody } from './TaskCard'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { isBoardStatus, resolveDropStatus } from './dropStatus'
+import { formatProjectLabel } from '../../lib/format'
 import type { ProjectListItem, Task, TaskStatus } from '../../api/types'
 
 interface BoardProps {
@@ -114,7 +116,7 @@ export function Board({
         (task) => task.id === activeTaskId,
       ) ?? null
     : null
-  const projectNames = new Map(projects.map((p) => [p.id, p.name]))
+  const projectNames = new Map(projects.map((p) => [p.id, formatProjectLabel(p.projectNumber, p.name)]))
 
   return (
     <DndContext
@@ -143,10 +145,15 @@ export function Board({
           />
         ))}
       </div>
-      <DragOverlay>
+      <DragOverlay dropAnimation={{ duration: 200, easing: 'ease' }}>
         {activeTask ? (
-          <div className="border border-line rounded-md p-2.5 bg-canvas shadow-xl opacity-90 cursor-grabbing">
-            <div className="text-xs text-fg font-medium leading-snug">{activeTask.title}</div>
+          <div className="border border-line rounded-md p-3 bg-canvas shadow-xl cursor-grabbing rotate-1">
+            <TaskCardBody
+              task={activeTask}
+              projectName={
+                activeTask.projectId ? (projectNames.get(activeTask.projectId) ?? null) : null
+              }
+            />
           </div>
         ) : null}
       </DragOverlay>

@@ -13,8 +13,11 @@ import {
   updateProjectForUser,
 } from "../repository/project.repository.js";
 import type { ProjectUpdateData } from "../repository/project.repository.js";
-import type { ProjectCounts, ProjectDto } from "../types/domain.js";
+import { createProjectWithRepository } from "../repository/github.repository.js";
+import type { GitHubRepositoryDto, ProjectCounts, ProjectDto } from "../types/domain.js";
 import { toProjectDto } from "./projects.mapper.js";
+import { verifyRepositoryAccessible } from "./github.repositories.service.js";
+import { importAllIssues } from "./github.import.service.js";
 
 export interface CreateProjectInput {
   name: string;
@@ -115,4 +118,94 @@ export async function deleteProject(userId: string, id: string): Promise<void> {
   if (!removed) {
     throw new AppError("NOT_FOUND", "Project not found.");
   }
+}
+
+export interface FromGitHubItem {
+  githubId: bigint;
+  /** Project title: prefilled from the repo name, editable per row. */
+  name: string;
+  description?: string | null | undefined;
+}
+
+export interface FromGitHubSkip {
+  githubId: string;
+  reason: "ALREADY_LINKED" | "NOT_ACCESSIBLE";
+}
+
+export interface FromGitHubCreated {
+  project: ProjectDto;
+  repository: GitHubRepositoryDto;
+  importedCount: number;
+}
+
+export interface FromGitHubResult {
+  created: FromGitHubCreated[];
+  skipped: FromGitHubSkip[];
+}
+
+/**
+ * Bulk-add path: one project per repository, each linked on creation.
+ * Per-item atomicity (project + link commit together), per-item results —
+ * one duplicate or inaccessible repo never fails its siblings. A missing
+ * GitHub token aborts the whole request with 428 before anything is written.
+ */
+export async function createProjectsFromGitHub(
+  userId: string,
+  items: FromGitHubItem[],
+): Promise<FromGitHubResult> {
+  const created: FromGitHubCreated[] = [];
+  const skipped: FromGitHubSkip[] = [];
+
+  for (const item of items) {
+    const githubIdParam = item.githubId;
+    let repository: GitHubRepositoryDto;
+    try {
+      repository = await verifyRepositoryAccessible(userId, githubIdParam);
+    } catch (error) {
+      if (error instanceof AppError && error.code === "FORBIDDEN") {
+        skipped.push({ githubId: String(githubIdParam), reason: "NOT_ACCESSIBLE" });
+        continue;
+      }
+      throw error;
+    }
+
+    try {
+      const ids = await createProjectWithRepository(
+        userId,
+        { name: item.name, description: item.description ?? repository.description },
+        {
+          githubId: githubIdParam,
+          name: repository.name,
+          fullName: repository.fullName,
+          owner: repository.owner,
+          description: repository.description,
+          visibility: repository.visibility,
+          defaultBranch: repository.defaultBranch,
+          url: repository.url,
+        },
+      );
+      const row = await findProjectRowForUser(ids.projectId, userId);
+      if (row === null) {
+        throw new AppError("NOT_FOUND", "Project not found.");
+      }
+      // The project and its link already committed — an import failure must
+      // not roll them back, so a failed import reports zero, not an error.
+      let importedCount = 0;
+      try {
+        const imported = await importAllIssues(userId, ids.projectId);
+        importedCount = imported.imported.length;
+      } catch {
+        importedCount = 0;
+      }
+      created.push({ project: toProjectDto(row, NO_TASKS), repository, importedCount });
+    } catch (error) {
+      if (error instanceof AppError && error.code === "CONFLICT") {
+        skipped.push({ githubId: String(githubIdParam), reason: "ALREADY_LINKED" });
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  return { created, skipped };
 }

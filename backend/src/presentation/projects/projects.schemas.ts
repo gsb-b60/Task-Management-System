@@ -59,3 +59,25 @@ export const updateProjectBody = z
 
 export type CreateProjectBody = z.infer<typeof createProjectBody>;
 export type UpdateProjectBody = z.infer<typeof updateProjectBody>;
+
+// Bulk creation from GitHub repositories (one project per repository).
+// `githubId` mirrors github.schemas.ts: JSON numbers stay numbers, but ids
+// beyond 2^53 must arrive as decimal strings — hence number | string.
+const fromGitHubItem = z.strictObject({
+  githubId: z
+    .union([z.number().int(), z.string().regex(/^\d+$/)])
+    .transform((value) => BigInt(value))
+    .refine((value) => value > 0n, "githubId must be a positive integer."),
+  // The project title: prefilled from the repo name, editable per row.
+  name: projectFields.name,
+  description: z.string().max(10000, "Description is too long.").nullish(),
+});
+
+export const createProjectsFromGitHubBody = z.strictObject({
+  items: z
+    .array(fromGitHubItem)
+    .min(1, "Select at least one repository.")
+    .max(30, "Add at most 30 repositories at once."),
+});
+
+export type CreateProjectsFromGitHubBody = z.infer<typeof createProjectsFromGitHubBody>;

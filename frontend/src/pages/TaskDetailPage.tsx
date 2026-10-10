@@ -5,8 +5,9 @@ import { useUpdateTask, useDeleteTask } from '../hooks/useTaskMutations'
 import { TaskForm, type TaskFormValues } from '../components/task/TaskForm'
 import { DeleteTaskDialog } from '../components/task/DeleteTaskDialog'
 import { Button } from '../components/ui/Button'
+import { Markdown } from '../components/ui/Markdown'
 import { IconArrowLeft } from '../components/ui/Icons'
-import { formatDateOnly } from '../lib/format'
+import { formatDateTime } from '../lib/format'
 import type { TaskStatus, TaskPriority } from '../api/types'
 
 export function TaskDetailPage() {
@@ -122,7 +123,7 @@ export function TaskDetailPage() {
             {task.description && (
               <div>
                 <p className="text-xs font-medium text-faint mb-1">Description</p>
-                <p className="text-sm text-fg whitespace-pre-wrap">{task.description}</p>
+                <Markdown text={task.description} />
               </div>
             )}
 
@@ -141,13 +142,13 @@ export function TaskDetailPage() {
                 </span>
               </div>
               <div>
-                <p className="text-xs font-medium text-faint">Start date</p>
-                <p className="text-sm text-fg">{task.startDate ? formatDateOnly(task.startDate) : '—'}</p>
+                <p className="text-xs font-medium text-faint">Start time</p>
+                <p className="text-sm text-fg">{task.startDate ? formatDateTime(task.startDate) : '—'}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-faint">Due date</p>
+                <p className="text-xs font-medium text-faint">Due time</p>
                 <p className={`text-sm ${task.isOverdue ? 'text-bad font-semibold' : 'text-fg'}`}>
-                  {task.dueDate ? formatDateOnly(task.dueDate) : '—'}
+                  {task.dueDate ? formatDateTime(task.dueDate) : '—'}
                   {task.daysUntilDue != null && <span className="text-[10px] text-muted ml-1">{dueLabel(task.daysUntilDue)}</span>}
                 </p>
               </div>

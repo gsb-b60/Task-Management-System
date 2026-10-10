@@ -6,6 +6,7 @@ import { EmptyState } from '../components/ui/EmptyState'
 import { Select } from '../components/ui/Select'
 import { TaskSort } from '../components/task/TaskSort'
 import { TaskDetailDrawer } from '../components/task/TaskDetailDrawer'
+import { formatProjectLabel } from '../lib/format'
 import type { Task, TaskStatus } from '../api/types'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
@@ -135,7 +136,7 @@ export function BoardPage() {
               onChange={(e) => handleProjectChange(e.target.value || null)}
               options={[
                 { value: '', label: 'Project: All' },
-                ...projects.map((p) => ({ value: p.id, label: p.name })),
+                ...projects.map((p) => ({ value: p.id, label: formatProjectLabel(p.projectNumber, p.name) })),
               ]}
             />
           </div>
@@ -151,6 +152,7 @@ export function BoardPage() {
       />
       <TaskDetailDrawer
         variant="overlay"
+        key={selectedTaskId ?? 'none'}
         taskId={selectedTaskId ?? null}
         projects={projects}
         onClose={handleCloseDetail}

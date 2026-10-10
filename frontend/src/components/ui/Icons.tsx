@@ -126,6 +126,16 @@ export function IconClose(props: IconProps) {
   )
 }
 
+export function IconDots(props: IconProps) {
+  return (
+    <Frame {...props}>
+      <circle cx="12" cy="5.5" r="1" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="18.5" r="1" fill="currentColor" stroke="none" />
+    </Frame>
+  )
+}
+
 export function IconRepo(props: IconProps) {
   return (
     <Frame {...props}>

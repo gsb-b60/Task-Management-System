@@ -1,6 +1,7 @@
 // Project data access (Phase 08). Every query carries the `userId` predicate —
 // there is no bare-id lookup, so another user's project can never be read,
 // updated, or deleted through this module (Phase 08 §10.4).
+import { Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import type {
   ProjectCounts,
@@ -50,7 +51,46 @@ export async function createProjectForUser(
   userId: string,
   data: NewProjectData,
 ): Promise<ProjectRow> {
-  return prisma.project.create({ data: { ...data, userId } });
+  return createNumberedProjectForUser(userId, data);
+}
+
+/**
+ * Allocates the next per-user project number from `User.projectSeq` and
+ * creates the row in one transaction. The counter survives row deletion, so
+ * a number is never reused. Concurrent creators can read the same counter —
+ * the composite unique turns the loser into a retry, bounded so a hot loop
+ * can never spin forever.
+ */
+export async function createNumberedProjectForUser(
+  userId: string,
+  data: NewProjectData,
+  attempts = 5,
+): Promise<ProjectRow> {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { projectSeq: true },
+      });
+      const row = await tx.project.create({
+        data: { ...data, userId, projectNumber: user.projectSeq },
+      });
+      await tx.user.update({
+        where: { id: userId },
+        data: { projectSeq: user.projectSeq + 1 },
+      });
+      return row;
+    });
+  } catch (error) {
+    if (
+      attempts > 1 &&
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return createNumberedProjectForUser(userId, data, attempts - 1);
+    }
+    throw error;
+  }
 }
 
 export async function listProjectsForUser(userId: string): Promise<ProjectRow[]> {

@@ -4,7 +4,6 @@ import { BrandMark } from '../components/ui/BrandMark'
 const PHASES: Record<string, string> = {
   '/tasks': 'Phase 06 — searchable, filterable, paginated task list',
   '/board': 'Phase 07 — drag-and-drop board with rollback on failure',
-  '/roadmap': 'Phase 09 — timeline with week and quarter scales',
   '/projects': 'Phase 08 — project CRUD and the switcher',
 }
 

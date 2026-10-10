@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { formatDateOnly, dueLabel } from '../../lib/format'
+import { formatDateTime, dueLabel, formatProjectLabel } from '../../lib/format'
 import { useUpdateTask } from '../../hooks/useTaskMutations'
 import { useOpenDropdown } from '../../hooks/useOpenDropdown'
 import { Select } from '../ui/Select'
 import { TextInput } from '../ui/Input'
-import { toDateInputValue } from '../../lib/dateOnly'
+import { toDateTimeInputValue } from '../../lib/dateOnly'
 import type { ProjectListItem, Task, TaskStatus, TaskPriority } from '../../api/types'
 import { IconCalendar } from '../ui/Icons'
 
@@ -45,7 +45,13 @@ export function TaskRow({ task, projectName = null, projects = [], onSelect }: T
   const shortId = `#${task.id.slice(-4)}`
   const updateTask = useUpdateTask()
   const [editingField, setEditingField] = useState<'status' | 'priority' | 'project' | 'startDate' | 'dueDate' | null>(null)
+  const [dateDraft, setDateDraft] = useState('')
   const openDropdown = useOpenDropdown()
+
+  function openDateEditor(field: 'startDate' | 'dueDate', current: string | null | undefined) {
+    setDateDraft(toDateTimeInputValue(current) ?? '')
+    setEditingField(field)
+  }
 
   const commit = async (patch: { status?: TaskStatus; priority?: TaskPriority; projectId?: string | null; startDate?: string | null; dueDate?: string | null }) => {
     try {
@@ -98,7 +104,7 @@ export function TaskRow({ task, projectName = null, projects = [], onSelect }: T
               aria-label={`Project for ${task.title}`}
               options={[
                 { value: '', label: 'No project' },
-                ...projects.map((p) => ({ value: p.id, label: p.name })),
+                ...projects.map((p) => ({ value: p.id, label: formatProjectLabel(p.projectNumber, p.name) })),
               ]}
               value={task.projectId ?? ''}
               disabled={updateTask.isPending}
@@ -202,71 +208,113 @@ export function TaskRow({ task, projectName = null, projects = [], onSelect }: T
       <td className="px-3 py-2 text-muted">
         {editingField === 'startDate' ? (
           <span
+            className="inline-flex items-center gap-1"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
             <TextInput
-              aria-label={`Start date for ${task.title}`}
-              type="date"
-              value={toDateInputValue(task.startDate) ?? ''}
+              aria-label={`Start time for ${task.title}`}
+              type="datetime-local"
+              value={dateDraft}
               disabled={updateTask.isPending}
               autoFocus
-              onChange={(e) => void commit({ startDate: e.target.value || null })}
-              onBlur={() => {
-                if (!updateTask.isPending) setEditingField(null)
-              }}
+              onChange={(e) => setDateDraft(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Escape') setEditingField(null)
+                if (e.key === 'Enter') void commit({ startDate: dateDraft || null })
               }}
             />
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                void commit({ startDate: dateDraft || null })
+              }}
+              disabled={updateTask.isPending}
+              className="px-2 py-1 text-[11px] font-semibold text-white bg-ok hover:bg-ok-dark rounded disabled:opacity-50"
+            >
+              Apply
+            </button>
+            <button
+              type="button"
+              aria-label="Cancel"
+              onClick={(e) => {
+                e.stopPropagation()
+                setEditingField(null)
+              }}
+              className="px-1.5 py-1 text-xs text-muted hover:text-fg"
+            >
+              ✕
+            </button>
           </span>
         ) : (
           <button
             type="button"
-            title="Change start date"
+            title="Change start time"
             onClick={(e) => {
               e.stopPropagation()
-              setEditingField('startDate')
+              openDateEditor('startDate', task.startDate)
             }}
             className="hover:underline cursor-pointer"
           >
-            {task.startDate ? formatDateOnly(task.startDate) : <span className="text-faint">—</span>}
+            {task.startDate ? formatDateTime(task.startDate) : <span className="text-faint">—</span>}
           </button>
         )}
       </td>
       <td className={`px-3 py-2 text-right ${task.isOverdue ? 'text-bad font-semibold' : 'text-muted'}`}>
         {editingField === 'dueDate' ? (
           <span
+            className="inline-flex items-center gap-1"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
             <TextInput
-              aria-label={`Due date for ${task.title}`}
-              type="date"
-              value={toDateInputValue(task.dueDate) ?? ''}
+              aria-label={`Due time for ${task.title}`}
+              type="datetime-local"
+              value={dateDraft}
               disabled={updateTask.isPending}
               autoFocus
-              onChange={(e) => void commit({ dueDate: e.target.value || null })}
-              onBlur={() => {
-                if (!updateTask.isPending) setEditingField(null)
-              }}
+              onChange={(e) => setDateDraft(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Escape') setEditingField(null)
+                if (e.key === 'Enter') void commit({ dueDate: dateDraft || null })
               }}
             />
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                void commit({ dueDate: dateDraft || null })
+              }}
+              disabled={updateTask.isPending}
+              className="px-2 py-1 text-[11px] font-semibold text-white bg-ok hover:bg-ok-dark rounded disabled:opacity-50"
+            >
+              Apply
+            </button>
+            <button
+              type="button"
+              aria-label="Cancel"
+              onClick={(e) => {
+                e.stopPropagation()
+                setEditingField(null)
+              }}
+              className="px-1.5 py-1 text-xs text-muted hover:text-fg"
+            >
+              ✕
+            </button>
           </span>
         ) : task.dueDate ? (
           <button
             type="button"
-            title="Change due date"
+            title="Change due time"
             onClick={(e) => {
               e.stopPropagation()
-              setEditingField('dueDate')
+              openDateEditor('dueDate', task.dueDate)
             }}
             className="inline-flex items-center gap-1 hover:underline cursor-pointer"
           >
             <IconCalendar className="w-3 h-3" />
-            {formatDateOnly(task.dueDate)}
+            {formatDateTime(task.dueDate)}
             {task.daysUntilDue != null && (
               <span className="text-[10px]">{dueLabel(task.daysUntilDue)}</span>
             )}
@@ -274,10 +322,10 @@ export function TaskRow({ task, projectName = null, projects = [], onSelect }: T
         ) : (
           <button
             type="button"
-            title="Set due date"
+            title="Set due time"
             onClick={(e) => {
               e.stopPropagation()
-              setEditingField('dueDate')
+              openDateEditor('dueDate', task.dueDate)
             }}
             className="text-[10px] text-faint hover:underline cursor-pointer"
           >

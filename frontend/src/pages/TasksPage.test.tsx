@@ -34,8 +34,8 @@ describe('TasksPage project column and filter', () => {
     expect(await screen.findByRole('columnheader', { name: 'Project' })).toBeInTheDocument()
     const table = await screen.findByRole('table')
     expect(within(table).getByText('Design system')).toBeInTheDocument()
-    expect(within(table).getAllByText('Portfolio').length).toBe(2)
-    expect(within(table).getByText('Stream')).toBeInTheDocument()
+    expect(within(table).getAllByText('#1 Portfolio').length).toBe(2)
+    expect(within(table).getByText('#2 Stream')).toBeInTheDocument()
   })
 
   it('filters the list by project', async () => {
@@ -172,7 +172,7 @@ describe('TasksPage inline project assignment', () => {
     })
 
     await waitFor(() => {
-      expect(within(row).getByText('Portfolio')).toBeInTheDocument()
+      expect(within(row).getByText('#1 Portfolio')).toBeInTheDocument()
     })
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
@@ -263,13 +263,14 @@ describe('TasksPage inline date editing', () => {
     await screen.findByText('Design system')
     const row = screen.getByRole('row', { name: 'Open details for Design system' })
 
-    await userEvent.click(within(row).getByTitle('Change due date'))
-    fireEvent.change(within(row).getByLabelText('Due date for Design system'), {
-      target: { value: '2026-12-01' },
+    await userEvent.click(within(row).getByTitle('Change due time'))
+    fireEvent.change(within(row).getByLabelText('Due time for Design system'), {
+      target: { value: '2026-12-01T14:30' },
     })
+    await userEvent.click(within(row).getByRole('button', { name: 'Apply' }))
 
     await waitFor(() => {
-      expect(within(row).getByText('1 Dec')).toBeInTheDocument()
+      expect(within(row).getByText('1 Dec, 14:30')).toBeInTheDocument()
     })
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
@@ -279,13 +280,14 @@ describe('TasksPage inline date editing', () => {
     await screen.findByText('Design system')
     const row = screen.getByRole('row', { name: 'Open details for Design system' })
 
-    await userEvent.click(within(row).getByTitle('Change start date'))
-    fireEvent.change(within(row).getByLabelText('Start date for Design system'), {
-      target: { value: '2026-02-05' },
+    await userEvent.click(within(row).getByTitle('Change start time'))
+    fireEvent.change(within(row).getByLabelText('Start time for Design system'), {
+      target: { value: '2026-02-05T09:15' },
     })
+    await userEvent.click(within(row).getByRole('button', { name: 'Apply' }))
 
     await waitFor(() => {
-      expect(within(row).getByText('5 Feb')).toBeInTheDocument()
+      expect(within(row).getByText('5 Feb, 09:15')).toBeInTheDocument()
     })
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })

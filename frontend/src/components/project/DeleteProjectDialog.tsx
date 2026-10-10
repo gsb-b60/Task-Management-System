@@ -1,4 +1,5 @@
 import { AlertDialog } from '../ui/Dialog'
+import { formatProjectLabel } from '../../lib/format'
 import type { ProjectListItem } from '../../api/types'
 
 interface DeleteProjectDialogProps {
@@ -17,7 +18,7 @@ export function DeleteProjectDialog({ open, onClose, project, onConfirm, isLoadi
       open={open}
       onClose={onClose}
       title="Delete project"
-      message={`Delete "${project.name}"? This will also delete all ${project.taskCount} tasks in this project. This cannot be undone.`}
+      message={`Delete "${formatProjectLabel(project.projectNumber, project.name)}"? This will also delete all ${project.taskCount} tasks in this project. This cannot be undone.`}
       confirmLabel="Delete"
       cancelLabel="Cancel"
       onConfirm={onConfirm}

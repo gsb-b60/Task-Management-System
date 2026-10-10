@@ -1,15 +1,16 @@
-import { createProjectBody, updateProjectBody } from "./projects.schemas.js";
+import { createProjectBody, createProjectsFromGitHubBody, updateProjectBody } from "./projects.schemas.js";
 import { envelope, errors, listEnvelope, type OperationSpec } from "../openapi/openapi.js";
 
 const projectSchema = {
   type: "object",
-  required: ["id", "name", "taskCount", "completedTaskCount", "createdAt"],
+  required: ["id", "name", "projectNumber", "taskCount", "completedTaskCount", "createdAt"],
   properties: {
     id: { type: "string", format: "uuid" },
     name: { type: "string", maxLength: 200 },
     description: { type: "string", nullable: true },
     startDate: { type: "string", format: "date-time", nullable: true },
     targetDate: { type: "string", format: "date-time", nullable: true },
+    projectNumber: { type: "integer", minimum: 1, description: "Stable per-user index, shown as #N" },
     taskCount: { type: "integer", minimum: 0 },
     completedTaskCount: { type: "integer", minimum: 0 },
     createdAt: { type: "string", format: "date-time" },
@@ -23,6 +24,49 @@ const ID_PARAM = {
   description: "Project id",
   schema: { type: "string", format: "uuid" },
 };
+
+const fromGitHubResultSchema = {
+  type: "object",
+  required: ["created", "skipped"],
+  properties: {
+    created: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["project", "repository", "importedCount"],
+        properties: {
+          project: projectSchema,
+          repository: {
+            type: "object",
+            required: ["githubId", "name", "fullName", "owner", "visibility"],
+            properties: {
+              githubId: { type: "string" },
+              name: { type: "string" },
+              fullName: { type: "string" },
+              owner: { type: "string" },
+              description: { type: "string", nullable: true },
+              visibility: { type: "string", enum: ["public", "private"] },
+              defaultBranch: { type: "string", nullable: true },
+              url: { type: "string", nullable: true },
+            },
+          },
+          importedCount: { type: "integer", minimum: 0, description: "Issues imported with this project" },
+        },
+      },
+    },
+    skipped: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["githubId", "reason"],
+        properties: {
+          githubId: { type: "string" },
+          reason: { type: "string", enum: ["ALREADY_LINKED", "NOT_ACCESSIBLE"] },
+        },
+      },
+    },
+  },
+} as const;
 
 export const PROJECTS_OPERATIONS: Record<string, OperationSpec> = {
   "GET /api/projects": {
@@ -46,8 +90,23 @@ export const PROJECTS_OPERATIONS: Record<string, OperationSpec> = {
       ...errors(400, 401),
     ],
   },
-  "GET /api/projects/:id": {
+  "POST /api/projects/from-github": {
     tag: "Projects",
+    summary: "Create one project per GitHub repository",
+    description:
+      "Each item verifies access with the caller's token, then creates the project " +
+      "and links the repository atomically. Duplicates and inaccessible repos are " +
+      "skipped per item, never failing their siblings. 201 when anything was " +
+      "created, 200 when every item was skipped.",
+    auth: true,
+    requestBody: { schema: createProjectsFromGitHubBody },
+    responses: [
+      { status: 201, description: "Created and skipped items", schema: envelope(fromGitHubResultSchema) },
+      { status: 200, description: "Every item was skipped", schema: envelope(fromGitHubResultSchema) },
+      ...errors(400, 401, 428),
+    ],
+  },
+  "GET /api/projects/:id": {    tag: "Projects",
     summary: "Read one project",
     description: "Another user's project is a 404, never a 403.",
     auth: true,

@@ -8,7 +8,6 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard', to: '/dashboard' },
   { label: 'Tasks', to: '/tasks' },
   { label: 'Board', to: '/board' },
-  { label: 'Roadmap', to: '/roadmap' },
   { label: 'Projects', to: '/projects' },
 ]
 

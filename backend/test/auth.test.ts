@@ -122,3 +122,63 @@ describe("POST /api/auth/logout", () => {
     expect(after.body.error.code).toBe("UNAUTHENTICATED");
   });
 });
+
+describe("PATCH /api/auth/me", () => {
+  it("updates the display name and returns the session user", async () => {
+    const user = await registerUser("me-patch");
+    const res = await user.agent.patch("/api/auth/me").send({ displayName: "New Name" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toMatchObject({ id: user.id, email: user.email, displayName: "New Name" });
+
+    const me = await user.agent.get("/api/auth/me");
+    expect(me.body.data.displayName).toBe("New Name");
+  });
+
+  it("clears the display name on explicit null and ignores omitted fields", async () => {
+    const user = await registerUser("me-clear");
+    const cleared = await user.agent.patch("/api/auth/me").send({ displayName: null });
+    expect(cleared.status).toBe(200);
+    expect(cleared.body.data.displayName).toBeNull();
+
+    const untouched = await user.agent.patch("/api/auth/me").send({});
+    expect(untouched.status).toBe(200);
+    expect(untouched.body.data.displayName).toBeNull();
+  });
+
+  it("rejects an overlong display name", async () => {
+    const user = await registerUser("me-long");
+    const res = await user.agent.patch("/api/auth/me").send({ displayName: "x".repeat(101) });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe("VALIDATION_ERROR");
+  });
+
+  it("returns 401 without a session", async () => {
+    const res = await agent().patch("/api/auth/me").send({ displayName: "Ghost" });
+    expect(res.status).toBe(401);
+  });
+});
+
+describe("DELETE /api/auth/github", () => {
+  it("clears the link and drops GitHub access to 428", async () => {
+    const user = await registerUser("gh-disconnect");
+    const { prisma } = await import("../src/lib/prisma.js");
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { githubId: "123", githubLogin: "someone", githubAccessToken: "gho_x" },
+    });
+
+    const res = await user.agent.delete("/api/auth/github");
+    expect(res.status).toBe(200);
+    expect(res.body.data.id).toBe(user.id);
+
+    const repos = await user.agent.get("/api/github/repositories");
+    expect(repos.status).toBe(428);
+  });
+
+  it("returns 401 without a session", async () => {
+    const res = await agent().delete("/api/auth/github");
+    expect(res.status).toBe(401);
+  });
+});

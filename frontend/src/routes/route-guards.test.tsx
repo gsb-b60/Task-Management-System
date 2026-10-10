@@ -100,7 +100,7 @@ describe('app shell', () => {
     expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('href', '/dashboard')
     expect(screen.getByRole('link', { name: /Tasks/ })).toHaveAttribute('href', '/tasks')
     expect(screen.getByRole('link', { name: 'Board' })).toHaveAttribute('href', '/board')
-    expect(screen.getByRole('link', { name: 'Roadmap' })).toHaveAttribute('href', '/roadmap')
+    expect(screen.getByRole('link', { name: /manage projects/i })).toHaveAttribute('href', '/projects')
   })
 
   it('returns to /login after signing out', async () => {

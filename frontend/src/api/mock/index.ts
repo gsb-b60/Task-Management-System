@@ -1,6 +1,9 @@
 import type {
   DashboardResponse,
   DashboardStats,
+  FromGitHubItem,
+  FromGitHubResult,
+  GitHubRepository,
   ProjectListItem,
   Task,
   TaskPriority,
@@ -19,6 +22,7 @@ const mockProjects: ProjectListItem[] = [
     startDate: '2024-01-01',
     targetDate: '2024-12-31',
     color: '#3b82f6',
+    projectNumber: 1,
     taskCount: 137,
     completedTaskCount: 48,
     repository: null,
@@ -31,6 +35,7 @@ const mockProjects: ProjectListItem[] = [
     startDate: '2024-02-01',
     targetDate: '2024-11-30',
     color: '#10b981',
+    projectNumber: 2,
     taskCount: 52,
     completedTaskCount: 12,
     repository: null,
@@ -105,7 +110,7 @@ const mockUpcoming: Task[] = mockTasks.slice(0, 2)
 interface MockUser {
   id: string
   email: string
-  displayName: string
+  displayName: string | null
   createdAt: string
 }
 
@@ -179,6 +184,19 @@ export const mockAuthApi = {
   async me() {
     return scenarios[currentScenario].user
   },
+  async updateMe(input: { displayName?: string | null }) {
+    const user = scenarios[currentScenario].user
+    if (!user) return user
+    const updated = {
+      ...user,
+      displayName: input.displayName !== undefined ? input.displayName : user.displayName,
+    }
+    scenarios[currentScenario].user = updated
+    return updated
+  },
+  async disconnectGitHub() {
+    return scenarios[currentScenario].user
+  },
   githubAuthorizeUrl() {
     return 'https://github.com/login/oauth/authorize?client_id=test'
   },
@@ -215,16 +233,18 @@ export const mockProjectsApi = {
     return scenarios[currentScenario].projects!.find((p: ProjectListItem) => p.id === id) as ProjectListItem
   },
   async create(input: { name: string; description?: string | null; startDate?: string | null; targetDate?: string | null }) {
+    const projects = scenarios[currentScenario].projects!
     const newProject: ProjectListItem = {
       id: `project-${Date.now()}`,
       ...input,
       color: '#3b82f6',
+      projectNumber: projects.reduce((max, p) => Math.max(max, p.projectNumber), 0) + 1,
       taskCount: 0,
       completedTaskCount: 0,
       repository: null,
       createdAt: new Date().toISOString(),
     }
-    scenarios[currentScenario].projects!.push(newProject)
+    projects.push(newProject)
     return newProject
   },
   async update(id: string, input: Partial<ProjectListItem>) {
@@ -237,6 +257,20 @@ export const mockProjectsApi = {
   },
   async delete(id: string) {
     scenarios[currentScenario].projects = scenarios[currentScenario].projects!.filter((p: ProjectListItem) => p.id !== id)
+  },
+  async createFromGitHub(items: FromGitHubItem[]): Promise<FromGitHubResult> {
+    const created: FromGitHubResult['created'] = []
+    for (const item of items) {
+      const repo = mockGitHubRepos.find((r) => r.githubId === item.githubId)
+      if (!repo) continue
+      const project = await mockProjectsApi.create({ name: item.name, description: item.description })
+      created.push({
+        project: { ...project, description: project.description ?? null },
+        repository: repo,
+        importedCount: 0,
+      })
+    }
+    return { created, skipped: [] }
   },
 }
 
@@ -351,9 +385,35 @@ export const mockTasksApi = {
   },
 }
 
+export const mockGitHubRepos: GitHubRepository[] = [
+  {
+    githubId: '1296269',
+    name: 'Hello-World',
+    fullName: 'octocat/Hello-World',
+    owner: 'octocat',
+    description: 'My first repository',
+    visibility: 'public',
+    defaultBranch: 'main',
+    url: 'https://github.com/octocat/Hello-World',
+  },
+  {
+    githubId: '1296270',
+    name: 'Spoon-Knife',
+    fullName: 'octocat/Spoon-Knife',
+    owner: 'octocat',
+    description: null,
+    visibility: 'public',
+    defaultBranch: 'main',
+    url: 'https://github.com/octocat/Spoon-Knife',
+  },
+]
+
 export const mockGitHubApi = {
   async rateLimit() {
     return { remaining: 5000, limit: 5000 }
+  },
+  async listRepositories() {
+    return mockGitHubRepos
   },
 }
 

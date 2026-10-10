@@ -1,5 +1,6 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { useProjects } from '../../hooks/useProjects'
+import { formatProjectLabel } from '../../lib/format'
 import { IconCheck, IconChevronDown, IconRepo } from '../ui/Icons'
 import { useMenu } from './useMenu'
 
@@ -17,7 +18,7 @@ export function ProjectSwitcher({ compact = false }: { compact?: boolean }) {
 
   const activeId = searchParams.get('projectId')
   const active = projects.find((project) => project.id === activeId)
-  const label = active?.name ?? 'All projects'
+  const label = active ? formatProjectLabel(active.projectNumber, active.name) : 'All projects'
 
   function select(projectId: string) {
     close()
@@ -106,7 +107,7 @@ export function ProjectSwitcher({ compact = false }: { compact?: boolean }) {
                   ) : (
                     <span className="w-1.5 h-1.5 rounded-full bg-line flex-none" />
                   )}
-                  <span className="truncate">{project.name}</span>
+                  <span className="truncate">{formatProjectLabel(project.projectNumber, project.name)}</span>
                 {project.repository && (
                   <IconRepo className="w-3 h-3 text-faint flex-none" aria-label="GitHub linked" />
                 )}

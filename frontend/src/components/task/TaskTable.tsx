@@ -1,6 +1,7 @@
 import { forwardRef } from 'react'
 import { Table, THead, TBody, Tr, Th } from '../ui/Table'
 import { TaskRow } from './TaskRow'
+import { formatProjectLabel } from '../../lib/format'
 import type { ProjectListItem, Task } from '../../api/types'
 import { Pagination } from '../Pagination'
 
@@ -16,13 +17,14 @@ interface TaskTableProps {
   }
   projects?: ProjectListItem[]
   onPageChange: (page: number) => void
-  onPageSizeChange: (pageSize: number) => void
   onSelectTask?: (taskId: string) => void
 }
 
 export const TaskTable = forwardRef<HTMLTableElement, TaskTableProps>(
-  ({ tasks, meta, projects = [], onPageChange, onPageSizeChange, onSelectTask }, ref) => {
-    const projectNames = new Map(projects.map((p) => [p.id, p.name]))
+  ({ tasks, meta, projects = [], onPageChange, onSelectTask }, ref) => {
+    const projectNames = new Map(
+      projects.map((p) => [p.id, formatProjectLabel(p.projectNumber, p.name)]),
+    )
 
     if (tasks.length === 0) {
       return null
@@ -38,8 +40,8 @@ export const TaskTable = forwardRef<HTMLTableElement, TaskTableProps>(
               <Th className="w-36">Project</Th>
               <Th className="w-28">Priority</Th>
               <Th className="w-32">Status</Th>
-              <Th className="w-32">Start</Th>
-              <Th className="w-36 text-right">Due</Th>
+              <Th className="w-32">Start time</Th>
+              <Th className="w-36 text-right">Due time</Th>
             </Tr>
           </THead>
           <TBody>
@@ -56,13 +58,10 @@ export const TaskTable = forwardRef<HTMLTableElement, TaskTableProps>(
         </Table>
         <Pagination
           page={meta.page}
-          pageSize={meta.pageSize}
-          totalItems={meta.totalItems}
           totalPages={meta.totalPages}
           hasNextPage={meta.hasNextPage}
           hasPreviousPage={meta.hasPreviousPage}
           onPageChange={onPageChange}
-          onPageSizeChange={onPageSizeChange}
         />
       </div>
     )

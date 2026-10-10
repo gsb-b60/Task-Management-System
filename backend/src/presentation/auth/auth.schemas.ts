@@ -17,5 +17,12 @@ export const loginBody = z.strictObject({
   password: z.string().min(1, "Password is required."),
 });
 
+// PATCH /me is partial: omitted fields keep their values, explicit null
+// clears the display name back to the email-derived default.
+export const updateMeBody = z.strictObject({
+  displayName: z.string().trim().max(100, "Name must be 100 characters or fewer.").nullish(),
+});
+
 export type RegisterBody = z.infer<typeof registerBody>;
 export type LoginBody = z.infer<typeof loginBody>;
+export type UpdateMeBody = z.infer<typeof updateMeBody>;

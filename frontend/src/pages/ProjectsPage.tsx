@@ -1,20 +1,20 @@
-import { useState, useCallback } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useProjects } from '../hooks/useProjects'
 import { useProject } from '../hooks/useProject'
 import { useCreateProject, useUpdateProject, useDeleteProject } from '../hooks/useProjectMutations'
-import { useCreateTask } from '../hooks/useTaskMutations'
 import { ProjectList } from '../components/project/ProjectList'
 import { ProjectForm, type ProjectFormValues } from '../components/project/ProjectForm'
 import { DeleteProjectDialog } from '../components/project/DeleteProjectDialog'
-import { TaskForm, type TaskFormValues } from '../components/task/TaskForm'
+import { ImportReposDialog } from '../components/project/ImportReposDialog'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Button } from '../components/ui/Button'
-import { IconPlus } from '../components/ui/Icons'
+import { IconPlus, IconGithub } from '../components/ui/Icons'
 import { Dialog } from '../components/ui/Dialog'
 import type { ProjectListItem } from '../api/types'
 
 export function ProjectsPage() {
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const projectId = searchParams.get('projectId') ?? undefined
 
@@ -23,12 +23,11 @@ export function ProjectsPage() {
   const createProject = useCreateProject()
   const updateProject = useUpdateProject()
   const deleteProject = useDeleteProject()
-  const createTask = useCreateTask()
 
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-  const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false)
+  const [isImportOpen, setIsImportOpen] = useState(false)
   const [projectToDelete, setProjectToDelete] = useState<ProjectListItem | null>(null)
 
   const handleCreateSubmit = async (values: ProjectFormValues) => {
@@ -48,22 +47,6 @@ export function ProjectsPage() {
     setProjectToDelete(null)
     setIsDeleteOpen(false)
   }
-
-  const handleCreateTaskSubmit = useCallback(
-    async (values: TaskFormValues) => {
-      await createTask.mutateAsync({
-        title: values.title,
-        description: values.description,
-        status: values.status,
-        priority: values.priority,
-        startDate: values.startDate,
-        dueDate: values.dueDate,
-        projectId: projectId,
-      })
-      setIsCreateTaskOpen(false)
-    },
-    [createTask, projectId],
-  )
 
   if (isPending) {
     return (
@@ -98,21 +81,33 @@ export function ProjectsPage() {
   const projectsList = projects ?? []
 
   const handleSelectProject = (id: string) => {
-    if (projectId === id) {
-      setSearchParams({})
-    } else {
-      setSearchParams({ projectId: id })
-    }
+    navigate(`/tasks?projectId=${id}`)
+  }
+
+  const handleEditProject = (id: string) => {
+    setSearchParams({ projectId: id })
+    setIsEditOpen(true)
+  }
+
+  const handleDeleteProject = (project: ProjectListItem) => {
+    setProjectToDelete(project)
+    setIsDeleteOpen(true)
   }
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-lg font-semibold text-fg">Projects</h1>
-        <Button onClick={() => setIsCreateOpen(true)}>
-          <IconPlus className="w-4 h-4 mr-1.5" />
-          New project
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="secondary" onClick={() => setIsImportOpen(true)}>
+            <IconGithub className="w-4 h-4 mr-1.5" />
+            From GitHub
+          </Button>
+          <Button onClick={() => setIsCreateOpen(true)}>
+            <IconPlus className="w-4 h-4 mr-1.5" />
+            New project
+          </Button>
+        </div>
       </div>
 
       {projectsList.length === 0 ? (
@@ -131,6 +126,8 @@ export function ProjectsPage() {
           projects={projectsList}
           selectedProjectId={projectId ?? ''}
           onSelect={handleSelectProject}
+          onEdit={handleEditProject}
+          onDelete={handleDeleteProject}
         />
       )}
 
@@ -149,13 +146,6 @@ export function ProjectsPage() {
 
       {projectId && selectedProject && (
         <>
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-fg">{selectedProject.name}</h2>
-            <Button onClick={() => setIsCreateTaskOpen(true)}>
-              <IconPlus className="w-4 h-4 mr-1.5" />
-              New task
-            </Button>
-          </div>
           <Dialog
             open={isEditOpen}
             onClose={() => setIsEditOpen(false)}
@@ -185,19 +175,13 @@ export function ProjectsPage() {
         </>
       )}
 
-      <Dialog
-        open={isCreateTaskOpen}
-        onClose={() => setIsCreateTaskOpen(false)}
-        title="New task"
-      >
-        <TaskForm
-          initialValues={{ projectId: projectId ?? null }}
-          onSubmit={handleCreateTaskSubmit}
-          onClose={() => setIsCreateTaskOpen(false)}
-          submitLabel="Create task"
-          isSubmitting={createTask.isPending}
-        />
-      </Dialog>
+      <ImportReposDialog
+        open={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        projects={projectsList}
+        // Remount on every open for a fresh search and selection.
+        key={isImportOpen ? 'open' : 'closed'}
+      />
     </div>
   )
 }

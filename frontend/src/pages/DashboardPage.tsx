@@ -4,12 +4,11 @@ import { useDashboard } from '../hooks/useDashboard'
 import { useUndatedTasks } from '../hooks/useUndatedTasks'
 import { useProjects } from '../hooks/useProjects'
 import { useCreateTask } from '../hooks/useTaskMutations'
-import { dueLabel, errorMessage, formatDateOnly } from '../lib/format'
+import { dueLabel, errorMessage, formatDateOnly, formatProjectLabel } from '../lib/format'
 import type { PaginationMeta, Task, TaskPriority, TaskStatus, TaskSummary } from '../api/types'
 import { IconCalendar, IconRetry, IconPlus } from '../components/ui/Icons'
 import { Button } from '../components/ui/Button'
 import { Dialog } from '../components/ui/Dialog'
-import { Pagination } from '../components/Pagination'
 import { TaskForm, type TaskFormValues } from '../components/task/TaskForm'
 
 const TILE = 'border border-line rounded-md p-3'
@@ -33,9 +32,9 @@ export function DashboardPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const projectId = searchParams.get('projectId') ?? undefined
   const page = Math.max(1, Number(searchParams.get('page') ?? '1') || 1)
-  const pageSize = Math.min(100, Math.max(1, Number(searchParams.get('pageSize') ?? '10') || 10))
+  const pageSize = Math.min(100, Math.max(1, Number(searchParams.get('pageSize') ?? '20') || 20))
   const undatedPage = Math.max(1, Number(searchParams.get('undatedPage') ?? '1') || 1)
-  const undatedPageSize = Math.min(100, Math.max(1, Number(searchParams.get('undatedPageSize') ?? '10') || 10))
+  const undatedPageSize = Math.min(100, Math.max(1, Number(searchParams.get('undatedPageSize') ?? '20') || 20))
   const { data, isPending, isError, error, refetch } = useDashboard(projectId, page, pageSize)
   const { data: undated } = useUndatedTasks(projectId, undatedPage, undatedPageSize)
   const { data: projects = [] } = useProjects()
@@ -79,7 +78,7 @@ export function DashboardPage() {
     <>
       <div>
       <div className="flex items-center justify-between">
-      <h1 className="text-lg font-semibold text-fg">{project ? project.name : 'Dashboard'}</h1>
+      <h1 className="text-lg font-semibold text-fg">{project ? formatProjectLabel(project.projectNumber, project.name) : 'Dashboard'}</h1>
       <Button onClick={() => setIsCreateTaskOpen(true)}>
         <IconPlus className="w-4 h-4 mr-1.5" />
         New task
@@ -87,7 +86,7 @@ export function DashboardPage() {
     </div>
       <p className="text-xs text-muted mt-1">
         {project
-          ? `Counts for ${project.name} only.`
+          ? `Counts for ${formatProjectLabel(project.projectNumber, project.name)} only.`
           : 'Every task you own, across all projects.'}
       </p>
 
@@ -115,7 +114,7 @@ export function DashboardPage() {
               <h2 className="mt-2.5 text-sm font-semibold text-fg">No tasks yet</h2>
               <p className="text-xs text-muted mt-1">
                 {project
-                  ? `${project.name} has no tasks yet.`
+                  ? `${formatProjectLabel(project.projectNumber, project.name)} has no tasks yet.`
                   : 'Create your first task and it will appear here.'}
               </p>
               <Button className="mt-4" onClick={() => setIsCreateTaskOpen(true)}>
@@ -125,21 +124,19 @@ export function DashboardPage() {
             </div>
           ) : (
             <>
-              <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-3">
-                <StatTile label="Total" value={data.stats.total} sub="all statuses" />
+              <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-3" data-testid="stat-tiles">
+                <StatTile label="Total" value={data.stats.total} />
                 <StatTile
                   label="Todo"
                   value={data.stats.byStatus.TODO}
-                  sub="byStatus.TODO"
                   dot="bg-faint"
                 />
                 <StatTile
                   label="In progress"
                   value={data.stats.byStatus.IN_PROGRESS}
-                  sub="byStatus.IN_PROGRESS"
                   dot="bg-info"
                 />
-                <StatTile label="Done" value={data.stats.byStatus.DONE} sub="byStatus.DONE" dot="bg-ok" />
+                <StatTile label="Done" value={data.stats.byStatus.DONE} dot="bg-ok" />
               </div>
 
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -174,7 +171,6 @@ export function DashboardPage() {
               {undated && undated.meta.totalItems > 0 && (
                 <UndatedPanel
                   tasks={undated.data}
-                  meta={undated.meta}
                   tasksHref={projectId ? `/tasks?projectId=${projectId}` : '/tasks'}
                 />
               )}
@@ -206,12 +202,10 @@ export function DashboardPage() {
 function StatTile({
   label,
   value,
-  sub,
   dot,
 }: {
   label: string
   value: number
-  sub: string
   dot?: string
 }) {
   return (
@@ -222,7 +216,6 @@ function StatTile({
       </div>
       {/* Absent counts render 0, never blank. */}
       <div className={TILE_VALUE}>{value}</div>
-      <div className="text-[10px] text-faint mt-0.5">{sub}</div>
     </div>
   )
 }
@@ -336,22 +329,6 @@ function UpcomingPanel({
           </tbody>
         </table>
       )}
-      {meta.totalItems > 0 && (
-        <div className="px-4 pb-3">
-          <Pagination
-            page={meta.page}
-            pageSize={meta.pageSize}
-            totalItems={meta.totalItems}
-            totalPages={meta.totalPages}
-            hasNextPage={meta.hasNextPage}
-            hasPreviousPage={meta.hasPreviousPage}
-            // Page state lives in the URL (?page=/?pageSize=) which the
-            // Pagination control writes itself; the query reads it back.
-            onPageChange={() => {}}
-            onPageSizeChange={() => {}}
-          />
-        </div>
-      )}
       {hiddenCount > 0 && (
         <p className="px-4 pb-3 text-[11px] text-faint">
           {hiddenCount} completed {hiddenCount === 1 ? 'task is' : 'tasks are'} not
@@ -367,11 +344,9 @@ function UpcomingPanel({
 
 function UndatedPanel({
   tasks,
-  meta,
   tasksHref,
 }: {
   tasks: Task[]
-  meta: PaginationMeta
   tasksHref: string
 }) {
   return (
@@ -428,22 +403,6 @@ function UndatedPanel({
             ))}
           </tbody>
         </table>
-      )}
-      {meta.totalItems > 0 && (
-        <div className="px-4 pb-3">
-          <Pagination
-            page={meta.page}
-            pageSize={meta.pageSize}
-            totalItems={meta.totalItems}
-            totalPages={meta.totalPages}
-            hasNextPage={meta.hasNextPage}
-            hasPreviousPage={meta.hasPreviousPage}
-            pageParam="undatedPage"
-            pageSizeParam="undatedPageSize"
-            onPageChange={() => {}}
-            onPageSizeChange={() => {}}
-          />
-        </div>
       )}
     </div>
   )

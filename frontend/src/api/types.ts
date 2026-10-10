@@ -72,6 +72,8 @@ export interface Project {
   startDate?: string | null
   targetDate?: string | null
   color?: string | null
+  /** Stable per-user index, shown as `#N`, never reused after delete. */
+  projectNumber: number
   createdAt: string
 }
 
@@ -82,6 +84,8 @@ export interface ProjectListItem {
   startDate?: string | null
   targetDate?: string | null
   color?: string | null
+  /** Stable per-user index, shown as `#N`, never reused after delete. */
+  projectNumber: number
   taskCount: number
   completedTaskCount: number
   repository?: {
@@ -128,4 +132,33 @@ export interface GitHubRateLimit {
   remaining: number
   /** Null when the server did not expose the quota ceiling (see CORS). */
   limit: number | null
+}
+
+export interface GitHubRepository {
+  /** Decimal string — GitHub ids exceed 2^53 and never round-trip as numbers. */
+  githubId: string
+  name: string
+  fullName: string
+  owner: string
+  description: string | null
+  visibility: 'public' | 'private'
+  defaultBranch: string | null
+  url: string | null
+}
+
+export interface FromGitHubItem {
+  githubId: string
+  /** Project title: prefilled from the repo name, editable per row. */
+  name: string
+  description: string | null
+}
+
+export interface FromGitHubSkip {
+  githubId: string
+  reason: 'ALREADY_LINKED' | 'NOT_ACCESSIBLE'
+}
+
+export interface FromGitHubResult {
+  created: Array<{ project: Project; repository: GitHubRepository; importedCount: number }>
+  skipped: FromGitHubSkip[]
 }

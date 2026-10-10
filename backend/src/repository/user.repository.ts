@@ -58,6 +58,44 @@ export async function linkUserGitHub(
   }
 }
 
+export async function updateUserProfile(
+  userId: string,
+  data: { displayName?: string | null | undefined },
+): Promise<UserRow | null> {
+  try {
+    return await prisma.user.update({
+      where: { id: userId },
+      data: { ...(data.displayName !== undefined ? { displayName: data.displayName } : {}) },
+    });
+  } catch (error) {
+    // The id comes from the session, so a missing row means the account was
+    // deleted out from under the session — callers turn that into a 404.
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
+      return null;
+    }
+    throw error;
+  }
+}
+
+/**
+ * Removes the GitHub link (id, login, token) without touching projects,
+ * their repository rows, or imported tasks — those degrade to 428-backed
+ * reads until the account reconnects.
+ */
+export async function clearUserGitHub(userId: string): Promise<UserRow | null> {
+  try {
+    return await prisma.user.update({
+      where: { id: userId },
+      data: { githubId: null, githubLogin: null, githubAccessToken: null },
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
+      return null;
+    }
+    throw error;
+  }
+}
+
 function isUniqueViolation(error: unknown, target?: string): boolean {
   if (!(error instanceof Prisma.PrismaClientKnownRequestError)) return false;
   if (error.code !== "P2002") return false;

@@ -12,6 +12,10 @@ export interface AuthApi {
   login(input: LoginInput): Promise<User>
   logout(): Promise<void>
   me(): Promise<User>
+  /** Partial profile update — omitted fields keep their values. */
+  updateMe(input: { displayName?: string | null }): Promise<User>
+  /** Removes the GitHub link; projects and imported tasks are untouched. */
+  disconnectGitHub(): Promise<User>
   /** Full URL the browser follows to reach GitHub's consent screen. */
   githubAuthorizeUrl(): string
 }
@@ -84,6 +88,8 @@ export interface ProjectsApi {
 
 export interface GitHubApi {
   rateLimit(): Promise<import('./types').GitHubRateLimit | null>
+  /** First page of repos visible to the linked account (up to 30). */
+  listRepositories(): Promise<import('./types').GitHubRepository[]>
 }
 
 export interface DataApi {
@@ -109,6 +115,14 @@ export const fetchAuthApi: AuthApi = {
   async me() {
     // A 401 here means "no session", which is a normal state.
     return request<User>('/auth/me', { expectUnauthenticated: true })
+  },
+
+  async updateMe(input: { displayName?: string | null }) {
+    return request<User>('/auth/me', { method: 'PATCH', body: input })
+  },
+
+  async disconnectGitHub() {
+    return request<User>('/auth/github', { method: 'DELETE' })
   },
 
   githubAuthorizeUrl() {

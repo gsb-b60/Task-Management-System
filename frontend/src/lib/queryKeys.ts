@@ -18,13 +18,6 @@ export const queryKeys = {
   board: (params?: { projectId?: string; sortBy?: string; sortOrder?: string }) =>
     ['board', { projectId: params?.projectId, sortBy: params?.sortBy, sortOrder: params?.sortOrder }] as const,
 
-  roadmap: (params: {
-    projectId?: string
-    scale?: 'week' | 'month' | 'quarter'
-    range?: string
-    groupBy?: 'status' | 'priority' | 'project'
-  }) => ['roadmap', params] as const,
-
   projects: () => ['projects'] as const,
 
   project: (id: string) => ['project', { id }] as const,

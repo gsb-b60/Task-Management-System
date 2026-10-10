@@ -1,13 +1,24 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+import { useQueryClient } from '@tanstack/react-query'
+import { authApi } from '../../api'
 import { useAuth } from '../../contexts/auth-context'
+import { useGitHubRateLimit } from '../../hooks/useGitHubRateLimit'
 import { initialsOf } from '../../lib/format'
+import { queryKeys } from '../../lib/queryKeys'
 import { IconArrowOut, IconChevronDown, IconGear, IconGithub } from '../ui/Icons'
+import { EditProfileDialog } from './EditProfileDialog'
 import { useMenu } from './useMenu'
 
 export function UserMenu() {
-  const { user, logout } = useAuth()
+  const { user, logout, refreshUser } = useAuth()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { ref, open, setOpen, close } = useMenu()
+  const { data: rateLimit } = useGitHubRateLimit()
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isDisconnecting, setIsDisconnecting] = useState(false)
 
   if (!user) return null
 
@@ -18,6 +29,26 @@ export function UserMenu() {
     close()
     await logout()
     navigate('/login', { replace: true })
+  }
+
+  function handleEditProfile() {
+    close()
+    setIsEditOpen(true)
+  }
+
+  async function handleDisconnectGitHub() {
+    close()
+    setIsDisconnecting(true)
+    try {
+      await authApi.disconnectGitHub()
+      await refreshUser()
+      await queryClient.invalidateQueries({ queryKey: queryKeys.githubRateLimit() })
+      toast.success('GitHub disconnected')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Could not disconnect GitHub.')
+    } finally {
+      setIsDisconnecting(false)
+    }
   }
 
   return (
@@ -51,23 +82,33 @@ export function UserMenu() {
             <button
               type="button"
               role="menuitem"
-              disabled
-              className="w-full px-2 py-1.5 rounded flex items-center gap-2 text-fg cursor-not-allowed"
+              onClick={handleEditProfile}
+              className="w-full px-2 py-1.5 rounded hover:bg-subtle flex items-center gap-2 text-fg"
             >
               <IconGear className="w-3.5 h-3.5 text-faint" />
-              Settings
-              <span className="ml-auto text-[10px] text-faint">deferred</span>
+              Edit profile
             </button>
-            <button
-              type="button"
-              role="menuitem"
-              disabled
-              className="w-full px-2 py-1.5 rounded flex items-center gap-2 text-fg cursor-not-allowed"
-            >
-              <IconGithub className="w-3.5 h-3.5 text-faint" />
-              Disconnect GitHub
-              <span className="ml-auto text-[10px] text-faint">phase 11</span>
-            </button>
+            {rateLimit ? (
+              <button
+                type="button"
+                role="menuitem"
+                onClick={handleDisconnectGitHub}
+                disabled={isDisconnecting}
+                className="w-full px-2 py-1.5 rounded hover:bg-subtle flex items-center gap-2 text-fg disabled:opacity-50"
+              >
+                <IconGithub className="w-3.5 h-3.5 text-faint" />
+                {isDisconnecting ? 'Disconnecting…' : 'Disconnect GitHub'}
+              </button>
+            ) : (
+              <a
+                role="menuitem"
+                href={authApi.githubAuthorizeUrl()}
+                className="w-full px-2 py-1.5 rounded hover:bg-subtle flex items-center gap-2 text-fg"
+              >
+                <IconGithub className="w-3.5 h-3.5 text-faint" />
+                Connect GitHub
+              </a>
+            )}
           </div>
 
           <div className="border-t border-line p-1">
@@ -83,6 +124,8 @@ export function UserMenu() {
           </div>
         </div>
       )}
+
+      {isEditOpen && <EditProfileDialog open onClose={() => setIsEditOpen(false)} />}
     </div>
   )
 }

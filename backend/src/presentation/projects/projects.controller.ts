@@ -3,13 +3,22 @@ import { AppError } from "../../lib/errors.js";
 import { currentUser } from "../../middleware/requireAuth.js";
 import {
   createProject,
+  createProjectsFromGitHub,
   deleteProject,
   getProjectById,
   listProjects,
   updateProject,
 } from "../../service/index.js";
-import type { CreateProjectBody, UpdateProjectBody } from "./projects.schemas.js";
-import { createProjectBody, updateProjectBody } from "./projects.schemas.js";
+import type {
+  CreateProjectBody,
+  CreateProjectsFromGitHubBody,
+  UpdateProjectBody,
+} from "./projects.schemas.js";
+import {
+  createProjectBody,
+  createProjectsFromGitHubBody,
+  updateProjectBody,
+} from "./projects.schemas.js";
 
 function idParam(req: Request): string {
   const id: unknown = req.params["id"];
@@ -28,6 +37,13 @@ export async function create(req: Request, res: Response): Promise<void> {
   const body = createProjectBody.parse(req.body) satisfies CreateProjectBody;
   const project = await createProject(currentUser(req).id, body);
   res.status(201).json({ data: project });
+}
+
+export async function createFromGitHub(req: Request, res: Response): Promise<void> {
+  const body = createProjectsFromGitHubBody.parse(req.body) satisfies CreateProjectsFromGitHubBody;
+  const result = await createProjectsFromGitHub(currentUser(req).id, body.items);
+  // 201 when anything was created; 200 when every item was skipped.
+  res.status(result.created.length > 0 ? 201 : 200).json({ data: result });
 }
 
 export async function getById(req: Request, res: Response): Promise<void> {

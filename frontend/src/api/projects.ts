@@ -1,5 +1,5 @@
 import { request } from './client'
-import type { Project, ProjectListItem } from './types'
+import type { FromGitHubItem, FromGitHubResult, Project, ProjectListItem } from './types'
 
 export interface ProjectsApi {
   list(): Promise<ProjectListItem[]>
@@ -20,6 +20,13 @@ export interface ProjectsApi {
     targetDate?: string | null
   }): Promise<Project>
 
+  /**
+   * One project per repository, each linked on creation. Partial success:
+   * duplicates and inaccessible repos come back in `skipped`, never failing
+   * their siblings.
+   */
+  createFromGitHub(items: FromGitHubItem[]): Promise<FromGitHubResult>
+
   delete(id: string): Promise<void>
 }
 
@@ -34,6 +41,10 @@ export const fetchProjectsApi: ProjectsApi = {
 
   async create(input) {
     return request<Project>('/projects', { method: 'POST', body: input })
+  },
+
+  async createFromGitHub(items) {
+    return request<FromGitHubResult>('/projects/from-github', { method: 'POST', body: { items } })
   },
 
   async update(id, input) {

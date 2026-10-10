@@ -7,7 +7,7 @@ import { useProjects } from '../../hooks/useProjects'
 import { useCreateProject } from '../../hooks/useProjectMutations'
 import { IconCheck, IconGithub, IconPlus } from '../ui/Icons'
 import { TextInput } from '../ui/Input'
-import { SIDEBAR_VIEWS } from './nav'
+import { formatProjectLabel } from '../../lib/format'
 
 const ITEM = 'flex items-center gap-2 text-xs px-2 py-1.5 rounded-md'
 const ACTIVE = 'font-semibold text-fg bg-inset'
@@ -63,22 +63,7 @@ export function Sidebar() {
 
   return (
     <aside className="hidden lg:block w-56 flex-none border-r border-line p-3 bg-canvas">
-      <div className={`${SECTION} mb-1.5`}>Views</div>
-      {SIDEBAR_VIEWS.map((item) => (
-        <NavLink
-          key={item.to}
-          to={item.to}
-          end={item.to === '/dashboard'}
-          className={({ isActive }) => `${ITEM} ${isActive ? ACTIVE : INACTIVE}`}
-        >
-          {item.label}
-          {item.to === '/tasks' && (
-            <span className="ml-auto text-[10px] text-faint">{dashboard?.stats.total ?? 0}</span>
-          )}
-        </NavLink>
-      ))}
-
-      <div className="flex items-center justify-between mt-4 mb-1.5">
+      <div className="flex items-center justify-between mb-1.5">
         <span className={`${SECTION}`}>Projects</span>
         {!isAddingProject && (
           <button
@@ -144,12 +129,18 @@ export function Sidebar() {
                 className="w-1.5 h-1.5 rounded-full flex-none"
                 style={{ backgroundColor: project.color ?? 'var(--color-line)' }}
               />
-              <span className="truncate">{project.name}</span>
+              <span className="truncate">{formatProjectLabel(project.projectNumber, project.name)}</span>
               <span className="ml-auto text-[10px] text-faint">{project.taskCount}</span>
             </button>
           )))
         }
       </div>
+      <NavLink
+        to="/projects"
+        className="mt-1.5 inline-block px-2 text-[11px] font-medium text-accent hover:text-accent-dark hover:underline"
+      >
+        Manage projects →
+      </NavLink>
 
       <div className="mt-4 border border-line rounded-md p-2 bg-subtle">
         {isGitHubLoading ? (

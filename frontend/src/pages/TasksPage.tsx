@@ -95,13 +95,6 @@ export function TasksPage() {
     [],
   )
 
-  const handlePageSizeChange = useCallback(
-    () => {
-      // Page size change is handled by TaskTable via URL
-    },
-    [],
-  )
-
   const handleCreateSubmit = useCallback(
     async (values: TaskFormValues) => {
       await createTask.mutateAsync({
@@ -220,7 +213,6 @@ export function TasksPage() {
               meta={meta}
               projects={projects}
               onPageChange={handlePageChange}
-              onPageSizeChange={handlePageSizeChange}
               onSelectTask={handleSelectTask}
             />
           )}
@@ -243,6 +235,7 @@ export function TasksPage() {
       </Dialog>
       </div>
       <TaskDetailDrawer
+        key={selectedTaskId ?? 'none'}
         taskId={selectedTaskId ?? null}
         projects={projects}
         onClose={handleCloseDetail}
