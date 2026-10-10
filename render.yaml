@@ -1,7 +1,7 @@
 services:
   - type: web
     name: todogit-backend
-    env: node
+    runtime: node
     rootDir: backend
     buildCommand: pnpm install --frozen-lockfile && npx prisma generate && pnpm build
     startCommand: node dist/server.js
@@ -20,10 +20,11 @@ services:
       - key: BCRYPT_SALT_ROUNDS
         value: "12"
 
-  - type: static
+  - type: web
     name: todogit-frontend
+    runtime: static
     rootDir: frontend
-    buildCommand: pnpm install && pnpm build
+    buildCommand: pnpm install --frozen-lockfile && pnpm build
     staticPublishPath: dist
     routes:
       - type: rewrite
