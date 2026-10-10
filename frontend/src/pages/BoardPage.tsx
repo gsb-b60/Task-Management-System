@@ -1,13 +1,33 @@
+import { useState } from 'react'
 import { useBoard } from '../hooks/useBoard'
+import { useProjects } from '../hooks/useProjects'
 import { Board } from '../components/board/Board'
 import { EmptyState } from '../components/ui/EmptyState'
+import { Select } from '../components/ui/Select'
+import { TaskSort } from '../components/task/TaskSort'
+import { TaskDetailDrawer } from '../components/task/TaskDetailDrawer'
 import type { Task, TaskStatus } from '../api/types'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export function BoardPage() {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const projectId = searchParams.get('projectId') ?? undefined
+  const selectedTaskId = searchParams.get('selected') ?? undefined
+  const [sortBy, setSortBy] = useState(searchParams.get('sortBy') ?? 'dueDate')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(
+    searchParams.get('sortOrder') === 'desc' ? 'desc' : 'asc',
+  )
+
+  const handleProjectChange = (nextProjectId: string | null) => {
+    const next = new URLSearchParams(searchParams)
+    if (nextProjectId) {
+      next.set('projectId', nextProjectId)
+    } else {
+      next.delete('projectId')
+    }
+    setSearchParams(next, { replace: true })
+  }
   
   const {
     columns,
@@ -18,14 +38,23 @@ export function BoardPage() {
     refetch,
     moveTask,
     isMoving,
-  } = useBoard({ projectId })
+  } = useBoard({ projectId, sortBy, sortOrder })
+  const { data: projects = [] } = useProjects()
 
   const handleMoveTask = async (taskId: string, status: TaskStatus) => {
     await moveTask({ taskId, status })
   }
 
   const handleTaskClick = (task: Task) => {
-    navigate(`/tasks/${task.id}`)
+    const next = new URLSearchParams(searchParams)
+    next.set('selected', task.id)
+    setSearchParams(next, { replace: true })
+  }
+
+  const handleCloseDetail = () => {
+    const next = new URLSearchParams(searchParams)
+    next.delete('selected')
+    setSearchParams(next, { replace: true })
   }
 
   if (isLoading) {
@@ -85,20 +114,46 @@ export function BoardPage() {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between gap-3">
         <h1 className="text-lg font-semibold text-fg">Board</h1>
-        {isMoving && (
-          <span className="text-xs text-accent animate-pulse">
-            Saving…
-          </span>
-        )}
+        <div className="flex items-center gap-3">
+          {isMoving && (
+            <span className="text-xs text-accent animate-pulse">
+              Saving…
+            </span>
+          )}
+          <TaskSort
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            onSortByChange={setSortBy}
+            onSortOrderChange={setSortOrder}
+          />
+          <div className="w-[180px]">
+            <Select
+              aria-label="Filter by project"
+              value={projectId ?? ''}
+              onChange={(e) => handleProjectChange(e.target.value || null)}
+              options={[
+                { value: '', label: 'Project: All' },
+                ...projects.map((p) => ({ value: p.id, label: p.name })),
+              ]}
+            />
+          </div>
+        </div>
       </div>
 
       <Board
         columns={columns}
         meta={meta}
+        projects={projects}
         onTaskClick={handleTaskClick}
         onMoveTask={handleMoveTask}
+      />
+      <TaskDetailDrawer
+        variant="overlay"
+        taskId={selectedTaskId ?? null}
+        projects={projects}
+        onClose={handleCloseDetail}
       />
     </div>
   )

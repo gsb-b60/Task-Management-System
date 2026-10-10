@@ -6,6 +6,8 @@ import type { Task, TaskStatus } from '../api/types'
 
 interface UseBoardOptions {
   projectId?: string
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
 }
 
 interface BoardData {
@@ -20,10 +22,10 @@ interface BoardData {
   }
 }
 
-export function useBoard({ projectId }: UseBoardOptions = {}) {
+export function useBoard({ projectId, sortBy = 'dueDate', sortOrder = 'asc' }: UseBoardOptions = {}) {
   const queryClient = useQueryClient()
 
-  const queryKey = queryKeys.board(projectId)
+  const queryKey = queryKeys.board({ projectId, sortBy, sortOrder })
 
   const { data, isPending, isLoading, isError, error, refetch } = useQuery({
     queryKey,
@@ -33,8 +35,8 @@ export function useBoard({ projectId }: UseBoardOptions = {}) {
         status: ['TODO', 'IN_PROGRESS', 'DONE'],
         page: 1,
         pageSize: 100,
-        sortBy: 'createdAt',
-        sortOrder: 'asc',
+        sortBy,
+        sortOrder,
       }),
   })
 
@@ -89,6 +91,7 @@ export function useBoard({ projectId }: UseBoardOptions = {}) {
     hasPreviousPage: false,
   }
 
+  // The server returns rows in the requested order; columns only group.
   const columns: Record<TaskStatus, Task[]> = {
     TODO: tasks.filter((t) => t.status === 'TODO'),
     IN_PROGRESS: tasks.filter((t) => t.status === 'IN_PROGRESS'),

@@ -151,6 +151,19 @@ export function setScenario(name: keyof typeof scenarios) {
   }
 }
 
+// Mutations (create/update/delete) push into the shared scenario objects, so
+// tests that write must reset first — otherwise titles, statuses, and extra
+// rows leak into every later test in the file.
+const pristineScenarios = JSON.parse(JSON.stringify(scenarios)) as typeof scenarios
+
+export function resetMockStore() {
+  const fresh = JSON.parse(JSON.stringify(pristineScenarios)) as typeof scenarios
+  scenarios.default = fresh.default
+  scenarios.empty = fresh.empty
+  scenarios.unauthenticated = fresh.unauthenticated
+  currentScenario = 'default'
+}
+
 export function getScenario() {
   return scenarios[currentScenario]
 }

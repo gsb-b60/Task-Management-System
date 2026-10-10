@@ -39,12 +39,15 @@ export interface Task {
   description?: string | null
   status: TaskStatus
   priority: TaskPriority
-  /** Date-only value, `YYYY-MM-DD`. Parse as local, never `new Date()`. */
+  /** ISO datetime from the wire. Parse the date part only, never `new Date()`. */
   dueDate?: string | null
   startDate?: string | null
-  /** Computed server-side. A client clock in another timezone disagrees. */
-  isOverdue: boolean
-  daysUntilDue: number | null
+  /**
+   * Absent on the Task resource — only TaskSummary carries these literals,
+   * computed server-side. Never re-derive them from the browser clock.
+   */
+  isOverdue?: boolean
+  daysUntilDue?: number | null
   projectId: string | null
   githubIssueNumber: number | null
   githubState: string | null

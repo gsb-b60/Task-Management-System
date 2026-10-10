@@ -68,11 +68,14 @@ export function MultiSelect<T extends string = string>({
   disabled,
 }: MultiSelectProps<T>) {
   const [open, setOpen] = useState(false)
-  const triggerRef = useRef<HTMLButtonElement>(null)
+  // The whole popover, not just the trigger — otherwise mousedown on an
+  // option closes the list before its change event can fire and nothing
+  // ever gets selected.
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false)
       }
     }
@@ -92,9 +95,8 @@ export function MultiSelect<T extends string = string>({
     .map((o) => o.label)
 
   return (
-    <div className={`relative ${className}`}>
+    <div ref={containerRef} className={`relative ${className}`}>
       <button
-        ref={triggerRef}
         type="button"
         onClick={() => setOpen(!open)}
         disabled={disabled}

@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import {
   DndContext,
+  DragOverlay,
   closestCenter,
   KeyboardSensor,
   PointerSensor,
@@ -11,13 +12,10 @@ import {
   type DragOverEvent,
   type UniqueIdentifier,
 } from '@dnd-kit/core'
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
 import { BoardColumn } from './BoardColumn'
-import type { Task, TaskStatus } from '../../api/types'
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
+import { isBoardStatus, resolveDropStatus } from './dropStatus'
+import type { ProjectListItem, Task, TaskStatus } from '../../api/types'
 
 interface BoardProps {
   columns: Record<TaskStatus, Task[]>
@@ -29,6 +27,7 @@ interface BoardProps {
     hasNextPage: boolean
     hasPreviousPage: boolean
   }
+  projects?: ProjectListItem[]
   onTaskClick: (task: Task) => void
   onMoveTask: (taskId: string, status: TaskStatus) => Promise<void>
 }
@@ -38,11 +37,15 @@ const STATUS_ORDER: TaskStatus[] = ['TODO', 'IN_PROGRESS', 'DONE']
 export function Board({
   columns,
   meta,
+  projects = [],
   onTaskClick,
   onMoveTask,
 }: BoardProps) {
   const [dragOverStatus, setDragOverStatus] = useState<TaskStatus | null>(null)
   const [activeTaskId, setActiveTaskId] = useState<UniqueIdentifier | null>(null)
+  // A real drag ends in a synthetic click on the card — swallow it so the
+  // task detail does not open behind the drop.
+  const suppressClickUntil = useRef(0)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -55,38 +58,48 @@ export function Board({
     }),
   )
 
+  const shouldSuppressClick = useCallback(
+    () => Date.now() < suppressClickUntil.current,
+    [],
+  )
+
   const handleDragStart = useCallback((event: DragStartEvent) => {
     setActiveTaskId(event.active.id)
   }, [])
 
-  const handleDragOver = useCallback(
-    (event: DragOverEvent) => {
-      if (event.over && event.over.id !== activeTaskId) {
-        const status = event.over.id as TaskStatus
-        if (['TODO', 'IN_PROGRESS', 'DONE'].includes(status)) {
-          setDragOverStatus(status)
-        }
-      } else {
-        setDragOverStatus(null)
-      }
-    },
-    [activeTaskId],
-  )
+  const handleDragOver = useCallback((event: DragOverEvent) => {
+    const over = event.over
+    if (!over) {
+      setDragOverStatus(null)
+      return
+    }
+    const overId = String(over.id)
+    setDragOverStatus(
+      isBoardStatus(overId)
+        ? overId
+        : isBoardStatus(over.data.current?.status)
+          ? over.data.current.status
+          : null,
+    )
+  }, [])
 
   const handleDragEnd = useCallback(
     async (event: DragEndEvent) => {
       const { active, over } = event
       setActiveTaskId(null)
       setDragOverStatus(null)
+      suppressClickUntil.current = Date.now() + 300
 
-      if (!over || active.id === over.id) return
+      if (!over) return
 
-      const taskId = String(active.id)
-      const newStatus = String(over.id) as TaskStatus
+      const newStatus = resolveDropStatus(
+        String(over.id),
+        over.data.current?.status,
+        active.data.current?.status,
+      )
+      if (!newStatus) return
 
-      if (!['TODO', 'IN_PROGRESS', 'DONE'].includes(newStatus)) return
-
-      await onMoveTask(taskId, newStatus)
+      await onMoveTask(String(active.id), newStatus)
     },
     [onMoveTask],
   )
@@ -95,6 +108,13 @@ export function Board({
     setActiveTaskId(null)
     setDragOverStatus(null)
   }, [])
+
+  const activeTask = activeTaskId
+    ? [...columns.TODO, ...columns.IN_PROGRESS, ...columns.DONE].find(
+        (task) => task.id === activeTaskId,
+      ) ?? null
+    : null
+  const projectNames = new Map(projects.map((p) => [p.id, p.name]))
 
   return (
     <DndContext
@@ -105,27 +125,31 @@ export function Board({
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <SortableContext
-        items={STATUS_ORDER}
-        strategy={verticalListSortingStrategy}
-      >
-        <div className="grid grid-cols-3 gap-3">
-          {STATUS_ORDER.map((status) => (
-            <BoardColumn
-              key={status}
-              status={status}
-              tasks={columns[status]}
-              totalCount={
-                status === 'TODO'
-                  ? meta.totalItems - columns.IN_PROGRESS.length - columns.DONE.length
-                  : columns[status].length
-              }
-              onTaskClick={onTaskClick}
-              dragOver={dragOverStatus === status}
-            />
-          ))}
-        </div>
-      </SortableContext>
+      <div className="grid grid-cols-3 gap-3">
+        {STATUS_ORDER.map((status) => (
+          <BoardColumn
+            key={status}
+            status={status}
+            tasks={columns[status]}
+            totalCount={
+              status === 'TODO'
+                ? meta.totalItems - columns.IN_PROGRESS.length - columns.DONE.length
+                : columns[status].length
+            }
+            projectNames={projectNames}
+            onTaskClick={onTaskClick}
+            dragOver={dragOverStatus === status}
+            shouldSuppressClick={shouldSuppressClick}
+          />
+        ))}
+      </div>
+      <DragOverlay>
+        {activeTask ? (
+          <div className="border border-line rounded-md p-2.5 bg-canvas shadow-xl opacity-90 cursor-grabbing">
+            <div className="text-xs text-fg font-medium leading-snug">{activeTask.title}</div>
+          </div>
+        ) : null}
+      </DragOverlay>
     </DndContext>
   )
 }

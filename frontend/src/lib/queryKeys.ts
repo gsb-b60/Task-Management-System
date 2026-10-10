@@ -15,7 +15,8 @@ export const queryKeys = {
 
   task: (id: string) => ['task', { id }] as const,
 
-  board: (projectId?: string) => ['board', { projectId }] as const,
+  board: (params?: { projectId?: string; sortBy?: string; sortOrder?: string }) =>
+    ['board', { projectId: params?.projectId, sortBy: params?.sortBy, sortOrder: params?.sortOrder }] as const,
 
   roadmap: (params: {
     projectId?: string

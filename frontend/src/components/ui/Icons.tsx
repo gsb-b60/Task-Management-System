@@ -73,6 +73,24 @@ export function IconArrowLeft(props: IconProps) {
   )
 }
 
+export function IconArrowUp(props: IconProps) {
+  return (
+    <Frame {...props}>
+      <path d="M12 20V5" />
+      <path d="m6 11 6-6 6 6" />
+    </Frame>
+  )
+}
+
+export function IconArrowDown(props: IconProps) {
+  return (
+    <Frame {...props}>
+      <path d="M12 5v15" />
+      <path d="m6 13 6 6 6-6" />
+    </Frame>
+  )
+}
+
 export function IconArrowOut(props: IconProps) {
   return (
     <Frame {...props}>

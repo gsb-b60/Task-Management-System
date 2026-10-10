@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { mockDataApi, mockTasksApi, setScenario } from '../api/mock'
+import { mockDataApi, mockTasksApi, resetMockStore } from '../api/mock'
 import { renderPage } from '../test/renderApp'
 import { DashboardPage } from './DashboardPage'
 
@@ -22,11 +22,9 @@ function renderDashboard(route = '/dashboard') {
 
 describe('DashboardPage undated tasks', () => {
   beforeEach(() => {
-    setScenario('default')
+    resetMockStore()
   })
 
-  // NOTE: the mock store is shared per file — this read-only test runs first
-  // so the task created below cannot leak into it.
   it('hides the section when every task has a due date', async () => {
     await renderDashboard()
 

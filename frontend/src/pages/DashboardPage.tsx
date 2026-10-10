@@ -421,7 +421,7 @@ function UndatedPanel({
                 <td className="px-4 py-2 text-right text-muted">
                   <span className="inline-flex items-center gap-1">
                     <IconCalendar className="w-3 h-3" />
-                    {formatDateOnly(task.createdAt.slice(0, 10))}
+                    {formatDateOnly(task.createdAt)}
                   </span>
                 </td>
               </tr>

@@ -28,6 +28,14 @@ describe('formatDateOnly', () => {
     expect(formatDateOnly('2026-10-15')).toBe('15 Oct')
   })
 
+  it('reduces a full ISO datetime to its calendar date', () => {
+    expect(formatDateOnly('2026-10-23T00:00:00.000Z')).toBe('23 Oct')
+  })
+
+  it('passes unrecognised values through instead of blanking them', () => {
+    expect(formatDateOnly('not-a-date')).toBe('not-a-date')
+  })
+
   it('renders an em dash for a missing date', () => {
     expect(formatDateOnly(null)).toBe('—')
   })

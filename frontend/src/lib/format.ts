@@ -14,10 +14,16 @@ export function dueLabel(daysUntilDue: number | null | undefined): string {
   return `in ${daysUntilDue} days`
 }
 
-/** `YYYY-MM-DD` → `15 Oct`, read as a local date rather than a UTC instant. */
+/**
+ * `YYYY-MM-DD` → `15 Oct`, read as a local date rather than a UTC instant.
+ * The Task resource carries full ISO datetimes (`2026-10-23T00:00:00.000Z`);
+ * those reduce to their calendar-date part first. Anything else passes
+ * through untouched so a backend change stays visible instead of blank.
+ */
 export function formatDateOnly(dateOnly: string | null | undefined): string {
   if (!dateOnly) return '—'
-  const [year, month, day] = dateOnly.split('-').map(Number)
+  const datePart = /^\d{4}-\d{2}-\d{2}/.test(dateOnly) ? dateOnly.slice(0, 10) : dateOnly
+  const [year, month, day] = datePart.split('-').map(Number)
   if (!year || !month || !day) return dateOnly
   return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
     day: 'numeric',

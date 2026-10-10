@@ -1,5 +1,7 @@
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { formatDateOnly, dueLabel } from '../../lib/format'
-import type { Task, TaskPriority } from '../../api/types'
+import type { Task, TaskPriority, TaskStatus } from '../../api/types'
 import { IconCalendar, IconExternalLink } from '../ui/Icons'
 
 const PRIORITY_STYLE: Record<TaskPriority, string> = {
@@ -10,47 +12,70 @@ const PRIORITY_STYLE: Record<TaskPriority, string> = {
 
 interface TaskCardProps {
   task: Task
+  projectName?: string | null
   onClick?: () => void
-  dragHandleProps?: React.HTMLAttributes<HTMLDivElement>
 }
 
-export function TaskCard({ task, onClick, dragHandleProps }: TaskCardProps) {
+export function TaskCard({ task, projectName = null, onClick }: TaskCardProps) {
   const shortId = `#${task.id.slice(-4)}`
   const hasGitHubIssue = task.githubIssueNumber !== null
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: task.id,
+    data: { status: task.status satisfies TaskStatus },
+  })
 
   return (
     <div
-      {...dragHandleProps}
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
       className={`
-        border border-line rounded-md p-2.5 hover:border-muted cursor-pointer bg-canvas
-        transition-shadow duration-150
+        border border-line rounded-md p-3 hover:border-muted cursor-grab active:cursor-grabbing bg-canvas
+        transition-shadow duration-150 touch-none select-none
+        ${isDragging ? 'opacity-50 shadow-lg' : ''}
       `}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }}
       onClick={onClick}
       tabIndex={0}
       role="button"
       aria-label={`Task ${shortId}: ${task.title}`}
     >
       <div className="flex items-center gap-1.5">
-        <span className="font-mono text-[10px] text-faint">{shortId}</span>
+        <span className="font-mono text-xs text-faint">{shortId}</span>
         {hasGitHubIssue && (
-          <span className="ml-auto inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-semibold border border-info rounded-full bg-infobg text-info">
-            <IconExternalLink className="w-2.5 h-2.5" />
+          <span className="ml-auto inline-flex items-center gap-1 px-1.5 py-0.5 text-sm font-semibold border border-info rounded-full bg-infobg text-info">
+            <IconExternalLink className="w-3 h-3" />
             GH-{task.githubIssueNumber}
           </span>
         )}
       </div>
-      <div className="text-xs text-fg font-medium mt-1 leading-snug">{task.title}</div>
+      <div className="text-base text-fg font-medium mt-1 leading-snug">{task.title}</div>
+      {projectName && (
+        <div className="mt-0.5 text-sm text-faint truncate">{projectName}</div>
+      )}
       <div className="flex items-center gap-1.5 mt-2">
-        <span className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold ${PRIORITY_STYLE[task.priority]}`}>
+        <span className={`inline-flex items-center px-1.5 py-0.5 text-sm font-semibold ${PRIORITY_STYLE[task.priority]}`}>
           {task.priority}
         </span>
         {task.dueDate && (
-          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-semibold ${
+          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 text-sm font-semibold ${
             task.isOverdue ? 'text-bad' : 'text-muted'
           }`}>
-            <IconCalendar className="w-3 h-3" />
+            <IconCalendar className="w-3.5 h-3.5" />
             {formatDateOnly(task.dueDate)}
-            <span className="text-[10px]">{dueLabel(task.daysUntilDue)}</span>
+            {task.daysUntilDue != null && (
+              <span>{dueLabel(task.daysUntilDue)}</span>
+            )}
           </span>
         )}
       </div>

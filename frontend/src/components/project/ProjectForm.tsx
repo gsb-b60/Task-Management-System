@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { TextInput, Field } from '../ui/Input'
 import { Button } from '../ui/Button'
+import { toDateInputValue } from '../../lib/dateOnly'
 
 const projectSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name must be 100 characters or less'),
@@ -32,9 +33,10 @@ export function ProjectForm({ initialValues, onSubmit, onClose, submitLabel, isS
     defaultValues: {
       name: '',
       description: '',
-      startDate: null,
-      targetDate: null,
       ...initialValues,
+      // Stored dates arrive as ISO datetimes; native date inputs need YYYY-MM-DD.
+      startDate: toDateInputValue(initialValues?.startDate),
+      targetDate: toDateInputValue(initialValues?.targetDate),
     },
   })
 

@@ -4,8 +4,10 @@
  * where `new Date('2026-10-15')` parses as UTC midnight and renders
  * as the 14th in timezones west of Greenwich.
  *
- * The server stores date-only fields as UTC midnight (`2026-10-15T00:00:00.000Z`)
- * but the wire format is `YYYY-MM-DD`. We read/write that string directly.
+ * Task/Project dates arrive on the wire as full ISO datetimes
+ * (`2026-10-23T00:00:00.000Z`, midnight UTC of the calendar date).
+ * Reduce them with {@link toDateInputValue} / `slice(0, 10)` before
+ * feeding native date inputs or these helpers.
  */
 
 /** Parse `YYYY-MM-DD` into a local `Date` at midnight. */
@@ -46,4 +48,15 @@ export function daysBetween(dateOnlyA: string, dateOnlyB: string): number {
 /** Clamp a percentage to [0, 1]. */
 export function clamp01(n: number): number {
   return Math.max(0, Math.min(1, n))
+}
+
+/**
+ * Reduce a wire datetime (`2026-10-23T00:00:00.000Z`) or date-only string to
+ * `YYYY-MM-DD` for native `<input type="date">` defaults. Anything else —
+ * including null/undefined — passes through unchanged so form schemas keep
+ * working with optional/nullable fields.
+ */
+export function toDateInputValue(value: string | null | undefined): string | null {
+  if (value === null || value === undefined || value === '') return null
+  return /^\d{4}-\d{2}-\d{2}/.test(value) ? value.slice(0, 10) : value
 }

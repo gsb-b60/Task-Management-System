@@ -1,3 +1,5 @@
+import { useDroppable } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { TaskCard } from './TaskCard'
 import type { Task, TaskStatus } from '../../api/types'
 
@@ -11,18 +13,24 @@ interface BoardColumnProps {
   status: TaskStatus
   tasks: Task[]
   totalCount: number
+  projectNames: Map<string, string>
   onTaskClick: (task: Task) => void
+  /** True while the pointer is over the column during a drag. */
   dragOver: boolean
+  /** A drag always ends in a click — suppress the navigation behind it. */
+  shouldSuppressClick: () => boolean
 }
 
-export function BoardColumn({ status, tasks, totalCount, onTaskClick, dragOver }: BoardColumnProps) {
+export function BoardColumn({ status, tasks, totalCount, projectNames, onTaskClick, dragOver, shouldSuppressClick }: BoardColumnProps) {
   const style = COLUMN_STYLE[status]
+  const { setNodeRef } = useDroppable({ id: status })
 
   return (
     <div
+      ref={setNodeRef}
       className={`
         border border-line rounded-md bg-canvas overflow-hidden
-        ${dragOver ? 'ring-2 ring-accent bg-blue-50' : ''}
+        ${dragOver ? 'ring-2 ring-accent bg-accentbg' : ''}
       `}
       data-status={status}
     >
@@ -41,9 +49,18 @@ export function BoardColumn({ status, tasks, totalCount, onTaskClick, dragOver }
             No tasks
           </div>
         ) : (
-          tasks.map((task) => (
-            <TaskCard key={task.id} task={task} onClick={() => onTaskClick(task)} />
-          ))
+          <SortableContext items={tasks.map((task) => task.id)} strategy={verticalListSortingStrategy}>
+            {tasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                projectName={task.projectId ? (projectNames.get(task.projectId) ?? null) : null}
+                onClick={() => {
+                  if (!shouldSuppressClick()) onTaskClick(task)
+                }}
+              />
+            ))}
+          </SortableContext>
         )}
       </div>
     </div>

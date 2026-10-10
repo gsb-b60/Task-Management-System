@@ -148,7 +148,7 @@ export function TaskDetailPage() {
                 <p className="text-xs font-medium text-faint">Due date</p>
                 <p className={`text-sm ${task.isOverdue ? 'text-bad font-semibold' : 'text-fg'}`}>
                   {task.dueDate ? formatDateOnly(task.dueDate) : '—'}
-                  {task.daysUntilDue !== null && <span className="text-[10px] text-muted ml-1">{dueLabel(task.daysUntilDue)}</span>}
+                  {task.daysUntilDue != null && <span className="text-[10px] text-muted ml-1">{dueLabel(task.daysUntilDue)}</span>}
                 </p>
               </div>
             </div>
@@ -163,7 +163,7 @@ export function TaskDetailPage() {
             <Button variant="secondary" onClick={() => setIsEditing(true)}>
               Edit
             </Button>
-            <Button variant="secondary" onClick={() => setIsDeleteOpen(true)}>
+            <Button variant="destructive" onClick={() => setIsDeleteOpen(true)}>
               Delete
             </Button>
           </div>

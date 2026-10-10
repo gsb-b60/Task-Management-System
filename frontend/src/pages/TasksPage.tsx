@@ -5,17 +5,20 @@ import { useCreateTask } from '../hooks/useTaskMutations'
 import { useProjects } from '../hooks/useProjects'
 import { TaskSearch } from '../components/task/TaskSearch'
 import { TaskFilters } from '../components/task/TaskFilters'
+import { TaskSort } from '../components/task/TaskSort'
 import { TaskTable } from '../components/task/TaskTable'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Button } from '../components/ui/Button'
 import { IconPlus } from '../components/ui/Icons'
 import { TaskForm, type TaskFormValues } from '../components/task/TaskForm'
+import { TaskDetailDrawer } from '../components/task/TaskDetailDrawer'
 import { Dialog } from '../components/ui/Dialog'
 import type { TaskStatus, TaskPriority } from '../api/types'
 
 export function TasksPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const projectId = searchParams.get('projectId') ?? undefined
+  const selectedTaskId = searchParams.get('selected') ?? undefined
   const shouldCreate = searchParams.get('create') === '1'
 
   const [search, setSearch] = useState(searchParams.get('q') ?? '')
@@ -24,6 +27,10 @@ export function TasksPage() {
   )
   const [priority, setPriority] = useState<TaskPriority[]>(
     searchParams.get('priority')?.split(',') as TaskPriority[] ?? [],
+  )
+  const [sortBy, setSortBy] = useState(searchParams.get('sortBy') ?? 'dueDate')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(
+    searchParams.get('sortOrder') === 'desc' ? 'desc' : 'asc',
   )
 
   const { data, isPending, isLoading, isError, error, refetch } = useTasks()
@@ -36,6 +43,41 @@ export function TasksPage() {
     setIsCreateOpen(false)
     const next = new URLSearchParams(searchParams)
     next.delete('create')
+    setSearchParams(next, { replace: true })
+  }, [searchParams, setSearchParams])
+
+  const handleSelectTask = useCallback(
+    (taskId: string) => {
+      const next = new URLSearchParams(searchParams)
+      // Clicking the open task again dismisses its popup.
+      if (next.get('selected') === taskId) {
+        next.delete('selected')
+      } else {
+        next.set('selected', taskId)
+      }
+      setSearchParams(next, { replace: true })
+    },
+    [searchParams, setSearchParams],
+  )
+
+  const handleCloseDetail = useCallback(() => {
+    const next = new URLSearchParams(searchParams)
+    next.delete('selected')
+    setSearchParams(next, { replace: true })
+  }, [searchParams, setSearchParams])
+
+  const handleClearFilters = useCallback(() => {
+    setSearch('')
+    setStatus([])
+    setPriority([])
+    // The list reads filters from the URL, so the params must go too —
+    // resetting state alone would leave the stale filter applied.
+    const next = new URLSearchParams(searchParams)
+    next.delete('q')
+    next.delete('status')
+    next.delete('priority')
+    next.delete('projectId')
+    next.set('page', '1')
     setSearchParams(next, { replace: true })
   }, [searchParams, setSearchParams])
 
@@ -69,7 +111,8 @@ export function TasksPage() {
         priority: values.priority,
         startDate: values.startDate,
         dueDate: values.dueDate,
-        projectId: values.projectId ?? projectId,
+        // An empty choice is "no project", never an empty-string id.
+        projectId: values.projectId ? values.projectId : (projectId ?? null),
       })
       setIsCreateOpen(false)
     },
@@ -86,10 +129,11 @@ export function TasksPage() {
     hasPreviousPage: false,
   }
 
-  const hasFilters = status.length > 0 || priority.length > 0 || search.length > 0
+  const hasFilters = status.length > 0 || priority.length > 0 || search.length > 0 || projectId !== undefined
 
   return (
-    <div>
+    <div className="flex items-stretch gap-4">
+      <div className="min-w-0 flex-1">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-lg font-semibold text-fg">Tasks</h1>
         <Button onClick={() => setIsCreateOpen(true)}>
@@ -105,6 +149,17 @@ export function TasksPage() {
           priority={priority}
           onStatusChange={setStatus}
           onPriorityChange={setPriority}
+          projectId={projectId ?? null}
+          projects={projects}
+          // The filter lives in the URL (?projectId=), which this page reads
+          // back on every render — no local state mirror needed.
+          onProjectChange={() => {}}
+        />
+        <TaskSort
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortByChange={setSortBy}
+          onSortOrderChange={setSortOrder}
         />
       </div>
 
@@ -115,7 +170,9 @@ export function TasksPage() {
               <div className="flex items-center gap-3">
                 <div className="skeleton h-4 w-12" />
                 <div className="skeleton h-4 w-32 flex-1" />
+                <div className="skeleton h-4 w-28" />
                 <div className="skeleton h-4 w-20" />
+                <div className="skeleton h-4 w-24" />
                 <div className="skeleton h-4 w-24" />
                 <div className="skeleton h-4 w-28" />
               </div>
@@ -147,11 +204,7 @@ export function TasksPage() {
                 ? 'Try adjusting your search or filters, or clear them to see all tasks.'
                 : 'Create your first task to get started.'}
               action={hasFilters ? (
-                <Button variant="secondary" className="mt-2" onClick={() => {
-                  setSearch('')
-                  setStatus([])
-                  setPriority([])
-                }}>
+                <Button variant="secondary" className="mt-2" onClick={handleClearFilters}>
                   Clear filters
                 </Button>
               ) : (
@@ -165,8 +218,10 @@ export function TasksPage() {
             <TaskTable
               tasks={tasks}
               meta={meta}
+              projects={projects}
               onPageChange={handlePageChange}
               onPageSizeChange={handlePageSizeChange}
+              onSelectTask={handleSelectTask}
             />
           )}
         </>
@@ -186,6 +241,12 @@ export function TasksPage() {
           projects={projects}
         />
       </Dialog>
+      </div>
+      <TaskDetailDrawer
+        taskId={selectedTaskId ?? null}
+        projects={projects}
+        onClose={handleCloseDetail}
+      />
     </div>
   )
 }

@@ -145,17 +145,22 @@ export function Roadmap({ tasks, initialScale = 'month' }: RoadmapProps) {
                     let left = 0
                     let width = 2
 
+                    // The wire format is a full ISO datetime; position bars by
+                    // the calendar-date part as a local midnight.
+                    const startOfLocalDay = (value: string): number =>
+                      new Date(`${value.slice(0, 10)}T00:00:00`).getTime()
+
                     if (task.startDate && task.dueDate) {
-                      const taskStart = new Date(task.startDate + 'T00:00:00').getTime()
-                      const taskEnd = new Date(task.dueDate + 'T00:00:00').getTime()
+                      const taskStart = startOfLocalDay(task.startDate)
+                      const taskEnd = startOfLocalDay(task.dueDate)
                       left = Math.max(0, Math.min(100, ((taskStart - roadmapWindow.start.getTime()) / windowMs) * 100))
                       width = Math.max(2, Math.min(100, ((taskEnd - taskStart) / windowMs) * 100))
                     } else if (task.dueDate) {
-                      const taskEnd = new Date(task.dueDate + 'T00:00:00').getTime()
+                      const taskEnd = startOfLocalDay(task.dueDate)
                       left = Math.max(0, Math.min(100, ((taskEnd - roadmapWindow.start.getTime()) / windowMs) * 100))
                       width = 2
                     } else if (task.startDate) {
-                      const taskStart = new Date(task.startDate + 'T00:00:00').getTime()
+                      const taskStart = startOfLocalDay(task.startDate)
                       left = Math.max(0, Math.min(100, ((taskStart - roadmapWindow.start.getTime()) / windowMs) * 100))
                       width = Math.max(2, Math.min(100, ((roadmapWindow.end.getTime() - taskStart) / windowMs) * 100))
                     }

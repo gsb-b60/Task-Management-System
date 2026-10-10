@@ -6,6 +6,7 @@ import { TextInput, Field } from '../ui/Input'
 import { Select } from '../ui/Select'
 import { Button } from '../ui/Button'
 import { IconPlus } from '../ui/Icons'
+import { toDateInputValue } from '../../lib/dateOnly'
 import { useCreateProject } from '../../hooks/useProjectMutations'
 import type { ProjectListItem } from '../../api/types'
 
@@ -56,10 +57,11 @@ export function TaskForm({ initialValues, onSubmit, onClose, submitLabel, isSubm
       description: '',
       status: 'TODO',
       priority: 'MEDIUM',
-      startDate: null,
-      dueDate: null,
       projectId: null,
       ...initialValues,
+      // Stored dates arrive as ISO datetimes; native date inputs need YYYY-MM-DD.
+      startDate: toDateInputValue(initialValues?.startDate),
+      dueDate: toDateInputValue(initialValues?.dueDate),
     },
   })
   const [isCreatingProject, setIsCreatingProject] = useState(false)
