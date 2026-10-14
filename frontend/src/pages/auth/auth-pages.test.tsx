@@ -209,6 +209,11 @@ describe('LoginPage', () => {
   })
 
   it('sends a real sign-in through the mock layer', async () => {
+    // mockAuthApi.me() reports a signed-in user, so fail the initial session
+    // check once to start logged out; login() still returns the mock user.
+    vi.spyOn(mockAuthApi, 'me').mockRejectedValueOnce(
+      new ApiError('UNAUTHENTICATED', 'Not signed in.', 401, []),
+    )
     renderApp(['/login'], mockAuthApi)
 
     await userEvent.type(await screen.findByLabelText('Email'), 'ada@example.com')

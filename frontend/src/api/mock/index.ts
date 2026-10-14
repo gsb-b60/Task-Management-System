@@ -57,8 +57,8 @@ const mockTasks: Task[] = [
     githubState: null,
     createdAt: '2024-01-10T00:00:00Z',
     updatedAt: '2024-01-10T00:00:00Z',
-    isOverdue: false,
-    daysUntilDue: 5,
+    isOverdue: true,
+    daysUntilDue: -3,
   },
   {
     id: 'task-2',
@@ -206,13 +206,31 @@ export const mockDashboardApi = {
   async get(params?: { projectId?: string; page?: number; pageSize?: number }) {
     const dashboard = scenarios[currentScenario].dashboard
     if (!dashboard) return null as unknown as DashboardResponse
+    // A scoped request mirrors the real API: stats and upcoming recomputed
+    // from that project's tasks instead of the canned global numbers.
+    let stats = dashboard.stats
+    let upcoming = dashboard.upcoming
+    if (params?.projectId !== undefined) {
+      const scoped = (scenarios[currentScenario].tasks?.data ?? []).filter(
+        (t) => t.projectId === params.projectId,
+      )
+      const byStatus: Record<TaskStatus, number> = { TODO: 0, IN_PROGRESS: 0, DONE: 0 }
+      for (const t of scoped) byStatus[t.status] += 1
+      stats = {
+        total: scoped.length,
+        byStatus,
+        overdue: scoped.filter((t) => t.isOverdue).length,
+        dueToday: scoped.filter((t) => t.daysUntilDue === 0).length,
+      }
+      upcoming = scoped.filter((t) => t.status !== 'DONE' && t.dueDate !== null)
+    }
     const pageSize = Math.min(100, Math.max(1, params?.pageSize ?? 10))
     const page = Math.max(1, params?.page ?? 1)
-    const totalItems = dashboard.upcoming.length
+    const totalItems = upcoming.length
     const totalPages = totalItems === 0 ? 0 : Math.ceil(totalItems / pageSize)
     return {
-      stats: dashboard.stats,
-      upcoming: dashboard.upcoming.slice((page - 1) * pageSize, page * pageSize),
+      stats,
+      upcoming: upcoming.slice((page - 1) * pageSize, page * pageSize),
       meta: {
         page,
         pageSize,

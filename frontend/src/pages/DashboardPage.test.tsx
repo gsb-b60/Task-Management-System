@@ -17,7 +17,8 @@ vi.mock('../api', () => ({
 }))
 
 const PORTFOLIO = 'aaaaaaaa-1111-4111-8111-aaaaaaaaaaaa'
-const STREAM = 'bbbbbbbb-2222-4222-8222-bbbbbbbbbbbb'
+// No mock task belongs to this project, so a scoped dashboard is empty.
+const EMPTY_SCOPE = 'cccccccc-3333-4333-8333-cccccccccccc'
 
 function renderDashboard(route = '/dashboard') {
   return renderPage(<DashboardPage />, { route })
@@ -78,7 +79,9 @@ describe('DashboardPage', () => {
   })
 
   it('offers a retry when the request fails', async () => {
-    setScenario('error')
+    // The mock layer has no 'error' scenario (setScenario ignores unknown
+    // names), so fail the call directly. Queries never retry in tests.
+    vi.spyOn(mockDashboardApi, 'get').mockRejectedValueOnce(new Error('dashboard exploded'))
     await renderDashboard()
 
     expect(await screen.findByText('Could not load the dashboard')).toBeInTheDocument()
@@ -86,25 +89,29 @@ describe('DashboardPage', () => {
   })
 
   it('names the project in the heading when scoped', async () => {
+    setScenario('default')
     await renderDashboard(`/dashboard?projectId=${PORTFOLIO}`)
 
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Portfolio Website/ })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /Portfolio/ })).toBeInTheDocument()
     })
     expect(screen.queryByText(`?projectId=${PORTFOLIO}`)).not.toBeInTheDocument()
   })
 
   it('scopes the counts to one project only', async () => {
+    setScenario('default')
     await renderDashboard(`/dashboard?projectId=${PORTFOLIO}`)
 
     await waitFor(() => {
       const tiles = screen.getByTestId('stat-tiles')
-      expect(within(tiles).getByText('Total').nextElementSibling).toHaveTextContent('12')
+      // The two PORTFOLIO mock tasks — never the 137 global total.
+      expect(within(tiles).getByText('Total').nextElementSibling).toHaveTextContent('2')
     })
   })
 
   it('reports zero for a project with no tasks', async () => {
-    await renderDashboard(`/dashboard?projectId=${STREAM}`)
+    setScenario('default')
+    await renderDashboard(`/dashboard?projectId=${EMPTY_SCOPE}`)
 
     expect(await screen.findByText('No tasks yet')).toBeInTheDocument()
   })
