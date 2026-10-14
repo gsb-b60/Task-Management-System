@@ -163,10 +163,13 @@ describe('LoginPage', () => {
     expect(alert).toHaveTextContent('Attempt 10 of 10')
   })
 
-  it('tells the user which page they will be returned to', async () => {
+  it('notes the pending redirect without leaking the raw URL', async () => {
     renderApp(['/login?redirect=%2Ftasks'], spyApi().api)
 
-    expect(await screen.findByText('/tasks')).toBeInTheDocument()
+    expect(
+      await screen.findByText('Signing you in — you will land back where you left off.'),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('/tasks')).not.toBeInTheDocument()
   })
 
   it('returns the user to the path they originally requested', async () => {
