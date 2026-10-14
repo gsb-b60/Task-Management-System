@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { Toaster } from 'sonner'
+import { Footer } from './Footer'
 import { Header } from './Header'
 import { Sidebar } from './Sidebar'
 
@@ -17,6 +18,7 @@ export function AppShell() {
           <Outlet />
         </main>
       </div>
+      <Footer />
       <Toaster position="bottom-right" theme="light" toastOptions={{ duration: 4000 }} />
     </div>
   )
