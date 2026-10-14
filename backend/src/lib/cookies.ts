@@ -38,7 +38,12 @@ export function readSessionCookie(req: Request): string | undefined {
 export function setSessionCookie(res: Response, token: string): void {
   res.cookie(SESSION_COOKIE, token, {
     httpOnly: true,
-    sameSite: "lax",
+    // "none" (with Secure in production) because the SPA and the API live
+    // on different hosts (both *.onrender.com, which is on the Public
+    // Suffix List, so they are cross-site). Browsers withhold Lax cookies
+    // on cross-site fetch, which makes every authenticated XHR 401 even
+    // though sign-in itself succeeds.
+    sameSite: "none",
     secure: cookieSecure,
     path: "/",
     maxAge: SESSION_MAX_AGE_MS,
@@ -48,7 +53,7 @@ export function setSessionCookie(res: Response, token: string): void {
 export function clearSessionCookie(res: Response): void {
   res.clearCookie(SESSION_COOKIE, {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "none",
     secure: cookieSecure,
     path: "/",
     maxAge: 0,
