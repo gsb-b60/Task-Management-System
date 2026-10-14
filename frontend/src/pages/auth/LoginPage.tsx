@@ -9,7 +9,7 @@ import { BrandMark } from '../../components/ui/BrandMark'
 import { Button } from '../../components/ui/Button'
 import { Divider } from '../../components/ui/Divider'
 import { Field, TextInput } from '../../components/ui/Input'
-import { IconArrowRight, IconGithub } from '../../components/ui/Icons'
+import { IconGithub } from '../../components/ui/Icons'
 import { useAuth } from '../../contexts/auth-context'
 import { redirectFromSearch } from '../../lib/redirect'
 import { loginSchema } from '../../lib/validation/schemas'
@@ -91,8 +91,7 @@ export function LoginPage() {
       {redirectTo !== '/dashboard' && (
         <Alert kind="info" className="mt-4 mb-4">
           <span className="inline-flex items-center gap-2">
-            Continuing to <span className="font-mono text-fg">{redirectTo}</span>
-            <IconArrowRight className="w-3 h-3 flex-none" />
+            Signing you in — you will land back where you left off.
           </span>
         </Alert>
       )}
