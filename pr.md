@@ -71,13 +71,65 @@ Tài khoản demo: `demo@example.com` / `password123`
 
 PostgreSQL + extensions `citext` (email/title không phân biệt hoa thường) và `pg_trgm` (index GIN tìm tiêu đề).
 
-| Bảng | Khóa chính | Khóa ngoại / ràng buộc chính |
+### `User` — tài khoản (email hoặc GitHub-only)
+
+| Cột | Kiểu | Ràng buộc |
 | --- | --- | --- |
-| `User` | `id` uuid | `email` citext unique; `githubId` unique; `passwordHash` nullable (user GitHub-only) |
-| `Session` | `id` uuid | `userId` → `User` (Cascade), `token` unique, `expiresAt` |
-| `Project` | `id` uuid | `userId` → `User` (Cascade); unique `(userId, projectNumber)`; soft-delete `deletedAt` |
-| `Task` | `id` uuid | `userId` → `User` (Cascade); `projectId` → `Project` (Cascade, nullable); `githubRepositoryId` → `GitHubRepository` (SetNull, nullable); unique `(githubRepositoryId, githubIssueNumber)`; index GIN trigram trên `title`; index `(userId, status/priority/dueDate/projectId)` |
-| `GitHubRepository` | `id` uuid | `projectId` → `Project` (Cascade, unique 1–1); `githubId` BigInt unique |
+| `id` | uuid | PK |
+| `email` | citext | unique |
+| `passwordHash` | string | nullable (user GitHub-only không có) |
+| `displayName` | string | nullable |
+| `githubId` | string | unique, nullable |
+| `githubLogin` / `githubAccessToken` | string | nullable |
+| `projectSeq` | int | default 1 (đếm số project `#n`) |
+
+### `Session` — phiên đăng nhập
+
+| Cột | Kiểu | Ràng buộc |
+| --- | --- | --- |
+| `id` | uuid | PK |
+| `token` | string | unique (opaque token trong cookie HttpOnly) |
+| `userId` | uuid | FK → `User`, Cascade |
+| `expiresAt` | datetime | hết hạn 7 ngày |
+
+### `Project` — nhóm task của user
+
+| Cột | Kiểu | Ràng buộc |
+| --- | --- | --- |
+| `id` | uuid | PK |
+| `userId` | uuid | FK → `User`, Cascade |
+| `name` / `description` | string | mô tả nullable |
+| `startDate` / `targetDate` | datetime | nullable |
+| `projectNumber` | int | unique theo `(userId, projectNumber)` |
+| `deletedAt` | datetime | nullable (xóa mềm) |
+
+### `Task` — công việc
+
+| Cột | Kiểu | Ràng buộc |
+| --- | --- | --- |
+| `id` | uuid | PK |
+| `userId` | uuid | FK → `User`, Cascade |
+| `projectId` | uuid | FK → `Project`, Cascade, nullable |
+| `title` | citext | index GIN trigram (tìm kiếm) |
+| `description` | string | nullable |
+| `status` | enum | `TODO` / `IN_PROGRESS` / `DONE` |
+| `priority` | enum | `LOW` / `MEDIUM` / `HIGH` |
+| `startDate` / `dueDate` | datetime | nullable |
+| `githubRepositoryId` | uuid | FK → `GitHubRepository`, SetNull, nullable |
+| `githubIssueNumber` / `githubState` | — | nullable; unique theo `(githubRepositoryId, githubIssueNumber)` |
+
+Index phụ: `(userId, status)`, `(userId, priority)`, `(userId, dueDate)`, `(userId, projectId)`.
+
+### `GitHubRepository` — repo link 1–1 với project
+
+| Cột | Kiểu | Ràng buộc |
+| --- | --- | --- |
+| `id` | uuid | PK |
+| `projectId` | uuid | FK → `Project`, Cascade, unique (1–1) |
+| `githubId` | BigInt | unique |
+| `fullName` / `owner` / `name` | string | định danh repo |
+| `visibility` | enum | `public` / `private` |
+| `description` / `defaultBranch` / `url` | string | nullable |
 
 Enum: `TaskStatus` (`TODO`, `IN_PROGRESS`, `DONE`), `TaskPriority` (`LOW`, `MEDIUM`, `HIGH`), `IssueState` (`open`, `closed`), `Visibility` (`public`, `private`). Mọi bảng nghiệp vụ đều scope theo `userId` ở tầng repository.
 
