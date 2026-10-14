@@ -1,14 +1,16 @@
-# Backend smoke monitor — probes liveness + readiness every 15 minutes.
+# Backend smoke monitor + keep-warm ping every minute.
 #
-# Setup (once): repo Settings → Secrets and variables → Actions → Variables →
-# add BACKEND_URL=https://<your-backend>.onrender.com (no trailing slash).
-# Runs on the default branch only (GitHub schedule limitation); delays of a
-# few minutes past each quarter-hour are normal on hosted runners.
+# The 1-minute cadence doubles as a keep-alive for the Render free tier
+# (services sleep after ~15 min idle): each run hits /health and
+# /api/health, so the backend's compute never idles long enough to spin
+# down. Scheduled runs can lag a few minutes on hosted runners.
+# Needs the BACKEND_URL repo variable (Settings → Secrets and variables →
+# Actions → Variables).
 name: Backend healthcheck
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "* * * * *"
   workflow_dispatch:
 
 jobs:
