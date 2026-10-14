@@ -150,7 +150,6 @@ export function DashboardPage() {
                   label="Due today"
                   value={data.stats.dueToday}
                   tone={data.stats.dueToday > 0 ? 'warn' : 'muted'}
-                  hint="daysUntilDue = 0, server-computed"
                 />
               </div>
 
@@ -229,7 +228,7 @@ function AlertTile({
   label: string
   value: number
   tone: 'bad' | 'warn' | 'muted'
-  hint: string
+  hint?: string
 }) {
   const tones = {
     bad: 'border-bad bg-badbg',
@@ -247,7 +246,9 @@ function AlertTile({
         </div>
         <div className={`text-lg font-semibold leading-tight ${valueTones[tone]}`}>{value}</div>
       </div>
-      <span className="text-[10px] text-faint ml-auto text-right">{hint}</span>
+      {hint !== undefined && (
+        <span className="text-[10px] text-faint ml-auto text-right">{hint}</span>
+      )}
     </div>
   )
 }
