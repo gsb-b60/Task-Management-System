@@ -6,13 +6,14 @@ import { Sidebar } from './Sidebar'
 
 /**
  * Every protected screen renders inside this shell. The sidebar collapses at
- * 1024px, below which the nav moves into the header.
+ * 1024px, below which the nav moves into the header. The column flex + flex-1
+ * content keeps the footer pinned to the viewport bottom on short pages.
  */
 export function AppShell() {
   return (
-    <div className="min-h-screen bg-canvas">
+    <div className="min-h-screen bg-canvas flex flex-col">
       <Header />
-      <div className="flex">
+      <div className="flex flex-1">
         <Sidebar />
         <main className="flex-1 min-w-0 p-5">
           <Outlet />
