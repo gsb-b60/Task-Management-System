@@ -145,35 +145,35 @@ export function ProjectsPage() {
       </Dialog>
 
       {projectId && selectedProject && (
-        <>
-          <Dialog
-            open={isEditOpen}
+        <Dialog
+          open={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          title="Edit project"
+        >
+          <ProjectForm
+            initialValues={{
+              name: selectedProject.name,
+              description: selectedProject.description,
+              startDate: selectedProject.startDate,
+              targetDate: selectedProject.targetDate,
+            }}
+            onSubmit={handleEditSubmit}
             onClose={() => setIsEditOpen(false)}
-            title="Edit project"
-          >
-            <ProjectForm
-              initialValues={{
-                name: selectedProject.name,
-                description: selectedProject.description,
-                startDate: selectedProject.startDate,
-                targetDate: selectedProject.targetDate,
-              }}
-              onSubmit={handleEditSubmit}
-              onClose={() => setIsEditOpen(false)}
-              submitLabel="Save changes"
-              isSubmitting={updateProject.isPending}
-            />
-          </Dialog>
-
-          <DeleteProjectDialog
-            open={isDeleteOpen}
-            onClose={() => setIsDeleteOpen(false)}
-            project={projectToDelete}
-            onConfirm={handleDelete}
-            isLoading={deleteProject.isPending}
+            submitLabel="Save changes"
+            isSubmitting={updateProject.isPending}
           />
-        </>
+        </Dialog>
       )}
+
+      {/* Outside the edit guard on purpose: deleting from the row menu sets
+        no ?projectId=, so gating this on it meant the dialog never opened. */}
+      <DeleteProjectDialog
+        open={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        project={projectToDelete}
+        onConfirm={handleDelete}
+        isLoading={deleteProject.isPending}
+      />
 
       <ImportReposDialog
         open={isImportOpen}
