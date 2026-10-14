@@ -55,8 +55,8 @@ describe('ProtectedRoute', () => {
 
     renderApp(['/dashboard'], slow)
 
-    // No protected content and no login form: only the session check.
-    expect(screen.getByText('GET /api/auth/me')).toBeInTheDocument()
+    // No protected content and no login form: only the loading spinner.
+    expect(screen.getByTestId('session-splash')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /sign in/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: /dashboard/i })).not.toBeInTheDocument()
 
