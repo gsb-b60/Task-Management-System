@@ -19,18 +19,15 @@ export function Spinner({ className = 'w-5 h-5' }: SpinnerProps) {
 }
 
 /**
- * The session check splash. Rendering protected content before `/me` resolves
- * flashes the login form on every hard refresh, so this blocks everything.
+ * The session check splash — spinner only. Rendering protected content
+ * before `/me` resolves flashes the login form on every hard refresh,
+ * so this blocks everything without explaining itself.
  */
 export function Splash() {
   return (
     <div className="min-h-screen grid place-items-center bg-canvas">
-      <div className="text-center">
+      <div className="text-center" data-testid="session-splash">
         <Spinner className="w-8 h-8 mx-auto text-fg" />
-        <p className="mt-3 text-xs text-muted font-mono">GET /api/auth/me</p>
-        <p className="text-[11px] text-faint mt-1">
-          Neither protected content nor the login form renders until this resolves.
-        </p>
       </div>
     </div>
   )
