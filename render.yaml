@@ -32,7 +32,7 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        value: https://todogit-backend.onrender.com/api
+        value: https://task-management-system-1-ykht.onrender.com/api
 
 databases:
   - name: todogit-db
