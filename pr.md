@@ -210,3 +210,22 @@ pnpm dev                 # đặt VITE_USE_MOCK_API=false để gọi API thật
 ```
 
 Kiểm tra: `pnpm -C backend typecheck && pnpm -C backend test`, `pnpm -C frontend typecheck && pnpm -C frontend test` (test integration cần DB `todogit_test`, xem README §6.5).
+
+## Video demo (3–5 phút)
+
+▶️ Link video: _(dán link YouTube/drive tại đây)_
+
+Nội dung video: đăng ký/đăng nhập (thường + GitHub OAuth) → CRUD task → tìm kiếm/lọc/phân trang → dashboard → Kanban kéo thả → import repo GitHub thành project.
+
+## Hình ảnh
+
+![Dashboard](images/demo.jpeg)
+
+| Màn hình | Ảnh |
+| --- | --- |
+| Dashboard + stat tiles | _(thêm ảnh)_ |
+| Kanban board kéo thả | _(thêm ảnh)_ |
+| Import repo GitHub | _(thêm ảnh)_ |
+| Login (thường + GitHub OAuth) | _(thêm ảnh)_ |
+
+> Đặt file ảnh vào `images/` rồi thay `_(thêm ảnh)_` bằng `![](images/ten-file.png)`.
