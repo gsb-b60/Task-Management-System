@@ -1,18 +1,47 @@
-name: Docker Image CI
+# Backend smoke monitor — probes liveness + readiness every 15 minutes.
+#
+# Setup (once): repo Settings → Secrets and variables → Actions → Variables →
+# add BACKEND_URL=https://<your-backend>.onrender.com (no trailing slash).
+# Runs on the default branch only (GitHub schedule limitation); delays of a
+# few minutes past each quarter-hour are normal on hosted runners.
+name: Backend healthcheck
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
 
 jobs:
-
-  build:
-
+  probe:
+    name: Probe backend health
     runs-on: ubuntu-latest
-
+    timeout-minutes: 10
+    env:
+      BACKEND_URL: ${{ vars.BACKEND_URL }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - name: Check BACKEND_URL is configured
+        run: |
+          if [ -z "$BACKEND_URL" ]; then
+            echo "::error::Repo variable BACKEND_URL is not set. Add it under Settings → Secrets and variables → Actions → Variables."
+            exit 1
+          fi
+          echo "Probing $BACKEND_URL"
+
+      # Liveness — process is up, no database involved (backend/src/presentation/health/health.routes.ts).
+      - name: Liveness GET /health (expect 200)
+        run: |
+          curl --fail --show-error --silent --max-time 60 "$BACKEND_URL/health" | tee /tmp/liveness.json
+          python3 -c "import json; d = json.load(open('/tmp/liveness.json')); assert d.get('status') == 'ok', d; print('liveness ok:', d)"
+
+      # Readiness — includes Postgres connectivity; 200 + "connected" means
+      # Render is wired to Neon. Retries cover Render free-tier cold starts.
+      - name: Readiness GET /api/health (expect 200 + database connected)
+        run: |
+          for i in 1 2 3; do
+            if curl --fail --show-error --silent --max-time 60 "$BACKEND_URL/api/health" | tee /tmp/readiness.json; then
+              break
+            fi
+            echo "attempt $i failed, retrying in 30s..."
+            sleep 30
+          done
+          python3 -c "import json; d = json.load(open('/tmp/readiness.json')); assert d.get('status') == 'ok' and d.get('database') == 'connected', d; print('readiness ok:', d)"
