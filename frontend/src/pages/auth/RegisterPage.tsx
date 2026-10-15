@@ -23,6 +23,8 @@ export function RegisterPage() {
   const [searchParams] = useSearchParams()
   const [formError, setFormError] = useState<{ title: string; body: string } | null>(null)
 
+  const redirectTo = redirectFromSearch(searchParams.toString())
+
   const {
     register,
     handleSubmit,
@@ -136,7 +138,7 @@ export function RegisterPage() {
 
       {/* A real navigation, not a form post — the backend owns the OAuth hop. */}
       <a
-        href={authApi.githubAuthorizeUrl()}
+        href={authApi.githubAuthorizeUrl(redirectTo === '/dashboard' ? undefined : redirectTo)}
         className="w-full border border-line rounded-md px-4 py-2 text-sm font-medium text-fg bg-canvas hover:bg-subtle flex items-center justify-center gap-2"
       >
         <IconGithub className="w-4 h-4" />

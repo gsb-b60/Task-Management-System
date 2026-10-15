@@ -62,8 +62,18 @@ export const AUTH_OPERATIONS: Record<string, OperationSpec> = {
   "GET /api/auth/github": {
     tag: "Auth",
     summary: "Start GitHub OAuth",
-    description: "Redirects the browser to GitHub's authorize endpoint.",
+    description:
+      "Redirects the browser to GitHub's authorize endpoint. Accepts an optional `state` (or `redirect`) return path, forwarded through GitHub and back to the SPA as `?redirect=`. Browsers get a 302 to the SPA error screen when OAuth is not configured; API clients get a 400 envelope.",
     auth: false,
+    params: [
+      {
+        name: "state",
+        in: "query",
+        required: false,
+        description: "Safe same-origin return path (e.g. /board)",
+        schema: { type: "string" },
+      },
+    ],
     responses: [
       { status: 302, description: "Redirect to GitHub" },
       ...errors(400),
@@ -84,7 +94,7 @@ export const AUTH_OPERATIONS: Record<string, OperationSpec> = {
     tag: "Auth",
     summary: "GitHub OAuth callback",
     description:
-      "Exchanges the code for a token, links or creates the account, and opens a session.",
+      "Exchanges the code for a token, links or creates the account, and opens a session. GitHub echoes `state` back; browsers are redirected to the SPA with it forwarded as `?redirect=`.",
     auth: false,
     params: [
       {
@@ -92,6 +102,13 @@ export const AUTH_OPERATIONS: Record<string, OperationSpec> = {
         in: "query",
         required: true,
         description: "Authorization code from GitHub",
+        schema: { type: "string" },
+      },
+      {
+        name: "state",
+        in: "query",
+        required: false,
+        description: "Return path originally sent to GET /api/auth/github",
         schema: { type: "string" },
       },
     ],

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { authApi } from '../../api'
@@ -14,6 +14,7 @@ import { useMenu } from './useMenu'
 export function UserMenu() {
   const { user, logout, refreshUser } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const queryClient = useQueryClient()
   const { ref, open, setOpen, close } = useMenu()
   const { data: rateLimit } = useGitHubRateLimit()
@@ -102,7 +103,7 @@ export function UserMenu() {
             ) : (
               <a
                 role="menuitem"
-                href={authApi.githubAuthorizeUrl()}
+                href={authApi.githubAuthorizeUrl(`${location.pathname}${location.search}`)}
                 className="w-full px-2 py-1.5 rounded hover:bg-subtle flex items-center gap-2 text-fg"
               >
                 <IconGithub className="w-3.5 h-3.5 text-faint" />

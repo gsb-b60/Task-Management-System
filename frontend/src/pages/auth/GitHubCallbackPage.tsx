@@ -21,8 +21,13 @@ export function GitHubCallbackPage() {
   const [exchangeFailed, setExchangeFailed] = useState(false)
 
   // Derived, not state: a denial is known from the first render.
-  const denied = searchParams.get('error') !== null
+  const errorCode = searchParams.get('error')
+  const denied = errorCode !== null
   const failed = denied || exchangeFailed
+  // The backend forwards OAuth `state` as `?redirect=` so a deep link
+  // (e.g. /login?redirect=/board) survives the GitHub round-trip.
+  const returnTo = redirectFromSearch(searchParams.toString())
+  const returnQuery = returnTo === '/dashboard' ? '' : `?redirect=${encodeURIComponent(returnTo)}`
 
   useEffect(() => {
     if (denied) return
@@ -46,6 +51,12 @@ export function GitHubCallbackPage() {
   }, [denied, refreshUser, navigate, queryClient, searchParams])
 
   if (failed) {
+    const message =
+      errorCode === 'oauth_not_configured'
+        ? 'GitHub sign-in is not configured on the server. Ask an admin to set GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET.'
+        : errorCode === 'exchange_failed' || exchangeFailed
+          ? 'The code exchange failed. Try again — codes expire after a few minutes.'
+          : 'Authorisation was denied. No account was linked.'
     return (
       <CenteredPanel>
         <div className="text-center">
@@ -53,18 +64,16 @@ export function GitHubCallbackPage() {
             <IconAlert className="w-5 h-5 text-bad" />
           </span>
           <h1 className="mt-3 text-base font-semibold text-fg">GitHub sign-in failed</h1>
-          <p className="text-xs text-muted mt-1">
-            Authorisation was denied. No account was linked.
-          </p>
+          <p className="text-xs text-muted mt-1">{message}</p>
           <div className="mt-4 flex items-center justify-center gap-2">
             <a
-              href="/login"
+              href={`/login${returnQuery}`}
               className="border border-line rounded-md px-3 py-1.5 text-xs font-medium text-fg bg-canvas hover:bg-subtle"
             >
               Back to sign in
             </a>
             <a
-              href={authApi.githubAuthorizeUrl()}
+              href={authApi.githubAuthorizeUrl(returnTo === '/dashboard' ? undefined : returnTo)}
               className="bg-ok text-white rounded-md px-3 py-1.5 text-xs font-semibold hover:bg-ok-dark"
             >
               Retry with GitHub

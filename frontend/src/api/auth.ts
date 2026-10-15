@@ -16,8 +16,12 @@ export interface AuthApi {
   updateMe(input: { displayName?: string | null }): Promise<User>
   /** Removes the GitHub link; projects and imported tasks are untouched. */
   disconnectGitHub(): Promise<User>
-  /** Full URL the browser follows to reach GitHub's consent screen. */
-  githubAuthorizeUrl(): string
+  /**
+   * Full URL the browser follows to reach GitHub's consent screen.
+   * `returnTo` (e.g. `/board`) is sent as OAuth `state` so the callback can
+   * land back where the user started. Unsafe values are ignored server-side.
+   */
+  githubAuthorizeUrl(returnTo?: string): string
 }
 
 export interface RegisterInput {
@@ -125,7 +129,9 @@ export const fetchAuthApi: AuthApi = {
     return request<User>('/auth/github', { method: 'DELETE' })
   },
 
-  githubAuthorizeUrl() {
-    return apiUrl('/auth/github')
+  githubAuthorizeUrl(returnTo?: string) {
+    const base = apiUrl('/auth/github')
+    if (returnTo === undefined || returnTo === '') return base
+    return `${base}?state=${encodeURIComponent(returnTo)}`
   },
 }

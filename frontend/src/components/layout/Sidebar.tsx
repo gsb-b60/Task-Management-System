@@ -1,4 +1,4 @@
-import { NavLink, useSearchParams } from 'react-router-dom'
+import { NavLink, useLocation, useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import { authApi } from '../../api'
 import { useDashboard } from '../../hooks/useDashboard'
@@ -22,6 +22,8 @@ export function Sidebar() {
   const createProject = useCreateProject()
 
   const [searchParams, setSearchParams] = useSearchParams()
+  const location = useLocation()
+  const returnTo = `${location.pathname}${location.search}`
   const activeId = searchParams.get('projectId')
   const [isAddingProject, setIsAddingProject] = useState(false)
   const [newProjectName, setNewProjectName] = useState('')
@@ -175,7 +177,7 @@ export function Sidebar() {
               Connect to import issues.
             </p>
             <a
-              href={authApi.githubAuthorizeUrl()}
+              href={authApi.githubAuthorizeUrl(returnTo)}
               className="ml-5 mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-accent hover:text-accent-dark"
             >
               Connect GitHub

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { authApi, dataApi, isApiError } from '../../api'
 import type { GitHubRepository, ProjectListItem } from '../../api/types'
@@ -25,6 +26,7 @@ export function ImportReposDialog({ open, onClose, projects }: ImportReposDialog
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [titles, setTitles] = useState<Record<string, string>>({})
   const createFromGitHub = useCreateProjectsFromGitHub()
+  const location = useLocation()
 
   const reposQuery = useQuery({
     queryKey: ['github', 'repositories'],
@@ -119,7 +121,7 @@ export function ImportReposDialog({ open, onClose, projects }: ImportReposDialog
             Connect your account to browse repositories.
           </p>
           <a
-            href={authApi.githubAuthorizeUrl()}
+            href={authApi.githubAuthorizeUrl(`${location.pathname}${location.search}`)}
             className="mt-3 inline-flex items-center gap-2 bg-ok text-white rounded-md px-4 py-2 text-sm font-semibold hover:bg-ok-dark"
           >
             <IconGithub className="w-4 h-4" />

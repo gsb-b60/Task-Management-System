@@ -197,8 +197,10 @@ export const mockAuthApi = {
   async disconnectGitHub() {
     return scenarios[currentScenario].user
   },
-  githubAuthorizeUrl() {
-    return 'https://github.com/login/oauth/authorize?client_id=test'
+  githubAuthorizeUrl(returnTo?: string) {
+    const base = 'https://github.com/login/oauth/authorize?client_id=test'
+    if (returnTo === undefined || returnTo === '') return base
+    return `${base}&state=${encodeURIComponent(returnTo)}`
   },
 }
 

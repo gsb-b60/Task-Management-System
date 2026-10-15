@@ -55,3 +55,4 @@ render.yaml.local
 # backend/pnpm-lock.yaml and frontend/pnpm-lock.yaml must be committed.
 # backend/prisma/schema.prisma and backend/prisma/migrations/ must be committed
 # so migrations are versioned and reproducible (SRS §17.4, DL-04).
+.neon
