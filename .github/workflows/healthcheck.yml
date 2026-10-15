@@ -1,16 +1,21 @@
-# Backend smoke monitor + keep-warm ping every minute.
+# Backend smoke monitor + keep-warm ping every 5 minutes.
 #
-# The 1-minute cadence doubles as a keep-alive for the Render free tier
+# The 5-minute cadence doubles as a keep-alive for the Render free tier
 # (services sleep after ~15 min idle): each run hits /health and
 # /api/health, so the backend's compute never idles long enough to spin
-# down. Scheduled runs can lag a few minutes on hosted runners.
+# down. NOTE: GitHub Actions requires at least 5 minutes between scheduled
+# runs — `* * * * *` (every minute) is ignored by the scheduler, which is
+# why this uses `*/5 * * * *`. Scheduled runs can lag a few minutes on
+# hosted runners. Runs on the default branch only (GitHub schedule
+# limitation); use "Run workflow" to trigger manually.
 # Needs the BACKEND_URL repo variable (Settings → Secrets and variables →
-# Actions → Variables).
+# Actions → Variables), e.g. https://todogit-backend.onrender.com (no
+# trailing slash).
 name: Backend healthcheck
 
 on:
   schedule:
-    - cron: "* * * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 jobs:
@@ -36,14 +41,21 @@ jobs:
           python3 -c "import json; d = json.load(open('/tmp/liveness.json')); assert d.get('status') == 'ok', d; print('liveness ok:', d)"
 
       # Readiness — includes Postgres connectivity; 200 + "connected" means
-      # Render is wired to Neon. Retries cover Render free-tier cold starts.
+      # Render is wired to Neon. Retries cover Render free-tier cold starts
+      # (first hit can take 30–50s to wake up).
       - name: Readiness GET /api/health (expect 200 + database connected)
         run: |
+          ok=0
           for i in 1 2 3; do
             if curl --fail --show-error --silent --max-time 60 "$BACKEND_URL/api/health" | tee /tmp/readiness.json; then
+              ok=1
               break
             fi
             echo "attempt $i failed, retrying in 30s..."
             sleep 30
           done
+          if [ "$ok" -ne 1 ]; then
+            echo "::error::Readiness probe failed after 3 attempts against $BACKEND_URL/api/health"
+            exit 1
+          fi
           python3 -c "import json; d = json.load(open('/tmp/readiness.json')); assert d.get('status') == 'ok' and d.get('database') == 'connected', d; print('readiness ok:', d)"
